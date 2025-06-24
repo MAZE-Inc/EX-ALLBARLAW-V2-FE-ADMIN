@@ -17,6 +17,41 @@
   :global(.ant-menu-submenu-arrow) {
     display: none !important;
   }
+
+  // 메뉴 활성화 색상 커스터마이징
+  :global(.ant-menu-item-selected) {
+    background-color: rgba(32, 191, 98, 0.1); // 보라색
+    color: $color-green-01;
+
+    &::after {
+      border-right-color: #722ed1; // 오른쪽 테두리
+    }
+  }
+
+  // 선택된 서브메뉴 커스터마이징 (클릭 시에만)
+  :global(.ant-menu-submenu-selected) {
+    > :global(.ant-menu-submenu-title) {
+      color: $color-green-01 !important;
+    }
+  }
+
+  // 선택되지 않은 서브메뉴 타이틀 호버 효과 제거
+  :global(.ant-menu-submenu:not(.ant-menu-submenu-selected)) {
+    :global(.ant-menu-submenu-title:hover) {
+      cursor: default;
+      background-color: transparent !important;
+      color: inherit !important;
+    }
+  }
+
+  // 선택된 서브메뉴 타이틀 호버 시 초록색 유지
+  :global(.ant-menu-submenu-selected) {
+    :global(.ant-menu-submenu-title:hover) {
+      cursor: default;
+      background-color: transparent !important;
+      color: $color-green-01 !important; // 초록색 유지
+    }
+  }
 }
 
 .sidebar-header {
@@ -26,7 +61,7 @@
   padding: 20px 16px;
   border-bottom: 1px solid #f0f0f0;
   border-right: 1px solid #f0f0f0;
-  background: #2f3349;
+  background: $color-green-02;
   color: white;
 
   .header-title {

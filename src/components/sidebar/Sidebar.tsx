@@ -1,12 +1,10 @@
 import { menuItems } from '@/constants/menu'
 import { Menu, MenuProps } from 'antd'
 import styles from './sidebar.module.scss'
-import { logo } from '@/assets/imgs'
 // import { useNavigate } from 'react-router-dom'
 
 const SidebarHeader = () => {
   const handleLogout = () => {
-    // 로그아웃 로직 추가
     console.log('로그아웃 클릭')
   }
 
