@@ -22,7 +22,8 @@ export const ROUTE_PATH = {
   CHAT_LIST: '/chat-list',
 
   // 게시판
-  BOARD_NOTICE: '/board-notice',
+  BOARD_NOTICE_LIST: '/board-notice-list',
+  BOARD_NOTICE_EDIT: '/board-notice-edit',
   BOARD_FAQ: '/board-faq',
   BOARD_LEGAL_DICTIONARY: '/board-legalDictionary',
 

@@ -53,7 +53,7 @@ export const menuItems: MenuItem[] = [
     key: 'board',
     label: '게시판',
     children: [
-      { key: 'board-notice', label: '공지사항' },
+      { key: 'board-notice-list', label: '공지사항' },
       { key: 'board-faq', label: 'FAQ' },
       { key: 'board-legalDictionary', label: '법률 백과사전전' },
     ],
