@@ -1,7 +1,7 @@
 import { menuItems } from '@/constants/menu'
 import { Menu, MenuProps } from 'antd'
 import styles from './sidebar.module.scss'
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const SidebarHeader = () => {
   const handleLogout = () => {
@@ -25,11 +25,10 @@ const SidebarHeader = () => {
 }
 
 const Sidebar = () => {
-  //   const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const onClick: MenuProps['onClick'] = e => {
-    console.log('메뉴 클릭:', e.key)
-    // 나중에 라우팅 로직 추가
+    navigate(e.key)
   }
 
   // 항상 열린 상태로 유지할 서브메뉴 키들

@@ -55,14 +55,14 @@ export const menuItems: MenuItem[] = [
     children: [
       { key: 'board-notice', label: '공지사항' },
       { key: 'board-faq', label: 'FAQ' },
-      { key: 'board-knowledge', label: '법률 백과사전전' },
+      { key: 'board-legalDictionary', label: '법률 백과사전전' },
     ],
   },
   {
     key: 'ad',
     label: '광고 관리',
     children: [
-      { key: 'ad-lawyer', label: '로펌 광고' },
+      { key: 'ad-lawfirm', label: '로펌 광고' },
       { key: 'ad-banner', label: '배너 광고' },
       { key: 'ad-lawyer', label: '변호사 광고' },
     ],

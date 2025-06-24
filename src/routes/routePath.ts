@@ -24,9 +24,10 @@ export const ROUTE_PATH = {
   // 게시판
   BOARD_NOTICE: '/board-notice',
   BOARD_FAQ: '/board-faq',
-  BOARD_KNOWLEDGE: '/board-knowledge',
+  BOARD_LEGAL_DICTIONARY: '/board-legalDictionary',
 
   // 광고 관리
+  AD_LAWFIRM: '/ad-lawfirm',
   AD_LAWYER: '/ad-lawyer',
   AD_BANNER: '/ad-banner',
 
