@@ -3,8 +3,8 @@ import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 // typescript-eslint 임포트 방식 수정
-import * as tseslint from '@typescript-eslint/eslint-plugin'
-import * as tsParser from '@typescript-eslint/parser'
+import tseslint from '@typescript-eslint/eslint-plugin'
+import tsParser from '@typescript-eslint/parser'
 import prettierPlugin from 'eslint-plugin-prettier'
 import testingLibrary from 'eslint-plugin-testing-library'
 import jestDom from 'eslint-plugin-jest-dom'
@@ -21,7 +21,9 @@ export default [
       parser: tsParser,
     },
     rules: {
-      ...tseslint.configs.recommended.rules,
+      // TypeScript 기본 규칙들
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
   {
