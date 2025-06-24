@@ -1,0 +1,195 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/colors' as *;
+
+/* SUIT 웹폰트 */
+@import url('https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css');
+
+body {
+  font-family: 'SUIT', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $text-color-primary;
+}
+
+/* 제목 스타일 */
+h1,
+.h1 {
+  font-size: 1.875rem;
+  font-weight: $font-weight-extra-bold;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+h2,
+.h2 {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-extra-bold;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+h3,
+.h3 {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-extra-bold;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+h4,
+.h4 {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-extra-bold;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+h5,
+.h5 {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  margin-bottom: $spacing-sm;
+}
+
+h6,
+.h6 {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  margin-bottom: $spacing-sm;
+}
+
+/* 단락 스타일 */
+p {
+  margin-bottom: $spacing-md;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* 디자인 시스템 폰트 클레스 */
+.title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-extra-bold;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+.sub-title-18 {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-extra-bold;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+.sub-title-16 {
+  font-size: $font-size-base;
+  font-weight: $font-weight-extra-bold;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+.sub-title-15 {
+  font-size: 0.9375rem;
+  font-weight: $font-weight-extra-bold;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+.body1-14 {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-extra-bold;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+.body1-13 {
+  font-size: 0.8125rem;
+  font-weight: $font-weight-extra-bold;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+.caption1-12 {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-extra-bold;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+.caption2-11 {
+  font-size: 0.6875rem;
+  font-weight: $font-weight-extra-bold;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+.caption3-10 {
+  font-size: 0.625rem;
+  font-weight: $font-weight-extra-bold;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+.advertisement-mark {
+  font-size: 0.5rem;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-tight;
+  letter-spacing: 0;
+}
+
+/* 텍스트 변형 클래스 */
+.text-xs {
+  font-size: $font-size-xs;
+}
+.text-sm {
+  font-size: $font-size-sm;
+}
+.text-md {
+  font-size: $font-size-md;
+}
+.text-lg {
+  font-size: $font-size-lg;
+}
+.text-xl {
+  font-size: $font-size-xl;
+}
+
+.text-light {
+  font-weight: $font-weight-light;
+}
+.text-regular {
+  font-weight: $font-weight-regular;
+}
+.text-medium {
+  font-weight: $font-weight-medium;
+}
+.text-semibold {
+  font-weight: $font-weight-semibold;
+}
+.text-bold {
+  font-weight: $font-weight-bold;
+}
+
+.text-primary {
+  color: $text-color-primary;
+}
+.text-secondary {
+  color: $text-color-secondary;
+}
+.text-tertiary {
+  color: $text-color-tertiary;
+}
+.text-disabled {
+  color: $text-color-disabled;
+}
+
+/* 링크 스타일 */
+a {
+  color: $color-primary-500;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $color-primary-600;
+  }
+}

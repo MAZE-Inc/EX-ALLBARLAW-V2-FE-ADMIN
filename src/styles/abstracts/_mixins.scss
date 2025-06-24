@@ -1,0 +1,79 @@
+@use 'variables' as *;
+@use 'colors' as *;
+@use 'breakpoints' as *;
+// 반응형 디자인을 위한 믹스인
+
+@mixin breakpoint($point) {
+  @if $point == 'mobile' or $point == $breakpoint-mobile {
+    @media (min-width: $breakpoint-mobile) {
+      @content;
+    }
+  } @else if $point == 'tablet' or $point == $breakpoint-tablet {
+    @media (min-width: $breakpoint-tablet) {
+      @content;
+    }
+  } @else if $point == 'laptop' or $point == $breakpoint-laptop {
+    @media (min-width: $breakpoint-laptop) {
+      @content;
+    }
+  } @else if $point == 'desktop' or $point == $breakpoint-desktop {
+    @media (min-width: $breakpoint-desktop) {
+      @content;
+    }
+  } @else if $point == 'wide' or $point == $breakpoint-wide {
+    @media (min-width: $breakpoint-wide) {
+      @content;
+    }
+  }
+}
+// 글꼴 크기 설정 믹스인
+@mixin font-size($size, $weight: null) {
+  @if $size == xs {
+    font-size: $font-size-xs;
+  } @else if $size == sm {
+    font-size: $font-size-sm;
+  } @else if $size == md {
+    font-size: $font-size-md;
+  } @else if $size == lg {
+    font-size: $font-size-lg;
+  } @else if $size == xl {
+    font-size: $font-size-xl;
+  } @else if $size == xxl {
+    font-size: $font-size-xxl;
+  } @else if $size == xxxl {
+    font-size: $font-size-xxxl;
+  }
+
+  @if $weight {
+    font-weight: $weight;
+  }
+}
+
+// Flex 설정 믹스인
+@mixin flex($direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  flex-wrap: $wrap;
+}
+
+// 그림자 효과 믹스인
+@mixin shadow($level: 1) {
+  @if $level == 1 {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  } @else if $level == 2 {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+  } @else if $level == 3 {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+  } @else if $level == 4 {
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.05);
+  }
+}
+
+// 트랜지션 믹스인
+@mixin transition($properties: all, $duration: 0.3s, $timing: ease) {
+  transition-property: $properties;
+  transition-duration: $duration;
+  transition-timing-function: $timing;
+}

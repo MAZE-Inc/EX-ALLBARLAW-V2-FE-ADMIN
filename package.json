@@ -1,5 +1,5 @@
 {
-  "name": "allbarlaw-v2",
+  "name": "allbarlaw-v2-admin",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,6 +11,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^6.0.0",
+    "antd": "^5.26.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.0",

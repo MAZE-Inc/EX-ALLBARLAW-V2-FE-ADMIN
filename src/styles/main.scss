@@ -1,0 +1,11 @@
+// 추상 레이어 (변수, 함수, 믹스인)
+@use './abstracts/variables';
+@use './abstracts/colors';
+@use './abstracts/mixins';
+@use './abstracts/functions';
+@use './abstracts/breakpoints' as *;
+
+// 베이스 레이어 (리셋, 타이포그래피, 기본 스타일)
+@use './base/reset';
+@use './base/typography';
+@use './base/base';

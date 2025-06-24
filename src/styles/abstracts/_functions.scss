@@ -1,0 +1,4 @@
+// _functions.scss
+@function responsive-size($base-size) {
+  @return calc(#{$base-size}px * (100vw / 1920px));
+}

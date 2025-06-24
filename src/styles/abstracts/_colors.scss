@@ -1,0 +1,82 @@
+// key
+$color-green-01: #20bf62;
+$color-green-02: #23735d;
+$color-green-hover: #20bf62;
+
+// text
+$color-text-black: #333333;
+$color-text-index: #6e6e6e;
+$color-text-caption: #999999;
+
+// Icon
+$color-icon-black: #333333;
+$color-icon-gray: #dddddd;
+$color-icon-gray-50: #bebebe;
+$color-icon-darkgray: #6a6a6a;
+$color-icon-green: #20bf62;
+$color-icon-puregreen: #4cd65f;
+$color-icon-lightgreen: #c3e85b;
+$color-icon-darkgreen: #23735d;
+
+//Bg
+$color-bg-black: #000000;
+$color-bg-gray-01: #eeeeee;
+$color-bg-gray-02: #f6f7fb;
+$color-bg-gray-03: #f7f7f7;
+$color-bg-gray-disable: #c7c7c7;
+$color-bg-gradient-01: #c5e1d1;
+
+//Color
+$color-white: #ffffff;
+$color-02-orange: #e3872c;
+$color-03-sky: #2cd1e3;
+$color-04-blue: #2c69e3;
+$color-07-black: #504e4f;
+
+//line
+$color-line-divider: #f6f6f6;
+$color-line-borderbox: #d9d9d9;
+
+// 주요 컬러
+$color-primary-50: #e6f1ff;
+$color-primary-100: #b3d1ff;
+$color-primary-200: #80b2ff;
+$color-primary-300: #4d92ff;
+$color-primary-400: #1a73ff;
+$color-primary-500: #0059e6;
+$color-primary-600: #0047b8;
+$color-primary-700: #00358a;
+$color-primary-800: #00235c;
+$color-primary-900: #00122e;
+
+// 중립 컬러
+$color-neutral-50: #f9fafb;
+$color-neutral-100: #f3f4f6;
+$color-neutral-200: #e5e7eb;
+$color-neutral-300: #d1d5db;
+$color-neutral-400: #9ca3af;
+$color-neutral-500: #6b7280;
+$color-neutral-600: #4b5563;
+$color-neutral-700: #374151;
+$color-neutral-800: #1f2937;
+$color-neutral-900: #111827;
+
+// 기능 컬러
+$color-success: #10b981;
+$color-warning: #f59e0b;
+$color-error: #ff0000;
+$color-info: #3b82f6;
+
+// 시맨틱 컬러 (용도에 따른 컬러)
+$text-color-primary: $color-neutral-900;
+$text-color-secondary: $color-neutral-700;
+$text-color-tertiary: $color-neutral-500;
+$text-color-disabled: $color-neutral-400;
+
+$background-color-primary: #ffffff;
+$background-color-secondary: $color-neutral-50;
+$background-color-tertiary: $color-neutral-100;
+
+$border-color-light: $color-neutral-200;
+$border-color-medium: $color-neutral-300;
+$border-color-dark: $color-neutral-400;

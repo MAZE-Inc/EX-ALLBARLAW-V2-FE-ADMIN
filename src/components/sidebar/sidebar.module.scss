@@ -1,0 +1,19 @@
+/* Ant Design 메뉴 화살표 아이콘 숨기기 */
+.sidebar {
+  height: 100vh; // 전체 화면 높이
+  overflow-y: auto; // 세로 스크롤만 허용
+  width: 256px; // 고정 너비
+  flex-shrink: 0; // 크기 축소 방지
+
+  // 스크롤바 숨기기 (모든 브라우저 지원)
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE/Edge
+
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
+  }
+
+  :global(.ant-menu-submenu-arrow) {
+    display: none !important;
+  }
+}

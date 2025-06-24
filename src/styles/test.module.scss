@@ -1,0 +1,11 @@
+.container {
+  background-color: $color-bg-gradient-01;
+}
+
+.mobile-only {
+  display: block;
+
+  @include breakpoint($breakpoint-mobile) {
+    display: none;
+  }
+}
