@@ -20,7 +20,7 @@
 
   // 메뉴 활성화 색상 커스터마이징
   :global(.ant-menu-item-selected) {
-    background-color: rgba(32, 191, 98, 0.1); // 보라색
+    background-color: rgba(32, 191, 98, 0.1);
     color: $color-green-01;
 
     &::after {

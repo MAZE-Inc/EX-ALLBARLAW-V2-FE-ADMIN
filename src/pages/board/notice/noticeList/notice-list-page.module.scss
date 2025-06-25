@@ -1,0 +1,30 @@
+.noticeListPage {
+}
+
+.noticeListPage__searchHeader {
+  :global {
+    // 드롭다운 트리거 버튼
+    .ant-dropdown-trigger.ant-btn {
+      width: 150px !important;
+
+      &:hover {
+        cursor: default !important;
+        background-color: inherit !important;
+        border-color: #f0f0f0 !important;
+        color: inherit !important;
+        box-shadow: none !important;
+      }
+
+      &:focus,
+      &:active {
+        border-color: #20bf62 !important;
+        color: #20bf62 !important;
+      }
+    }
+
+    .ant-space {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+}
