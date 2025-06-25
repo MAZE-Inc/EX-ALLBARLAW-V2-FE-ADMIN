@@ -17,6 +17,10 @@ const NoticeListPage = () => {
         selectedItem={selectedItem}
         onSelectionChange={handleSelectionChange}
         placeholder='분류 선택'
+        buttonText='공지 등록하기'
+        onButtonClick={() => {
+          console.log('공지 등록하기')
+        }}
         menuItems={noticeMenuItems}
         className={styles.noticeListPage__searchHeader}
       />

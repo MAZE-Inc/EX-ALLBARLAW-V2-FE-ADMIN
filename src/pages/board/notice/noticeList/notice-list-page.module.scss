@@ -5,20 +5,39 @@
   :global {
     // 드롭다운 트리거 버튼
     .ant-dropdown-trigger.ant-btn {
-      width: 150px !important;
+      width: 150px;
+      font-size: 16px;
+      padding: 16px;
 
       &:hover {
-        cursor: default !important;
-        background-color: inherit !important;
-        border-color: #f0f0f0 !important;
-        color: inherit !important;
-        box-shadow: none !important;
+        cursor: default;
+        background-color: inherit;
+        border-color: #f0f0f0;
+        color: inherit;
+        box-shadow: none;
       }
 
       &:focus,
       &:active {
-        border-color: #20bf62 !important;
-        color: #20bf62 !important;
+        border-color: #20bf62;
+        color: #20bf62;
+      }
+    }
+
+    // "공지 등록하기" 버튼만 선택 (Input.Search 버튼 제외)
+    .ant-btn:not(.ant-dropdown-trigger):not(.ant-input-search-button) {
+      background-color: $color-green-02;
+      color: white;
+      border: none;
+      font-size: 16px;
+      padding: 10px 20px;
+
+      &:hover {
+        transform: none;
+        outline: none;
+        box-shadow: none;
+        border: none;
+        background-color: $color-green-02;
       }
     }
 

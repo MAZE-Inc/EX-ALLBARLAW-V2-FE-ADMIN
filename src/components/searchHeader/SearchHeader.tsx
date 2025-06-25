@@ -12,6 +12,8 @@ interface SearchHeaderProps {
   menuItems: MenuProps['items']
   className?: string
   style?: CSSProperties
+  buttonText?: string
+  onButtonClick?: () => void
 }
 
 const SearchHeader = ({
@@ -21,6 +23,8 @@ const SearchHeader = ({
   menuItems,
   className,
   style,
+  buttonText,
+  onButtonClick,
 }: SearchHeaderProps) => {
   const items = menuItems || []
 
@@ -64,7 +68,7 @@ const SearchHeader = ({
         </Dropdown>
         <Input.Search placeholder='Filled' variant='filled' />
       </div>
-      <Button>공지 등록하기</Button>
+      {buttonText && <Button onClick={onButtonClick}>{buttonText}</Button>}
     </header>
   )
 }
