@@ -2,70 +2,17 @@
 }
 
 .noticeListPage__searchHeader {
-  padding: 1.5rem;
+  .noticeListPage__searchHeader__button {
+    background-color: $color-green-02;
+    color: white;
+    border: none;
+    font-size: 16px;
+    padding: 10px 20px;
 
-  :global {
-    // 드롭다운 트리거 버튼
-    .ant-dropdown-trigger.ant-btn {
-      width: 150px;
-      font-size: 16px;
-      padding: 16px;
-
-      &:hover {
-        cursor: default;
-        background-color: inherit;
-        border-color: $color-line-borderbox-dark;
-        color: inherit;
-        box-shadow: none;
-      }
-
-      &:focus,
-      &:active {
-        border-color: #20bf62;
-        color: #20bf62;
-      }
-    }
-
-    // "공지 등록하기" 버튼만 선택 (Input.Search 버튼 제외)
-    .ant-btn:not(.ant-dropdown-trigger):not(.ant-input-search-button) {
-      background-color: $color-green-02;
-      color: white;
-      border: none;
-      font-size: 16px;
-      padding: 10px 20px;
-
-      &:hover {
-        transform: none;
-        outline: none;
-        box-shadow: none;
-        border: none;
-        background-color: $color-green-02;
-      }
-    }
-
-    // 검색 input 필드
-    .ant-input {
-      border-radius: 8px;
-      font-size: 16px;
-
-      &:focus {
-        border: 1px solid $color-bg-gray-04;
-        background-color: $color-bg-gray-04;
-        box-shadow: none;
-        outline: none;
-      }
-    }
-
-    // 검색 input 안의 검색 버튼
-    .ant-input-search-button {
-      .anticon {
-        color: $color-green-02;
-      }
-    }
-
-    .ant-space {
-      width: 100%;
-      justify-content: space-between;
+    &:hover {
+      background-color: $color-green-02 !important;
+      color: white !important;
+      border: none !important;
     }
   }
 }

@@ -13,9 +13,9 @@ interface SearchHeaderProps {
   menuItems: MenuProps['items']
   className?: string
   style?: CSSProperties
-  buttonText?: string
-  onButtonClick?: () => void
+  buttonComponent?: React.ReactNode
   onSearch?: (value: string) => void
+  title?: string
 }
 
 const SearchHeader = ({
@@ -26,8 +26,8 @@ const SearchHeader = ({
   menuItems,
   className,
   style,
-  buttonText,
-  onButtonClick,
+  title,
+  buttonComponent,
   onSearch,
 }: SearchHeaderProps) => {
   const [searchValue, setSearchValue] = useState('')
@@ -66,25 +66,30 @@ const SearchHeader = ({
 
   return (
     <header className={`${styles.searchHeader} ${className || ''}`} style={style}>
-      <div className={styles.searchHeader__container}>
-        <Dropdown menu={menuProps} trigger={['click']}>
-          <Button className={styles.searchHeader__container__button}>
-            <Space>
-              {selectedItemText}
-              <DownOutlined style={{ minWidth: '16px' }} />
-            </Space>
-          </Button>
-        </Dropdown>
-        <Input.Search
-          placeholder={searchPlaceholder}
-          variant='filled'
-          onChange={handleInputChange}
-          value={searchValue}
-          onSearch={handleSearch}
-          onPressEnter={() => handleSearch(searchValue)}
-        />
-      </div>
-      {buttonText && <Button onClick={onButtonClick}>{buttonText}</Button>}
+      {menuItems && (
+        <div className={styles.searchHeader__container}>
+          {title && <h3 className={styles.searchHeader__container__title}>{title}</h3>}
+          <div className={styles.searchHeader__controls}>
+            <Dropdown menu={menuProps} trigger={['click']}>
+              <Button className={styles.searchHeader__container__button}>
+                <Space>
+                  {selectedItemText}
+                  <DownOutlined style={{ minWidth: '16px' }} />
+                </Space>
+              </Button>
+            </Dropdown>
+            <Input.Search
+              placeholder={searchPlaceholder}
+              variant='filled'
+              onChange={handleInputChange}
+              value={searchValue}
+              onSearch={handleSearch}
+              onPressEnter={() => handleSearch(searchValue)}
+            />
+          </div>
+        </div>
+      )}
+      {buttonComponent && <div>{buttonComponent}</div>}
     </header>
   )
 }

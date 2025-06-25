@@ -74,14 +74,16 @@ const router = createBrowserRouter([
       {
         path: ROUTE_PATH.BOARD_NOTICE_LIST,
         element: <NoticeListPage />,
-      },
-      {
-        path: `${ROUTE_PATH.BOARD_NOTICE_LIST}/:noticeId`,
-        element: <NoticeDetailPage />,
-      },
-      {
-        path: ROUTE_PATH.BOARD_NOTICE_EDIT,
-        element: <NoticeEditPage />,
+        children: [
+          {
+            path: ':noticeId',
+            element: <NoticeDetailPage />,
+          },
+          {
+            path: ROUTE_PATH.BOARD_NOTICE_EDIT,
+            element: <NoticeEditPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.BOARD_FAQ,

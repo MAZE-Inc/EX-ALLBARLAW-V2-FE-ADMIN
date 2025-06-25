@@ -23,7 +23,8 @@ export const ROUTE_PATH = {
 
   // 게시판
   BOARD_NOTICE_LIST: '/board-notice-list',
-  BOARD_NOTICE_EDIT: '/board-notice-edit',
+  BOARD_NOTICE_EDIT: 'edit',
+
   BOARD_FAQ: '/board-faq',
   BOARD_LEGAL_DICTIONARY: '/board-legalDictionary',
 
