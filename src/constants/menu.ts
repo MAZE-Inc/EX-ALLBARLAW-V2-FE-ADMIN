@@ -26,8 +26,8 @@ export const menuItems: MenuItem[] = [
     key: 'member',
     label: '회원관리',
     children: [
-      { key: 'member', label: '일반 회원' },
-      { key: 'lawyer-member', label: '변호사 회원' },
+      { key: 'member-member', label: '일반 회원' },
+      { key: 'member-lawyer', label: '변호사 회원' },
     ],
   },
   {

@@ -7,15 +7,15 @@ import { ROUTE_PATH } from '@/routes/routePath'
 
 const NoticeListPage = () => {
   const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>(null)
+  const [_searchValue, setSearchValue] = useState('')
   const navigate = useNavigate()
 
   const handleSelectionChange = (item: SearchHeaderMenuItemType) => {
-    console.log('선택된 아이템:', item)
     setSelectedItem(item)
   }
 
   const handleSearch = (value: string) => {
-    console.log('검색 값:', value)
+    setSearchValue(value)
   }
 
   const handleNavigateToNoticeWrite = () => navigate(ROUTE_PATH.BOARD_NOTICE_EDIT)

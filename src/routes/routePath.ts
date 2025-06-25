@@ -7,8 +7,8 @@ export const ROUTE_PATH = {
   CATEGORY_MANAGEMENT: '/category-management',
 
   // 회원관리
-  MEMBER: '/member',
-  LAWYER_MEMBER: '/lawyer-member',
+  MEMBER: '/member-member',
+  LAWYER_MEMBER: '/member-lawyer',
 
   // 변호사 관리
   LAWYER_MANAGEMENT: '/lawyer-management',
