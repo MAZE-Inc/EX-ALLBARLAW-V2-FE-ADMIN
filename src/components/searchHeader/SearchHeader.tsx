@@ -1,6 +1,6 @@
 import { DownOutlined } from '@ant-design/icons'
 import { Button, Dropdown, Input, MenuProps, message, Space } from 'antd'
-import { CSSProperties } from 'react'
+import React, { CSSProperties, useState } from 'react'
 import styles from './search-header.module.scss'
 
 export type SearchHeaderMenuItemType = NonNullable<MenuProps['items']>[number]
@@ -9,23 +9,28 @@ interface SearchHeaderProps {
   selectedItem: SearchHeaderMenuItemType | null
   onSelectionChange: (item: SearchHeaderMenuItemType) => void
   placeholder?: string
+  searchPlaceholder?: string
   menuItems: MenuProps['items']
   className?: string
   style?: CSSProperties
   buttonText?: string
   onButtonClick?: () => void
+  onSearch?: (value: string) => void
 }
 
 const SearchHeader = ({
   selectedItem,
   onSelectionChange,
   placeholder = 'Button',
+  searchPlaceholder = 'Search',
   menuItems,
   className,
   style,
   buttonText,
   onButtonClick,
+  onSearch,
 }: SearchHeaderProps) => {
+  const [searchValue, setSearchValue] = useState('')
   const items = menuItems || []
 
   const getDisplayText = () => {
@@ -50,6 +55,10 @@ const SearchHeader = ({
     }
   }
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchValue(e.target.value)
+
+  const handleSearch = (value: string) => onSearch?.(value)
+
   const menuProps = {
     items,
     onClick: handleMenuClick,
@@ -66,7 +75,14 @@ const SearchHeader = ({
             </Space>
           </Button>
         </Dropdown>
-        <Input.Search placeholder='Filled' variant='filled' />
+        <Input.Search
+          placeholder={searchPlaceholder}
+          variant='filled'
+          onChange={handleInputChange}
+          value={searchValue}
+          onSearch={handleSearch}
+          onPressEnter={() => handleSearch(searchValue)}
+        />
       </div>
       {buttonText && <Button onClick={onButtonClick}>{buttonText}</Button>}
     </header>

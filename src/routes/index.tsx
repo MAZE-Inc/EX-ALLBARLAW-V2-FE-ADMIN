@@ -80,7 +80,7 @@ const router = createBrowserRouter([
         element: <NoticeDetailPage />,
       },
       {
-        path: `${ROUTE_PATH.BOARD_NOTICE_EDIT}`,
+        path: ROUTE_PATH.BOARD_NOTICE_EDIT,
         element: <NoticeEditPage />,
       },
       {

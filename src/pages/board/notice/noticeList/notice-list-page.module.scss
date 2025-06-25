@@ -2,6 +2,8 @@
 }
 
 .noticeListPage__searchHeader {
+  padding: 1.5rem;
+
   :global {
     // 드롭다운 트리거 버튼
     .ant-dropdown-trigger.ant-btn {
@@ -12,7 +14,7 @@
       &:hover {
         cursor: default;
         background-color: inherit;
-        border-color: #f0f0f0;
+        border-color: $color-line-borderbox-dark;
         color: inherit;
         box-shadow: none;
       }
@@ -38,6 +40,26 @@
         box-shadow: none;
         border: none;
         background-color: $color-green-02;
+      }
+    }
+
+    // 검색 input 필드
+    .ant-input {
+      border-radius: 8px;
+      font-size: 16px;
+
+      &:focus {
+        border: 1px solid $color-bg-gray-04;
+        background-color: $color-bg-gray-04;
+        box-shadow: none;
+        outline: none;
+      }
+    }
+
+    // 검색 input 안의 검색 버튼
+    .ant-input-search-button {
+      .anticon {
+        color: $color-green-02;
       }
     }
 
