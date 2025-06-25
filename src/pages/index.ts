@@ -15,12 +15,11 @@ import AdBannerPage from './ad/adBanner/AdBanner'
 import StatisticsPage from './statistics/statistics/StatisticsPage'
 import ChatListPage from './chat/chatList/ChatListPage'
 import LegalDictionaryPage from './board/legalDictionary/LegalDictionaryPage'
-import NoticeListPage from './board/notice/noticeList/NoticeListPage'
 import NoticeDetailPage from './board/notice/noticeDetail/NoticeDetailPage'
 import NoticeEditPage from './board/notice/noticeEdit/NoticeEditPage'
+import NoticeListPage from './board/notice/noticeList/NoticeListPage'
 
 export {
-  NoticeListPage,
   FAQPage,
   LegalDictionary,
   AdminManagementPage,
@@ -40,4 +39,5 @@ export {
   LegalDictionaryPage,
   NoticeDetailPage,
   NoticeEditPage,
+  NoticeListPage,
 }

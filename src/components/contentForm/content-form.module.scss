@@ -1,0 +1,125 @@
+.contentForm {
+  background-color: #fff;
+
+  .formContainer {
+    width: 100%;
+  }
+
+  .formRow {
+    // 기본 Row 스타일
+  }
+
+  .labelCol {
+    // 라벨 컬럼 (span={3})
+  }
+
+  .inputCol {
+    // 입력 컬럼 (span={21})
+  }
+
+  .label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .titleInput {
+    // 제목 입력 필드 호버/포커스 커스터마이징
+    &:hover {
+      border-color: $color-green-02 !important;
+    }
+
+    &:focus {
+      border-color: $color-green-02 !important;
+      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.12) !important;
+    }
+
+    &.ant-input:focus {
+      border-color: $color-green-02 !important;
+      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.12) !important;
+    }
+  }
+
+  .radioGroup {
+    width: 100%;
+
+    // 라디오 버튼 활성 상태 커스터마이징
+    :global(.ant-radio-checked .ant-radio-inner) {
+      background-color: $color-green-02;
+      border-color: $color-green-02;
+    }
+
+    :global(.ant-radio:hover .ant-radio-inner) {
+      border-color: $color-green-02;
+    }
+
+    :global(.ant-radio-input:focus + .ant-radio-inner) {
+      border-color: $color-green-02;
+      box-shadow: 0 0 0 3px rgba(82, 196, 26, 0.12);
+    }
+
+    :global(.ant-radio-checked::after) {
+      border-color: $color-green-02;
+    }
+  }
+
+  .radioContainer {
+    // 라디오 버튼 컨테이너
+  }
+
+  .editorContainer {
+    // 에디터 전체 컨테이너에 포커스 효과 적용
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    transition: border-color 0.2s ease;
+
+    // 전체 에디터 컨테이너 호버 효과
+    &:hover {
+      border-color: $color-green-02;
+    }
+
+    // 전체 에디터 컨테이너 포커스 효과 (내부에 포커스가 있을 때)
+    &:focus-within {
+      border-color: $color-green-02;
+      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.12);
+    }
+
+    // 내부 에디터의 기본 테두리 제거하여 외부 테두리만 보이게
+    :global(.ql-toolbar.ql-snow) {
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      border-bottom: 1px solid #ccc;
+      border-radius: 0;
+    }
+
+    :global(.ql-container.ql-snow) {
+      border: none;
+      border-radius: 0;
+    }
+
+    // 내부 에디터 포커스 시 기본 효과 제거
+    :global(.ql-editor:focus) {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  .buttonContainer {
+    text-align: right;
+  }
+
+  .buttonSpace {
+    // 버튼 간격
+  }
+
+  .cancelButton {
+    // 취소 버튼
+  }
+
+  .saveButton {
+    background-color: $color-green-02;
+    border-color: $color-green-02;
+  }
+}

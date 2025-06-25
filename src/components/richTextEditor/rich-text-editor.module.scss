@@ -1,0 +1,36 @@
+.richTextEditor {
+  // 기본 스타일링
+
+  // Quill 에디터 커스터마이징
+  :global(.ql-toolbar) {
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+  }
+
+  :global(.ql-container) {
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  // 포커스 상태 스타일링
+  :global(.ql-toolbar:hover),
+  :global(.ql-container:focus-within) {
+    border-color: #52c41a;
+  }
+
+  // 읽기 전용 모드 스타일링
+  &.readonly {
+    :global(.ql-container) {
+      border: none;
+      padding: 0;
+    }
+  }
+}
