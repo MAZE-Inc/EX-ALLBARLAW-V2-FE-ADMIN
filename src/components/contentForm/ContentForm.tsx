@@ -34,6 +34,7 @@ interface ContentFormProps {
   showRadio?: boolean
 
   className?: string
+  readOnly?: boolean
 }
 
 const ContentForm = ({
@@ -54,12 +55,15 @@ const ContentForm = ({
   radioOptions = [],
   showRadio = false,
   className,
+  readOnly = false,
 }: ContentFormProps) => {
   const [title, setTitle] = useState(initialTitle)
   const [content, setContent] = useState(initialContent)
   const [radioValue, setRadioValue] = useState(initialRadioValue)
 
   const handleSave = () => {
+    if (readOnly) return // 읽기 전용일 때는 저장 불가
+
     const data: { title: string; content: string; radioValue?: string } = {
       title,
       content,
@@ -87,8 +91,9 @@ const ContentForm = ({
             <Col span={21} className={styles.inputCol}>
               <Radio.Group
                 value={radioValue}
-                onChange={e => setRadioValue(e.target.value)}
+                onChange={readOnly ? undefined : e => setRadioValue(e.target.value)}
                 className={styles.radioGroup}
+                disabled={readOnly}
               >
                 <Space size='large' className={styles.radioContainer}>
                   {radioOptions.map(option => (
@@ -111,9 +116,10 @@ const ContentForm = ({
             <Input
               placeholder={titlePlaceholder}
               value={title}
-              onChange={e => setTitle(e.target.value)}
+              onChange={readOnly ? undefined : e => setTitle(e.target.value)}
               size='large'
               className={styles.titleInput}
+              readOnly={readOnly}
             />
           </Col>
         </Row>
@@ -124,12 +130,13 @@ const ContentForm = ({
             <label className={styles.label}>{contentLabel}</label>
           </Col>
           <Col span={21} className={styles.inputCol}>
-            <div className={styles.editorContainer}>
+            <div className={`${styles.editorContainer} ${readOnly ? styles.readOnly : ''}`}>
               <RichTextEditor
                 value={content}
-                onChange={setContent}
+                onChange={readOnly ? () => {} : setContent}
                 placeholder={contentPlaceholder}
                 height={editorHeight}
+                readOnly={readOnly}
               />
             </div>
           </Col>
@@ -141,9 +148,11 @@ const ContentForm = ({
             <Button onClick={handleCancel} disabled={loading} className={styles.cancelButton}>
               {cancelButtonText}
             </Button>
-            <Button type='primary' onClick={handleSave} loading={loading} className={styles.saveButton}>
-              {saveButtonText}
-            </Button>
+            {!readOnly && (
+              <Button type='primary' onClick={handleSave} loading={loading} className={styles.saveButton}>
+                {saveButtonText}
+              </Button>
+            )}
           </Space>
         </div>
       </Space>

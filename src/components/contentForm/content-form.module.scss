@@ -39,6 +39,25 @@
       border-color: $color-green-02 !important;
       box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.12) !important;
     }
+
+    // readOnly 상태일 때 호버/포커스 효과 제거
+    &[readonly] {
+      cursor: default !important;
+
+      &:hover {
+        border-color: #d9d9d9 !important;
+      }
+
+      &:focus {
+        border-color: #d9d9d9 !important;
+        box-shadow: none !important;
+      }
+
+      &.ant-input:focus {
+        border-color: #d9d9d9 !important;
+        box-shadow: none !important;
+      }
+    }
   }
 
   .radioGroup {
@@ -62,6 +81,21 @@
     :global(.ant-radio-checked::after) {
       border-color: $color-green-02;
     }
+
+    // readOnly(disabled) 상태일 때 호버 효과 제거
+    &:global(.ant-radio-group-disabled) {
+      :global(.ant-radio:hover .ant-radio-inner) {
+        border-color: #d9d9d9 !important;
+      }
+
+      :global(.ant-radio-input:focus + .ant-radio-inner) {
+        box-shadow: none !important;
+      }
+
+      :global(.ant-radio) {
+        cursor: default !important;
+      }
+    }
   }
 
   .radioContainer {
@@ -83,6 +117,35 @@
     &:focus-within {
       border-color: $color-green-02;
       box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.12);
+    }
+
+    // readOnly 상태일 때 에디터 호버/포커스 효과 제거
+    &.readOnly {
+      cursor: default;
+
+      &:hover {
+        border-color: #d9d9d9 !important;
+      }
+
+      &:focus-within {
+        border-color: #d9d9d9 !important;
+        box-shadow: none !important;
+      }
+
+      // readOnly 에디터 내부 스타일
+      :global(.ql-toolbar.ql-snow) {
+        background-color: #fafafa;
+        pointer-events: none;
+      }
+
+      :global(.ql-editor) {
+        cursor: default !important;
+      }
+
+      :global(.ql-editor:focus) {
+        outline: none !important;
+        box-shadow: none !important;
+      }
     }
 
     // 내부 에디터의 기본 테두리 제거하여 외부 테두리만 보이게

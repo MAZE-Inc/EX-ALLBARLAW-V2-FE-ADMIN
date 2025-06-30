@@ -1,5 +1,6 @@
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import { useEffect } from 'react'
 import styles from './rich-text-editor.module.scss'
 
 interface RichTextEditorProps {
@@ -21,6 +22,23 @@ const RichTextEditor = ({
   readOnly = false,
   theme = 'snow',
 }: RichTextEditorProps) => {
+  // 개발 환경에서만 deprecation 경고 필터링
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      const originalWarn = console.warn
+      console.warn = (...args) => {
+        if (args[0]?.includes?.('DOMNodeInserted')) {
+          return // DOMNodeInserted 경고 무시
+        }
+        originalWarn.apply(console, args)
+      }
+
+      return () => {
+        console.warn = originalWarn
+      }
+    }
+  }, [])
+
   // Quill 에디터 툴바 설정
   const modules = {
     toolbar: readOnly
