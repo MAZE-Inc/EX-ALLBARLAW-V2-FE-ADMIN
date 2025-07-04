@@ -25,6 +25,7 @@ import {
   NoticeListPage,
 } from '@/pages'
 import NoticeLayout from '@/pages/layout/noticeLayout/NoticeListPage'
+import LoginPage from '@/pages/login/LoginPage'
 
 const router = createBrowserRouter([
   {
@@ -119,6 +120,10 @@ const router = createBrowserRouter([
         element: <StatisticsPage />,
       },
     ],
+  },
+  {
+    path: ROUTE_PATH.LOGIN,
+    element: <LoginPage />,
   },
 ])
 

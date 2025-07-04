@@ -1,4 +1,7 @@
 export const ROUTE_PATH = {
+  // 로그인
+  LOGIN: '/login',
+
   // 관리자 계정
   ADMIN_MANAGEMENT: '/admin-management',
   ADMIN_REGISTER: '/admin-register',

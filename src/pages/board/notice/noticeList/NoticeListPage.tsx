@@ -1,6 +1,6 @@
 import { NoticeType } from '@/types/noticeTypes'
 import { Table, TableProps } from 'antd'
-import styles from './notice-list.module.scss'
+import styles from './noticeList.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
 
