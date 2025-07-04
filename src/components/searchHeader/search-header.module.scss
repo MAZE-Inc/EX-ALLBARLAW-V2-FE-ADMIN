@@ -1,0 +1,81 @@
+.searchHeader {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 10px;
+  padding: 1.5rem;
+  position: relative;
+
+  // 드롭다운 트리거 버튼 기본 스타일
+  :global(.ant-dropdown-trigger.ant-btn) {
+    width: 150px;
+    font-size: 16px;
+    padding: 16px;
+
+    &:hover {
+      cursor: default;
+      background-color: inherit;
+      border-color: #d9d9d9;
+      color: inherit;
+      box-shadow: none;
+    }
+
+    &:focus,
+    &:active {
+      border-color: #20bf62;
+      color: #20bf62;
+    }
+  }
+
+  // 검색 input 기본 스타일
+  :global(.ant-input) {
+    border-radius: 8px;
+    font-size: 16px;
+
+    &:focus {
+      border: 1px solid #f7f7f7;
+      background-color: #f7f7f7;
+      box-shadow: none;
+      outline: none;
+    }
+  }
+
+  // 검색 버튼 아이콘 기본 스타일
+  :global(.ant-input-search-button .anticon) {
+    color: #23735d;
+  }
+
+  // Space 컴포넌트 기본 스타일
+  :global(.ant-space) {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+.searchHeader__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+.searchHeader__container__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.searchHeader__controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.searchHeader__container__button {
+  svg {
+    min-width: 16px;
+  }
+}

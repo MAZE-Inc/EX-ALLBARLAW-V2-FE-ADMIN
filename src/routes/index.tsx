@@ -18,10 +18,13 @@ import {
   LawyerMemberPage,
   LegalDictionaryPage,
   MemberPage,
-  NoticePage,
+  NoticeDetailPage,
   StatisticsPage,
   VideoPage,
+  NoticeEditPage,
+  NoticeListPage,
 } from '@/pages'
+import NoticeLayout from '@/pages/layout/noticeLayout/NoticeListPage'
 
 const router = createBrowserRouter([
   {
@@ -71,7 +74,25 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.BOARD_NOTICE,
-        element: <NoticePage />,
+        element: <NoticeLayout />,
+        children: [
+          {
+            path: '',
+            element: <NoticeListPage />,
+          },
+          {
+            path: ':noticeId',
+            element: <NoticeDetailPage />,
+          },
+          {
+            path: ROUTE_PATH.BOARD_NOTICE_EDIT,
+            element: <NoticeEditPage />,
+          },
+          {
+            path: `${ROUTE_PATH.BOARD_NOTICE_EDIT}/:noticeId`,
+            element: <NoticeEditPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.BOARD_FAQ,

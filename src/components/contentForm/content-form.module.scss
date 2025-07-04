@@ -1,0 +1,188 @@
+.contentForm {
+  background-color: #fff;
+
+  .formContainer {
+    width: 100%;
+  }
+
+  .formRow {
+    // 기본 Row 스타일
+  }
+
+  .labelCol {
+    // 라벨 컬럼 (span={3})
+  }
+
+  .inputCol {
+    // 입력 컬럼 (span={21})
+  }
+
+  .label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .titleInput {
+    // 제목 입력 필드 호버/포커스 커스터마이징
+    &:hover {
+      border-color: $color-green-02 !important;
+    }
+
+    &:focus {
+      border-color: $color-green-02 !important;
+      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.12) !important;
+    }
+
+    &.ant-input:focus {
+      border-color: $color-green-02 !important;
+      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.12) !important;
+    }
+
+    // readOnly 상태일 때 호버/포커스 효과 제거
+    &[readonly] {
+      cursor: default !important;
+
+      &:hover {
+        border-color: #d9d9d9 !important;
+      }
+
+      &:focus {
+        border-color: #d9d9d9 !important;
+        box-shadow: none !important;
+      }
+
+      &.ant-input:focus {
+        border-color: #d9d9d9 !important;
+        box-shadow: none !important;
+      }
+    }
+  }
+
+  .radioGroup {
+    width: 100%;
+
+    // 라디오 버튼 활성 상태 커스터마이징
+    :global(.ant-radio-checked .ant-radio-inner) {
+      background-color: $color-green-02;
+      border-color: $color-green-02;
+    }
+
+    :global(.ant-radio:hover .ant-radio-inner) {
+      border-color: $color-green-02;
+    }
+
+    :global(.ant-radio-input:focus + .ant-radio-inner) {
+      border-color: $color-green-02;
+      box-shadow: 0 0 0 3px rgba(82, 196, 26, 0.12);
+    }
+
+    :global(.ant-radio-checked::after) {
+      border-color: $color-green-02;
+    }
+
+    // readOnly(disabled) 상태일 때 호버 효과 제거
+    &:global(.ant-radio-group-disabled) {
+      :global(.ant-radio:hover .ant-radio-inner) {
+        border-color: #d9d9d9 !important;
+      }
+
+      :global(.ant-radio-input:focus + .ant-radio-inner) {
+        box-shadow: none !important;
+      }
+
+      :global(.ant-radio) {
+        cursor: default !important;
+      }
+    }
+  }
+
+  .radioContainer {
+    // 라디오 버튼 컨테이너
+  }
+
+  .editorContainer {
+    // 에디터 전체 컨테이너에 포커스 효과 적용
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    transition: border-color 0.2s ease;
+
+    // 전체 에디터 컨테이너 호버 효과
+    &:hover {
+      border-color: $color-green-02;
+    }
+
+    // 전체 에디터 컨테이너 포커스 효과 (내부에 포커스가 있을 때)
+    &:focus-within {
+      border-color: $color-green-02;
+      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.12);
+    }
+
+    // readOnly 상태일 때 에디터 호버/포커스 효과 제거
+    &.readOnly {
+      cursor: default;
+
+      &:hover {
+        border-color: #d9d9d9 !important;
+      }
+
+      &:focus-within {
+        border-color: #d9d9d9 !important;
+        box-shadow: none !important;
+      }
+
+      // readOnly 에디터 내부 스타일
+      :global(.ql-toolbar.ql-snow) {
+        background-color: #fafafa;
+        pointer-events: none;
+      }
+
+      :global(.ql-editor) {
+        cursor: default !important;
+      }
+
+      :global(.ql-editor:focus) {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+    }
+
+    // 내부 에디터의 기본 테두리 제거하여 외부 테두리만 보이게
+    :global(.ql-toolbar.ql-snow) {
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      border-bottom: 1px solid #ccc;
+      border-radius: 0;
+    }
+
+    :global(.ql-container.ql-snow) {
+      border: none;
+      border-radius: 0;
+    }
+
+    // 내부 에디터 포커스 시 기본 효과 제거
+    :global(.ql-editor:focus) {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  .buttonContainer {
+    text-align: right;
+  }
+
+  .buttonSpace {
+    // 버튼 간격
+  }
+
+  .cancelButton {
+    // 취소 버튼
+  }
+
+  .saveButton {
+    background-color: $color-green-02;
+    border-color: $color-green-02;
+  }
+}

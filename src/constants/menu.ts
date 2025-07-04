@@ -1,3 +1,4 @@
+import { ROUTE_PATH } from '@/routes/routePath'
 import { MenuProps } from 'antd'
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -26,8 +27,8 @@ export const menuItems: MenuItem[] = [
     key: 'member',
     label: '회원관리',
     children: [
-      { key: 'member', label: '일반 회원' },
-      { key: 'lawyer-member', label: '변호사 회원' },
+      { key: 'member-member', label: '일반 회원' },
+      { key: 'member-lawyer', label: '변호사 회원' },
     ],
   },
   {
@@ -53,7 +54,7 @@ export const menuItems: MenuItem[] = [
     key: 'board',
     label: '게시판',
     children: [
-      { key: 'board-notice', label: '공지사항' },
+      { key: ROUTE_PATH.BOARD_NOTICE, label: '공지사항' },
       { key: 'board-faq', label: 'FAQ' },
       { key: 'board-legalDictionary', label: '법률 백과사전전' },
     ],
