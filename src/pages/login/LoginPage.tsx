@@ -1,8 +1,23 @@
-import { Button, Checkbox, Form, Input } from 'antd'
+import { Button, Checkbox, Form, Input, Modal } from 'antd'
 import styles from './loginPage.module.scss'
 import Logo from '@/assets/imgs/allbarlaw-logo.png'
+import { useState } from 'react'
 
 const LoginPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const showModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleOk = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleCancel = () => {
+    setIsModalOpen(false)
+  }
+
   const onFinish = (values: unknown) => {
     console.log('Success:', values)
   }
@@ -49,13 +64,32 @@ const LoginPage = () => {
                 <Checkbox>아이디 저장하기</Checkbox>
               </Form.Item>
 
-              <a className={styles['login-form-forgot']} href=''>
+              <a className={styles['login-form-forgot']} onClick={showModal}>
                 아이디/비밀번호 찾기
               </a>
             </div>
           </Form.Item>
         </Form>
       </div>
+      <Modal
+        title='아이디 또는 비밀번호 찾기'
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        centered
+        footer={null}
+      >
+        <div className={styles['modal-content']}>
+          <p>{`가입시 등록하신 이메일 주소를 입력하시면\n메일로 아이디와 초기화된 비밀번호를 발송해드립니다.`}</p>
+          <div className={styles['modal-input']}>
+            <label htmlFor='email'>이메일 주소</label>
+            <Input placeholder='이메일 주소를 입력해주세요' />
+          </div>
+          <Button type='primary' htmlType='submit' className={styles['login-form-button']} size='large'>
+            아이디 및 초기화된 비밀번호 메일로 받기
+          </Button>
+        </div>
+      </Modal>
     </div>
   )
 }

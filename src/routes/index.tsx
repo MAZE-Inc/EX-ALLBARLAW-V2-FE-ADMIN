@@ -24,8 +24,10 @@ import {
   NoticeEditPage,
   NoticeListPage,
 } from '@/pages'
-import NoticeLayout from '@/pages/layout/noticeLayout/NoticeListPage'
+import NoticeLayout from '@/pages/board/noticeLayout/NoticeListPage'
 import LoginPage from '@/pages/login/LoginPage'
+import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
+import MemberLayout from '@/pages/member/memberLayout/MemberLayout'
 
 const router = createBrowserRouter([
   {
@@ -35,7 +37,17 @@ const router = createBrowserRouter([
     children: [
       {
         path: ROUTE_PATH.ADMIN_MANAGEMENT,
-        element: <AdminManagementPage />,
+        element: <AdminLayout />,
+        children: [
+          {
+            path: '',
+            element: <AdminManagementPage />,
+          },
+          {
+            path: ROUTE_PATH.ADMIN_REGISTER,
+            element: <AdminRegisterPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.ADMIN_REGISTER,
@@ -51,7 +63,13 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.MEMBER,
-        element: <MemberPage />,
+        element: <MemberLayout />,
+        children: [
+          {
+            path: '',
+            element: <MemberPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.CONTENT_BLOG,

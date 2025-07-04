@@ -1,0 +1,15 @@
+.admin-layout__searchHeader {
+  .admin-layout__searchHeader__button {
+    background-color: $color-green-02;
+    color: white;
+    border: none;
+    font-size: 16px;
+    padding: 21px 20px;
+
+    &:hover {
+      background-color: $color-green-02 !important;
+      color: white !important;
+      border: none !important;
+    }
+  }
+}

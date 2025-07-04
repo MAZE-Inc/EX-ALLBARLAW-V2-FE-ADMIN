@@ -75,13 +75,35 @@
   width: 100%;
   background-color: $color-icon-darkgreen;
   border-color: $color-icon-darkgreen;
-  &:hover {
-    background-color: $color-green-02;
-    border-color: $color-green-02;
+  color: $color-white;
+
+  &:hover,
+  &:focus {
+    background-color: $color-green-hover !important;
+    border-color: $color-green-hover !important;
+    color: $color-white;
+  }
+  &:active {
+    background-color: #1e6450 !important;
+    border-color: #1e6450 !important;
+    color: $color-white;
   }
 }
 
 :global {
+  .ant-input-affix-wrapper:focus-within,
+  .ant-input-password:focus-within,
+  .ant-input:focus,
+  .ant-input-focused {
+    border-color: $color-icon-darkgreen;
+    box-shadow: 0 0 0 2px rgba(35, 115, 93, 0.2);
+  }
+
+  .ant-input-affix-wrapper:hover,
+  .ant-input:hover {
+    border-color: $color-icon-darkgreen;
+  }
+
   .ant-checkbox-checked .ant-checkbox-inner {
     background-color: $color-icon-darkgreen;
     border-color: $color-icon-darkgreen;
@@ -90,5 +112,27 @@
   .ant-checkbox:hover .ant-checkbox-inner,
   .ant-checkbox-input:focus + .ant-checkbox-inner {
     border-color: $color-icon-darkgreen;
+  }
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  p {
+    margin: 0;
+    white-space: pre-line;
+  }
+}
+
+.modal-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  label {
+    // font-size: 1rem;
+    width: 100px;
   }
 }
