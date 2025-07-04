@@ -28,11 +28,17 @@ import NoticeLayout from '@/pages/board/noticeLayout/NoticeListPage'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
 import MemberLayout from '@/pages/member/memberLayout/MemberLayout'
+import ProtectedRoute from './ProtectedRoute'
+import PublicOnlyRoute from './PublicOnlyRoute'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <MainLayout />,
+    element: (
+      <ProtectedRoute>
+        <MainLayout />
+      </ProtectedRoute>
+    ),
     errorElement: <NotFound />,
     children: [
       {
@@ -42,10 +48,6 @@ const router = createBrowserRouter([
           {
             path: '',
             element: <AdminManagementPage />,
-          },
-          {
-            path: ROUTE_PATH.ADMIN_REGISTER,
-            element: <AdminRegisterPage />,
           },
         ],
       },
@@ -141,7 +143,11 @@ const router = createBrowserRouter([
   },
   {
     path: ROUTE_PATH.LOGIN,
-    element: <LoginPage />,
+    element: (
+      <PublicOnlyRoute>
+        <LoginPage />
+      </PublicOnlyRoute>
+    ),
   },
 ])
 

@@ -3,6 +3,7 @@ import styles from './adminManagementPage.module.scss'
 import ManagerList from '../managerList/ManagerList'
 import { COLOR } from '@/styles/abstracts/color'
 import { useNavigate } from 'react-router-dom'
+import { ROUTE_PATH } from '@/routes/routePath'
 
 const onChange = (key: string) => {
   console.log(key)
@@ -28,9 +29,16 @@ const items: TabsProps['items'] = [
 
 const AdminManagementPage = () => {
   const navigate = useNavigate()
+
+  const handleRegister = () => {
+    navigate(ROUTE_PATH.ADMIN_REGISTER)
+  }
+
   return (
     <div className={styles['admin-management-page']}>
-      <Button className={styles['manager-list-container__button']}>신규 계정 등록</Button>
+      <Button className={styles['manager-list-container__button']} onClick={handleRegister}>
+        신규 계정 등록
+      </Button>
       <ConfigProvider
         theme={{
           token: {

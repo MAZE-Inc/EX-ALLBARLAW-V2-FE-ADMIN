@@ -2,9 +2,12 @@ import { Button, Checkbox, Form, Input, Modal } from 'antd'
 import styles from './loginPage.module.scss'
 import Logo from '@/assets/imgs/allbarlaw-logo.png'
 import { useState } from 'react'
+import { useLoginMutation } from '@/hooks/mutations/useLoginMutation'
+import { LoginCredentials } from '@/types/authTypes'
 
 const LoginPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { mutate: login, isPending } = useLoginMutation()
 
   const showModal = () => {
     setIsModalOpen(true)
@@ -18,8 +21,8 @@ const LoginPage = () => {
     setIsModalOpen(false)
   }
 
-  const onFinish = (values: unknown) => {
-    console.log('Success:', values)
+  const onFinish = (values: LoginCredentials) => {
+    login(values)
   }
 
   const onFinishFailed = (errorInfo: unknown) => {
@@ -44,17 +47,23 @@ const LoginPage = () => {
           autoComplete='off'
           className={styles['login-form-fields']}
         >
-          <Form.Item name='username' rules={[{ required: true, message: '아이디를 입력해주세요!' }]}>
+          <Form.Item name='adminAccount' rules={[{ required: true, message: '아이디를 입력해주세요!' }]}>
             <Input placeholder='아이디를 입력해주세요' size='large' />
           </Form.Item>
 
-          <Form.Item name='password' rules={[{ required: true, message: '비밀번호를 입력해주세요!' }]}>
+          <Form.Item name='adminPassword' rules={[{ required: true, message: '비밀번호를 입력해주세요!' }]}>
             <Input.Password placeholder='비밀번호를 입력해주세요' size='large' />
           </Form.Item>
 
           <Form.Item>
-            <Button type='primary' htmlType='submit' className={styles['login-form-button']} size='large'>
-              로그인
+            <Button
+              type='primary'
+              htmlType='submit'
+              className={styles['login-form-button']}
+              size='large'
+              loading={isPending}
+            >
+              {isPending ? '로그인 중...' : '로그인'}
             </Button>
           </Form.Item>
 
