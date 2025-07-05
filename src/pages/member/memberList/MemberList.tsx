@@ -7,18 +7,27 @@ interface MemberListProps {
   data: Member[]
   loading?: boolean
   onSort: (field: MemberListRequest['orderBy']) => void
+  currentOrderBy: MemberListRequest['orderBy']
+  currentSort: MemberListRequest['sort']
 }
 
 const handleManageAccount = (userId: string) => {
   console.log(`계정 관리 버튼 클릭: ${userId}`)
 }
 
-const MemberList = ({ data, loading, onSort }: MemberListProps) => {
+const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: MemberListProps) => {
+  // Convert API sort type to Ant Design sort type
+  const getSortOrder = (field: MemberListRequest['orderBy']) => {
+    if (field !== currentOrderBy) return undefined
+    return currentSort === 'asc' ? 'ascend' : 'descend'
+  }
+
   const columns: TableProps<Member>['columns'] = [
     {
       title: '아이디',
       dataIndex: 'userAccount',
       sorter: true,
+      sortOrder: getSortOrder('account'),
       onHeaderCell: () => ({
         onClick: () => onSort('account'),
       }),
@@ -27,6 +36,7 @@ const MemberList = ({ data, loading, onSort }: MemberListProps) => {
       title: '인증 전화번호',
       dataIndex: 'userPhone',
       sorter: true,
+      sortOrder: getSortOrder('phone'),
       onHeaderCell: () => ({
         onClick: () => onSort('phone'),
       }),
@@ -35,6 +45,7 @@ const MemberList = ({ data, loading, onSort }: MemberListProps) => {
       title: '이메일 주소',
       dataIndex: 'userEmail',
       sorter: true,
+      sortOrder: getSortOrder('email'),
       onHeaderCell: () => ({
         onClick: () => onSort('email'),
       }),
@@ -43,6 +54,7 @@ const MemberList = ({ data, loading, onSort }: MemberListProps) => {
       title: '가입일시',
       dataIndex: 'userCreatedAt',
       sorter: true,
+      sortOrder: getSortOrder('createdAt'),
       onHeaderCell: () => ({
         onClick: () => onSort('createdAt'),
       }),

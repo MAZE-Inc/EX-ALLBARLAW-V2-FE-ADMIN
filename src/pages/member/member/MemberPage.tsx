@@ -12,12 +12,14 @@ const MemberPage = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [activeTab, setActiveTab] = useState<'total' | 'active' | 'inactive'>('total')
   const [orderBy, setOrderBy] = useState<MemberListRequest['orderBy']>('createdAt')
+  const [sort, setSort] = useState<MemberListRequest['sort']>('desc')
 
   const { data: totalPages } = useGetTotalMemberPage()
   const { data: memberList, isLoading } = useGetMemberList({
     userPage: currentPage,
     orderBy,
     userIsActive: activeTab === 'total' ? 'all' : activeTab,
+    sort,
   })
 
   const handleTabChange = (key: string) => {
@@ -30,8 +32,15 @@ const MemberPage = () => {
   }
 
   const handleSort = (field: MemberListRequest['orderBy']) => {
-    setOrderBy(field)
-    setCurrentPage(1) // 정렬 변경 시 페이지 초기화
+    if (field === orderBy) {
+      // 같은 필드를 클릭한 경우 정렬 방향을 토글
+      setSort(sort === 'asc' ? 'desc' : 'asc')
+    } else {
+      // 다른 필드를 클릭한 경우 해당 필드로 변경하고 내림차순으로 시작
+      setOrderBy(field)
+      setSort('desc')
+    }
+    setCurrentPage(1) // 정렬이 변경되면 첫 페이지로 이동
   }
 
   const items: TabsProps['items'] = [
@@ -63,7 +72,13 @@ const MemberPage = () => {
       >
         <Tabs defaultActiveKey='total' items={items} onChange={handleTabChange} />
       </ConfigProvider>
-      <MemberList data={memberList || []} loading={isLoading} onSort={handleSort} />
+      <MemberList
+        data={memberList || []}
+        loading={isLoading}
+        onSort={handleSort}
+        currentOrderBy={orderBy}
+        currentSort={sort}
+      />
       {totalPages?.totalPages && (
         <div className={styles['pagination-wrapper']}>
           <Pagination currentPage={currentPage} totalPages={totalPages.totalPages} onPageChange={handlePageChange} />

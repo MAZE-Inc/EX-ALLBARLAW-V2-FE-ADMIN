@@ -1,6 +1,7 @@
 export type MemberListRequest = {
   userPage: number
   orderBy: 'account' | 'phone' | 'email' | 'createdAt'
+  sort: 'asc' | 'desc'
   userIsActive: 'all' | 'active' | 'inactive'
 }
 
