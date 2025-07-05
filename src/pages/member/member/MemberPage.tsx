@@ -6,15 +6,17 @@ import { Pagination } from '@/components/pagination'
 import { useGetTotalMemberPage } from '@/hooks/queries/useGetTotalMemberPage'
 import { useState } from 'react'
 import { useGetMemberList } from '@/hooks/queries/useGetMemberList'
+import { MemberListRequest } from '@/types/memberType'
 
 const MemberPage = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [activeTab, setActiveTab] = useState<'total' | 'active' | 'inactive'>('total')
+  const [orderBy, setOrderBy] = useState<MemberListRequest['orderBy']>('createdAt')
 
   const { data: totalPages } = useGetTotalMemberPage()
   const { data: memberList, isLoading } = useGetMemberList({
     userPage: currentPage,
-    orderBy: 'createdAt',
+    orderBy,
     userIsActive: activeTab === 'total' ? 'all' : activeTab,
   })
 
@@ -25,6 +27,11 @@ const MemberPage = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
+  }
+
+  const handleSort = (field: MemberListRequest['orderBy']) => {
+    setOrderBy(field)
+    setCurrentPage(1) // 정렬 변경 시 페이지 초기화
   }
 
   const items: TabsProps['items'] = [
@@ -56,7 +63,7 @@ const MemberPage = () => {
       >
         <Tabs defaultActiveKey='total' items={items} onChange={handleTabChange} />
       </ConfigProvider>
-      <MemberList data={memberList || []} loading={isLoading} />
+      <MemberList data={memberList || []} loading={isLoading} onSort={handleSort} />
       {totalPages?.totalPages && (
         <div className={styles['pagination-wrapper']}>
           <Pagination currentPage={currentPage} totalPages={totalPages.totalPages} onPageChange={handlePageChange} />
