@@ -5,13 +5,11 @@
 .account-management-cell {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .pagination-wrapper {
   display: flex;
   justify-content: flex-end;
   margin-top: 16px;
-  padding-right: 16px;
 }

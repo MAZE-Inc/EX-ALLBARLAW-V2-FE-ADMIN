@@ -8,35 +8,37 @@ import { useState } from 'react'
 import { useGetMemberList } from '@/hooks/queries/useGetMemberList'
 
 const MemberPage = () => {
-  const { data } = useGetTotalMemberPage()
-  const [_activeTab, setActiveTab] = useState<string>('total')
-  const { data: memberList } = useGetMemberList({
-    userPage: 1,
-    orderBy: 'account',
-    userIsActive: 'all',
+  const [currentPage, setCurrentPage] = useState(1)
+  const [activeTab, setActiveTab] = useState<'total' | 'active' | 'inactive'>('total')
+
+  const { data: totalPages } = useGetTotalMemberPage()
+  const { data: memberList, isLoading } = useGetMemberList({
+    userPage: currentPage,
+    orderBy: 'createdAt',
+    userIsActive: activeTab === 'total' ? 'all' : activeTab,
   })
 
-  console.log(memberList)
-
   const handleTabChange = (key: string) => {
-    setActiveTab(key)
+    setActiveTab(key as 'total' | 'active' | 'inactive')
+    setCurrentPage(1) // 탭 변경 시 페이지 초기화
+  }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
   }
 
   const items: TabsProps['items'] = [
     {
       key: 'total',
       label: '전체',
-      children: <MemberList type='total' />,
     },
     {
       key: 'active',
       label: '사용중인 계정',
-      children: <MemberList type='active' />,
     },
     {
       key: 'inactive',
       label: '정지된 계정',
-      children: <MemberList type='inactive' />,
     },
   ]
 
@@ -54,9 +56,10 @@ const MemberPage = () => {
       >
         <Tabs defaultActiveKey='total' items={items} onChange={handleTabChange} />
       </ConfigProvider>
-      {data?.totalPages && (
+      <MemberList data={memberList || []} loading={isLoading} />
+      {totalPages?.totalPages && (
         <div className={styles['pagination-wrapper']}>
-          <Pagination totalPages={data.totalPages} onPageChange={() => {}} />
+          <Pagination currentPage={currentPage} totalPages={totalPages.totalPages} onPageChange={handlePageChange} />
         </div>
       )}
     </div>

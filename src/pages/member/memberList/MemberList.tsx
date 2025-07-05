@@ -1,11 +1,11 @@
 import { Button, Table, TableProps } from 'antd'
 import styles from './memberList.module.scss'
-import React, { useState } from 'react'
-import { useGetMemberList } from '@/hooks/queries/useGetMemberList'
+import React from 'react'
 import { Member } from '@/types/memberType'
 
 interface MemberListProps {
-  type: 'total' | 'active' | 'inactive'
+  data: Member[]
+  loading?: boolean
 }
 
 const handleManageAccount = (userId: string) => {
@@ -54,15 +54,7 @@ const rowSelection = {
   },
 }
 
-const MemberList = ({ type }: MemberListProps) => {
-  const [currentPage, setCurrentPage] = useState(1)
-
-  const { data, isLoading } = useGetMemberList({
-    userPage: currentPage,
-    orderBy: 'createAt',
-    userIsActive: type === 'total' ? 'all' : type,
-  })
-
+const MemberList = ({ data, loading }: MemberListProps) => {
   return (
     <div className={styles['member-list-container']}>
       <Table<Member>
@@ -72,7 +64,7 @@ const MemberList = ({ type }: MemberListProps) => {
           ...rowSelection,
         }}
         pagination={false}
-        loading={isLoading}
+        loading={loading}
       />
     </div>
   )
