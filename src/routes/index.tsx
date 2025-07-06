@@ -49,11 +49,11 @@ const router = createBrowserRouter([
             path: '',
             element: <AdminManagementPage />,
           },
+          {
+            path: ROUTE_PATH.ADMIN_REGISTER,
+            element: <AdminRegisterPage />,
+          },
         ],
-      },
-      {
-        path: ROUTE_PATH.ADMIN_REGISTER,
-        element: <AdminRegisterPage />,
       },
       {
         path: ROUTE_PATH.CATEGORY_MANAGEMENT,

@@ -4,7 +4,7 @@ export const ROUTE_PATH = {
 
   // 관리자 계정
   ADMIN_MANAGEMENT: '/admin-management',
-  ADMIN_REGISTER: '/admin-register',
+  ADMIN_REGISTER: 'register',
 
   // 분류 설정
   CATEGORY_MANAGEMENT: '/category-management',

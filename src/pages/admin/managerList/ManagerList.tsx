@@ -1,128 +1,98 @@
 import { Table, TableProps } from 'antd'
 import styles from './managerList.module.scss'
-import React, { useEffect, useState } from 'react'
+import { Admin } from '@/types/adminTypes'
 
-type Manager = {
-  key: React.Key
-  accountType: '통합 관리자' | 'CS 관리자'
-  userId: string
-  email: string
-  name: string
-  isActive: boolean
-}
-
-const columns: TableProps<Manager>['columns'] = [
-  {
-    title: '계정구분',
-    dataIndex: 'accountType',
-    key: 'accountType',
-    sorter: (a, b) => a.accountType.localeCompare(b.accountType),
-  },
-  {
-    title: '아이디',
-    dataIndex: 'userId',
-    key: 'userId',
-    sorter: (a, b) => a.userId.localeCompare(b.userId),
-  },
-  {
-    title: '이메일 주소',
-    dataIndex: 'email',
-    key: 'email',
-    sorter: (a, b) => a.email.localeCompare(b.email),
-  },
-  {
-    title: '계정이름',
-    dataIndex: 'name',
-    key: 'name',
-    sorter: (a, b) => a.name.localeCompare(b.name),
-  },
-  {
-    title: '계정사용 여부',
-    dataIndex: 'isActive',
-    key: 'isActive',
-    render: (isActive: boolean) => (isActive ? '사용' : '미사용'),
-    sorter: (a, b) => Number(a.isActive) - Number(b.isActive),
-  },
-]
-
-const allManagers: Manager[] = [
-  {
-    key: 1,
-    accountType: '통합 관리자',
-    userId: 'admin_master',
-    email: 'master@allbarlaw.com',
-    name: '김총괄',
-    isActive: true,
-  },
-  {
-    key: 2,
-    accountType: 'CS 관리자',
-    userId: 'cs_manager_01',
-    email: 'cs01@allbarlaw.com',
-    name: '이친절',
-    isActive: true,
-  },
-  {
-    key: 3,
-    accountType: 'CS 관리자',
-    userId: 'cs_manager_02',
-    email: 'cs02@allbarlaw.com',
-    name: '박상담',
-    isActive: false,
-  },
-  {
-    key: 4,
-    accountType: '통합 관리자',
-    userId: 'admin_sub',
-    email: 'sub_master@allbarlaw.com',
-    name: '최부괄',
-    isActive: true,
-  },
-  {
-    key: 5,
-    accountType: 'CS 관리자',
-    userId: 'cs_manager_03',
-    email: 'cs03@allbarlaw.com',
-    name: '정신속',
-    isActive: true,
-  },
-]
-
-type ManagerListProps = {
+interface ManagerListProps {
   type: 'total' | 'admin-manager' | 'cs-manager'
+  data: Admin[]
+  loading?: boolean
+  onSort?: (field: keyof Admin) => void
+  currentOrderBy?: keyof Admin
+  currentSort?: 'asc' | 'desc'
 }
 
-const ManagerList = ({ type }: ManagerListProps) => {
-  const [data, setData] = useState<Manager[]>([])
+const ManagerList = ({ data, loading, onSort, currentOrderBy, currentSort }: ManagerListProps) => {
+  const getSortOrder = (field: keyof Admin) => {
+    if (!currentOrderBy || !onSort) return undefined
+    if (field !== currentOrderBy) return undefined
+    return currentSort === 'asc' ? 'ascend' : 'descend'
+  }
 
-  useEffect(() => {
-    if (type === 'admin-manager') {
-      setData(allManagers.filter(manager => manager.accountType === '통합 관리자'))
-    } else if (type === 'cs-manager') {
-      setData(allManagers.filter(manager => manager.accountType === 'CS 관리자'))
-    } else {
-      setData(allManagers)
-    }
-  }, [type])
+  const columns: TableProps<Admin>['columns'] = [
+    {
+      title: '계정구분',
+      dataIndex: 'adminAccountTypeId',
+      key: 'adminAccountTypeId',
+      render: (typeId: number) => (typeId === 1 ? '통합 관리자' : 'CS 관리자'),
+      sorter: true,
+      sortOrder: getSortOrder('adminAccountTypeId'),
+      onHeaderCell: () => ({
+        onClick: () => onSort?.('adminAccountTypeId'),
+      }),
+    },
+    {
+      title: '아이디',
+      dataIndex: 'adminAccount',
+      key: 'adminAccount',
+      sorter: true,
+      sortOrder: getSortOrder('adminAccount'),
+      onHeaderCell: () => ({
+        onClick: () => onSort?.('adminAccount'),
+      }),
+    },
+    {
+      title: '이메일 주소',
+      dataIndex: 'adminEmail',
+      key: 'adminEmail',
+      sorter: true,
+      sortOrder: getSortOrder('adminEmail'),
+      onHeaderCell: () => ({
+        onClick: () => onSort?.('adminEmail'),
+      }),
+    },
+    {
+      title: '계정이름',
+      dataIndex: 'adminName',
+      key: 'adminName',
+      sorter: true,
+      sortOrder: getSortOrder('adminName'),
+      onHeaderCell: () => ({
+        onClick: () => onSort?.('adminName'),
+      }),
+    },
+    {
+      title: '계정사용 여부',
+      dataIndex: 'adminIsActive',
+      key: 'adminIsActive',
+      render: (isActive: boolean) => (isActive ? '사용' : '미사용'),
+      sorter: true,
+      sortOrder: getSortOrder('adminIsActive'),
+      onHeaderCell: () => ({
+        onClick: () => onSort?.('adminIsActive'),
+      }),
+    },
+  ]
 
   const rowSelection = {
-    onSelectAll: (selected: boolean, selectedRows: Manager[]) => {
+    onSelectAll: (selected: boolean, selectedRows: Admin[]) => {
       console.log('전체 선택:', selected, selectedRows)
     },
-    onSelect: (record: Manager, selected: boolean) => {
+    onSelect: (record: Admin, selected: boolean) => {
       console.log('개별 선택:', record, selected)
     },
   }
 
   return (
     <div className={styles['manager-list-container']}>
-      <Table<Manager>
+      <Table<Admin>
         columns={columns}
         dataSource={data}
         rowSelection={rowSelection}
         pagination={{
           position: ['bottomCenter'],
         }}
+        loading={loading}
+        onChange={() => {}} // 정렬은 헤더 클릭으로 처리
       />
     </div>
   )

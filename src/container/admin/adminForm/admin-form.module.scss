@@ -1,0 +1,100 @@
+.admin-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  :global {
+    .ant-form-item {
+      margin-bottom: 24px;
+    }
+
+    .ant-radio-group {
+      width: 100%;
+    }
+
+    .ant-radio-wrapper {
+      margin-right: 32px;
+    }
+  }
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 32px;
+}
+
+.contentForm {
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 24px;
+}
+
+.formContainer {
+  width: 100%;
+}
+
+.formRow {
+  width: 100%;
+  margin-bottom: 16px !important;
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+}
+
+.labelCol {
+  flex: 0 0 120px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 40px;
+}
+
+.label {
+  color: #000;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.inputCol {
+  flex: 1;
+  margin-left: 48px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  width: 100%;
+}
+
+.radioGroup {
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+
+.radioContainer {
+  margin-left: 8px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.buttonSpace {
+  :global {
+    .ant-btn {
+      min-width: 120px;
+      height: 40px;
+    }
+  }
+}
+
+.saveButton {
+  margin-left: 8px;
+}

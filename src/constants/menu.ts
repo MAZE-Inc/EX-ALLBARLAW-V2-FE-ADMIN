@@ -13,7 +13,7 @@ export const menuItems: MenuItem[] = [
         label: '관리자 계정 관리',
       },
       {
-        key: 'admin-register',
+        key: 'admin-management/register',
         label: '계정 등록',
       },
     ],
