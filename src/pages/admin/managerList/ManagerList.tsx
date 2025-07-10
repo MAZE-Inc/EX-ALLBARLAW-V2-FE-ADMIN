@@ -1,6 +1,7 @@
 import { Table, TableProps } from 'antd'
 import styles from './managerList.module.scss'
 import { Admin } from '@/types/adminTypes'
+import { useState } from 'react'
 
 interface ManagerListProps {
   type: 'total' | 'admin-manager' | 'cs-manager'
@@ -12,6 +13,8 @@ interface ManagerListProps {
 }
 
 const ManagerList = ({ data, loading, onSort, currentOrderBy, currentSort }: ManagerListProps) => {
+  const [selectedRows, setSelectedRows] = useState<Admin[]>([])
+
   const getSortOrder = (field: keyof Admin) => {
     if (!currentOrderBy || !onSort) return undefined
     if (field !== currentOrderBy) return undefined
@@ -74,12 +77,24 @@ const ManagerList = ({ data, loading, onSort, currentOrderBy, currentSort }: Man
   ]
 
   const rowSelection = {
+    selectedRowKeys: selectedRows.map(row => row.adminId),
     onSelectAll: (selected: boolean, selectedRows: Admin[]) => {
+      setSelectedRows(selected ? selectedRows : [])
       console.log('전체 선택:', selected, selectedRows)
     },
     onSelect: (record: Admin, selected: boolean) => {
+      setSelectedRows(prev => {
+        if (selected) {
+          return [...prev, record]
+        } else {
+          return prev.filter(row => row.adminId !== record.adminId)
+        }
+      })
       console.log('개별 선택:', record, selected)
     },
+    getCheckboxProps: (record: Admin) => ({
+      name: record.adminAccount,
+    }),
   }
 
   return (
@@ -88,6 +103,7 @@ const ManagerList = ({ data, loading, onSort, currentOrderBy, currentSort }: Man
         columns={columns}
         dataSource={data}
         rowSelection={rowSelection}
+        rowKey='adminId'
         pagination={{
           position: ['bottomCenter'],
         }}

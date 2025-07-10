@@ -33,4 +33,31 @@
       padding: 0;
     }
   }
+
+  // Quill 2.0 버그 보완: bullet list 스타일 강제 적용
+  :global(.ql-editor) {
+    ol[data-list='bullet'] {
+      list-style-type: none !important;
+      padding-left: 1.5em;
+
+      li {
+        list-style-type: none !important;
+        position: relative;
+
+        &::before {
+          content: '•';
+          position: absolute;
+          left: -1.5em;
+          display: inline-block;
+          width: 1em;
+          text-align: center;
+        }
+      }
+    }
+
+    // bullet list의 경우 기본 스타일 제거
+    ol li:not([data-list='ordered']) {
+      list-style-type: none !important;
+    }
+  }
 }

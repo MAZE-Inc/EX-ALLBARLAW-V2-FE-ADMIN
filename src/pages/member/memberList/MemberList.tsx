@@ -1,6 +1,6 @@
 import { Button, Table, TableProps } from 'antd'
 import styles from './memberList.module.scss'
-import React from 'react'
+import { useState } from 'react'
 import { Member, MemberListRequest } from '@/types/memberType'
 
 interface MemberListProps {
@@ -16,6 +16,8 @@ const handleManageAccount = (userId: string) => {
 }
 
 const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: MemberListProps) => {
+  const [selectedRows, setSelectedRows] = useState<Member[]>([])
+
   // Convert API sort type to Ant Design sort type
   const getSortOrder = (field: MemberListRequest['orderBy']) => {
     if (field !== currentOrderBy) return undefined
@@ -74,9 +76,24 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
   ]
 
   const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: Member[]) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
+    selectedRowKeys: selectedRows.map(row => row.userId),
+    onSelectAll: (selected: boolean, selectedRows: Member[]) => {
+      setSelectedRows(selected ? selectedRows : [])
+      console.log('전체 선택:', selected, selectedRows)
     },
+    onSelect: (record: Member, selected: boolean) => {
+      setSelectedRows(prev => {
+        if (selected) {
+          return [...prev, record]
+        } else {
+          return prev.filter(row => row.userId !== record.userId)
+        }
+      })
+      console.log('개별 선택:', record, selected)
+    },
+    getCheckboxProps: (record: Member) => ({
+      name: record.userAccount,
+    }),
   }
 
   return (
@@ -84,9 +101,8 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
       <Table<Member>
         columns={columns}
         dataSource={data}
-        rowSelection={{
-          ...rowSelection,
-        }}
+        rowSelection={rowSelection}
+        rowKey='userId'
         pagination={false}
         loading={loading}
         onChange={() => {}} // 정렬은 헤더 클릭으로 처리

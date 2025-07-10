@@ -1,6 +1,6 @@
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
-import { useEffect } from 'react'
+import ReactQuill from 'react-quill-new'
+import 'react-quill-new/dist/quill.snow.css'
+import { useEffect, useRef } from 'react'
 import styles from './rich-text-editor.module.scss'
 
 interface RichTextEditorProps {
@@ -13,6 +13,27 @@ interface RichTextEditorProps {
   theme?: 'snow' | 'bubble'
 }
 
+// HTML 포스트 프로세서 - ol을 ul로 변환하는 유틸리티 함수
+const fixQuillListHTML = (html: string): string => {
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(html, 'text/html')
+
+  // data-list="bullet"인 ol 태그를 찾아서 ul로 변환
+  const olElements = doc.querySelectorAll('ol[data-list="bullet"]')
+  olElements.forEach(ol => {
+    const ul = doc.createElement('ul')
+    // 속성 복사
+    Array.from(ol.attributes).forEach(attr => {
+      ul.setAttribute(attr.name, attr.value)
+    })
+    // 내용 복사
+    ul.innerHTML = ol.innerHTML
+    ol.parentNode?.replaceChild(ul, ol)
+  })
+
+  return doc.body.innerHTML
+}
+
 const RichTextEditor = ({
   value,
   onChange,
@@ -22,13 +43,15 @@ const RichTextEditor = ({
   readOnly = false,
   theme = 'snow',
 }: RichTextEditorProps) => {
+  const quillRef = useRef<ReactQuill>(null)
+
   // 개발 환경에서만 deprecation 경고 필터링
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       const originalWarn = console.warn
       console.warn = (...args) => {
         if (args[0]?.includes?.('DOMNodeInserted')) {
-          return // DOMNodeInserted 경고 무시
+          return
         }
         originalWarn.apply(console, args)
       }
@@ -38,6 +61,23 @@ const RichTextEditor = ({
       }
     }
   }, [])
+
+  // 컨텐츠 변경 핸들러
+  const handleChange = (content: string) => {
+    const quillInstance = quillRef.current?.getEditor()
+
+    if (quillInstance?.getSemanticHTML) {
+      // 1단계: getSemanticHTML로 개선된 HTML 가져오기
+      let semanticHTML = quillInstance.getSemanticHTML()
+
+      // 2단계: 포스트 프로세싱으로 남은 문제 해결
+      semanticHTML = fixQuillListHTML(semanticHTML)
+
+      onChange(semanticHTML)
+    } else {
+      onChange(content)
+    }
+  }
 
   // Quill 에디터 툴바 설정
   const modules = {
@@ -76,16 +116,17 @@ const RichTextEditor = ({
   return (
     <div className={`${styles.richTextEditor} ${className || ''}`}>
       <ReactQuill
+        ref={quillRef}
         theme={theme}
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
         modules={modules}
         formats={formats}
         placeholder={placeholder}
         readOnly={readOnly}
         style={{
           height: height,
-          marginBottom: readOnly ? '0' : '50px', // 읽기 전용일 때는 여백 제거
+          marginBottom: readOnly ? '0' : '50px',
         }}
       />
     </div>
