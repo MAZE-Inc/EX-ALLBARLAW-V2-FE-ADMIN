@@ -1,3 +1,62 @@
+@import '@/styles/abstracts/colors';
+@import '@/styles/abstracts/mixins';
+@import '@/styles/abstracts/variables';
+
+.container {
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+  }
+}
+
 .noticeList {
-  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.noticeItem {
+  padding: 1rem;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: $background-hover;
+    transform: translateY(-2px);
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: $text-secondary;
+    font-size: 0.9rem;
+  }
 }

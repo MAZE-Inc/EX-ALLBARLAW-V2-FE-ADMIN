@@ -17,6 +17,7 @@
     "antd": "^5.26.2",
     "axios": "^1.10.0",
     "quill": "^2.0.0-dev.4",
+    "quill-image-resize-module-react": "^3.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-quill": "^2.0.0",

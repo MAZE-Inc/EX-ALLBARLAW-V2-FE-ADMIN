@@ -17,8 +17,10 @@ type Notice = {
 }
 
 export type NoticeListResponse = {
-  noticeList: Notice[]
-  totalCount: number
-}
+  noticeId: number
+  noticeTypeId: number
+  noticeTitle: string
+  noticeCreatedAt: string
+}[]
 
 export type NoticePostRequest = Notice
