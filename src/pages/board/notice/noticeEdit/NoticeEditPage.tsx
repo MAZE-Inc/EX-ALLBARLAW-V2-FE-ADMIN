@@ -2,7 +2,7 @@ import ContentForm from '@/components/contentForm/ContentForm'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { message } from 'antd'
-import { NoticeDetailType } from '@/types/noticeTypes'
+import { NoticeDetailResponse } from '@/types/noticeTypes'
 import { ROUTE_PATH } from '@/routes/routePath'
 import { usePostNotice } from '@/hooks/mutations/usePostNotice'
 
@@ -14,12 +14,14 @@ const NoticeEditPage = () => {
   const { mutate: postNotice } = usePostNotice()
 
   const [loading, setLoading] = useState(false)
-  const [noticeData, setNoticeData] = useState<NoticeDetailType | null>(null)
+  const [noticeData, setNoticeData] = useState<NoticeDetailResponse | null>(null)
 
   useEffect(() => {
     if (isEditMode) {
+      console.log('Location State:', location.state)
       // 수정 모드: 무조건 DetailPage에서 데이터를 전달받아야 함
-      const passedData = location.state?.noticeData as NoticeDetailType | undefined
+      const passedData = location.state?.noticeDetail as NoticeDetailResponse | undefined
+      console.log('Passed Data:', passedData)
 
       if (passedData) {
         setNoticeData(passedData)
@@ -30,6 +32,8 @@ const NoticeEditPage = () => {
       }
     }
   }, [isEditMode, location.state, navigate])
+
+  console.log('Notice Data:', noticeData)
 
   const handleSave = async (data: { title: string; content: string; radioValue?: string }) => {
     try {
@@ -71,26 +75,12 @@ const NoticeEditPage = () => {
     { label: '이벤트', value: '3' },
   ]
 
-  // 카테고리를 라디오 값으로 변환
-  const getCategoryRadioValue = (category: string) => {
-    switch (category) {
-      case '공지사항':
-        return 'notice'
-      case '업데이트':
-        return 'update'
-      case '이벤트':
-        return 'event'
-      default:
-        return 'notice'
-    }
-  }
-
   return (
     <section style={{ padding: 36 }}>
       <ContentForm
-        initialTitle={isEditMode ? noticeData?.title || '' : ''}
-        initialContent={isEditMode ? noticeData?.content || '' : ''}
-        initialRadioValue={isEditMode ? getCategoryRadioValue(noticeData?.category || '공지사항') : 'notice'}
+        initialTitle={isEditMode && noticeData ? noticeData.noticeTitle : ''}
+        initialContent={isEditMode && noticeData ? noticeData.noticeContent : ''}
+        initialRadioValue={isEditMode && noticeData ? String(noticeData.noticeTypeId) : '1'}
         titlePlaceholder='공지사항 제목을 입력하세요'
         contentPlaceholder='공지사항 내용을 작성하세요...'
         saveButtonText={isEditMode ? '수정 완료' : '공지 등록'}

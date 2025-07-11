@@ -16,11 +16,14 @@ type Notice = {
   createdAt?: string
 }
 
-export type NoticeListResponse = {
+export type ServerNoticeType = {
   noticeId: number
   noticeTypeId: number
   noticeTitle: string
   noticeCreatedAt: string
-}[]
+}
+
+export type NoticeListResponse = ServerNoticeType[]
+export type NoticeDetailResponse = ServerNoticeType & { noticeContent: string }
 
 export type NoticePostRequest = Notice

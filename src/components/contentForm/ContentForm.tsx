@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Input, Space, Radio, Row, Col } from 'antd'
 import RichTextEditor from '@/components/richTextEditor/RichTextEditor'
+import { Viewer } from '@toast-ui/react-editor'
+import '@toast-ui/editor/dist/toastui-editor-viewer.css'
 import styles from './content-form.module.scss'
 
 interface RadioOption {
@@ -60,6 +62,14 @@ const ContentForm = ({
   const [title, setTitle] = useState(initialTitle)
   const [content, setContent] = useState(initialContent)
   const [radioValue, setRadioValue] = useState(initialRadioValue)
+
+  // 초기값이 변경될 때 상태 업데이트
+  useEffect(() => {
+    console.log('Initial values changed:', { initialTitle, initialContent, initialRadioValue })
+    setTitle(initialTitle)
+    setContent(initialContent)
+    setRadioValue(initialRadioValue)
+  }, [initialTitle, initialContent, initialRadioValue])
 
   const handleSave = () => {
     if (readOnly) return // 읽기 전용일 때는 저장 불가
@@ -131,13 +141,16 @@ const ContentForm = ({
           </Col>
           <Col span={21} className={styles.inputCol}>
             <div className={`${styles.editorContainer} ${readOnly ? styles.readOnly : ''}`}>
-              <RichTextEditor
-                value={content}
-                onChange={readOnly ? () => {} : setContent}
-                placeholder={contentPlaceholder}
-                height={editorHeight}
-                readOnly={readOnly}
-              />
+              {readOnly ? (
+                <Viewer initialValue={content} />
+              ) : (
+                <RichTextEditor
+                  value={content}
+                  onChange={setContent}
+                  placeholder={contentPlaceholder}
+                  height={editorHeight}
+                />
+              )}
             </div>
           </Col>
         </Row>

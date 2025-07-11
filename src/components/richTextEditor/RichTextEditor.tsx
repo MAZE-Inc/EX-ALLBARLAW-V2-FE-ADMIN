@@ -10,7 +10,6 @@ interface RichTextEditorProps {
   placeholder?: string
   height?: string
   className?: string
-  readOnly?: boolean
   theme?: 'light' | 'dark'
 }
 
@@ -20,16 +19,19 @@ const RichTextEditor = ({
   placeholder = '내용을 입력하세요...',
   height = '400px',
   className,
-  readOnly = false,
   theme = 'light',
 }: RichTextEditorProps) => {
   const editorRef = useRef<Editor>(null)
 
   // 초기 내용 설정
   useEffect(() => {
+    console.log('Editor value changed:', value)
     const editorInstance = editorRef.current?.getInstance()
-    if (editorInstance && value !== editorInstance.getHTML()) {
-      editorInstance.setHTML(value)
+    if (editorInstance) {
+      const currentContent = editorInstance.getHTML()
+      if (value && value !== currentContent) {
+        editorInstance.setHTML(value)
+      }
     }
   }, [value])
 
@@ -72,7 +74,6 @@ const RichTextEditor = ({
         onChange={handleChange}
         initialEditType='wysiwyg'
         previewStyle='tab'
-        viewer={readOnly}
         usageStatistics={false}
         hooks={{
           addImageBlobHook: handleImageUpload,

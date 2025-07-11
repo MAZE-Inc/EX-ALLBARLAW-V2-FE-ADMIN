@@ -1,7 +1,7 @@
 import { Button, Table, TableProps } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
-import { useGetNoticeList } from '@/hooks/queries/useGetNoticeList'
+import { useGetNoticeList } from '@/hooks/queries/useGetNotice'
 import { useState, useEffect, useMemo } from 'react'
 import { NoticeType, NoticeListResponse } from '@/types/noticeTypes'
 import React from 'react'
@@ -69,6 +69,10 @@ const NoticeListPage = () => {
     navigate(`${ROUTE_PATH.BOARD_NOTICE}/${ROUTE_PATH.BOARD_NOTICE_EDIT}`)
   }
 
+  const handleRowClick = (record: NoticeType) => {
+    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${record.noticeId}`)
+  }
+
   return (
     <div style={{ padding: 24 }}>
       <Button className={styles.noticeListPage__button} onClick={handleCreateNotice}>
@@ -79,6 +83,10 @@ const NoticeListPage = () => {
         dataSource={noticeList}
         rowKey='noticeId'
         rowSelection={rowSelection}
+        onRow={record => ({
+          onClick: () => handleRowClick(record),
+          style: { cursor: 'pointer' },
+        })}
         pagination={{
           current: noticePage,
           onChange: setNoticePage,

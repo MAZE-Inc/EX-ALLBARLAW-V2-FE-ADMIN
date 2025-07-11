@@ -1,5 +1,5 @@
 import instance from '@/lib/axios'
-import { NoticeListResponse, NoticePostRequest } from '@/types/noticeTypes'
+import { NoticeDetailResponse, NoticeListResponse, NoticePostRequest } from '@/types/noticeTypes'
 
 export const noticeService = {
   getNoticeList: async (noticePage: number) => {
@@ -16,6 +16,22 @@ export const noticeService = {
       throw error
     }
   },
+
+  getNoticeDetail: async (noticeId: number) => {
+    try {
+      const response = await instance.get<NoticeDetailResponse>(`/notice/${noticeId}`)
+      return response.data
+    } catch (error) {
+      console.error('Failed to get notice detail:', error)
+      throw error
+    }
+  },
+
+  deleteNotice: async (noticeId: number) => {
+    const response = await instance.delete(`/notice/${noticeId}`)
+    return response.data
+  },
+
   postNotice: async (notice: NoticePostRequest) => {
     try {
       const response = await instance.post('/notice', notice)
