@@ -6,6 +6,11 @@
   gap: 10px;
   padding: 1.5rem;
   position: relative;
+  background-color: white;
+
+  &.bordered {
+    border-bottom: 1px solid $color-line-borderbox;
+  }
 
   // 드롭다운 트리거 버튼 기본 스타일
   :global(.ant-dropdown-trigger.ant-btn) {

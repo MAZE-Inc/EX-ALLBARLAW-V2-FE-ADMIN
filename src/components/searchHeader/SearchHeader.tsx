@@ -16,6 +16,7 @@ interface SearchHeaderProps {
   buttonComponent?: React.ReactNode
   onSearch?: (value: string) => void
   title?: string
+  bordered?: boolean
 }
 
 const SearchHeader = ({
@@ -29,6 +30,7 @@ const SearchHeader = ({
   title,
   buttonComponent,
   onSearch,
+  bordered = true,
 }: SearchHeaderProps) => {
   const [searchValue, setSearchValue] = useState('')
   const items = menuItems || []
@@ -64,8 +66,10 @@ const SearchHeader = ({
     onClick: handleMenuClick,
   }
 
+  const headerClasses = [styles.searchHeader, bordered ? styles.bordered : '', className || ''].join(' ').trim()
+
   return (
-    <header className={`${styles.searchHeader} ${className || ''}`} style={style}>
+    <header className={headerClasses} style={style}>
       {menuItems && (
         <div className={styles.searchHeader__container}>
           {title && <h3 className={styles.searchHeader__container__title}>{title}</h3>}

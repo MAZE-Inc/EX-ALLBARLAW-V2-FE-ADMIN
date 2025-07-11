@@ -1,5 +1,6 @@
 //* external
 import axios from 'axios'
+import { TOKEN_KEY } from '@/constants/token'
 
 //* internal
 
@@ -8,10 +9,12 @@ const instance = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
-//* request∂
+//* request
 instance.interceptors.request.use(function (config) {
-  // const token = sessionStorage.getItem(LOCAL.TOKEN)
-  // if (token) config.headers['authorization'] = 'Bearer ' + token
+  const token = localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY)
+  if (token) {
+    config.headers['Authorization'] = 'Bearer ' + token
+  }
   return config
 })
 

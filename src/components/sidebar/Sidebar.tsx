@@ -2,10 +2,18 @@ import { menuItems } from '@/constants/menu'
 import { Menu, MenuProps } from 'antd'
 import styles from './sidebar.module.scss'
 import { useNavigate } from 'react-router-dom'
+import { ROUTE_PATH } from '@/routes/routePath'
 
 const SidebarHeader = () => {
+  const navigate = useNavigate()
+
   const handleLogout = () => {
-    console.log('로그아웃 클릭')
+    // 로컬스토리지와 세션스토리지 초기화
+    localStorage.clear()
+    sessionStorage.clear()
+
+    // 로그인 페이지로 리다이렉트
+    navigate(ROUTE_PATH.LOGIN)
   }
 
   return (
@@ -16,7 +24,7 @@ const SidebarHeader = () => {
         <button className={styles['logout-btn']} onClick={handleLogout}>
           [로그아웃]
         </button>
-        <a href='https://allbarlaw.com' target='_blank' rel='noopener noreferrer' className={styles['home-link']}>
+        <a href='https://v2.allbarlaw.com/' target='_blank' rel='noopener noreferrer' className={styles['home-link']}>
           홈페이지 바로가기
         </a>
       </div>

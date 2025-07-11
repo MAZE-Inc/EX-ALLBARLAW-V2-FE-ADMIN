@@ -1,15 +1,17 @@
-import { NoticeType } from '@/types/noticeTypes'
-import { Table, TableProps } from 'antd'
-import styles from './notice-list.module.scss'
+import { Button, Table, TableProps } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
+import { useGetNoticeList } from '@/hooks/queries/useGetNotice'
+import { useState, useEffect, useMemo } from 'react'
+import { NoticeType, NoticeListResponse } from '@/types/noticeTypes'
+import React from 'react'
+import styles from './noticeList.module.scss'
 
 const columns: TableProps<NoticeType>['columns'] = [
   {
-    title: '구분',
+    title: '카테고리',
     dataIndex: 'category',
     key: 'category',
-    width: 120,
   },
   {
     title: '제목',
@@ -17,76 +19,81 @@ const columns: TableProps<NoticeType>['columns'] = [
     key: 'title',
   },
   {
-    title: '등록일',
+    title: '작성일',
     dataIndex: 'createdAt',
     key: 'createdAt',
-    width: 120,
   },
 ]
 
 const NoticeListPage = () => {
   const navigate = useNavigate()
+  const [noticePage, setNoticePage] = useState(1)
+  const { data: noticeListResponse, isError, error } = useGetNoticeList(noticePage)
+
+  useEffect(() => {
+    if (isError) {
+      console.error('공지사항 목록을 불러오는데 실패했습니다:', error)
+    }
+  }, [isError, error])
+
+  // 응답 데이터를 프론트엔드 타입으로 변환
+  const noticeList = useMemo(() => {
+    if (!noticeListResponse) return []
+
+    console.log('Component Data:', noticeListResponse)
+    return noticeListResponse.map((notice: NoticeListResponse[number]) => {
+      let category: '공지사항' | '이벤트' | '업데이트'
+      if (notice.noticeTypeId === 1) category = '공지사항'
+      else if (notice.noticeTypeId === 2) category = '이벤트'
+      else category = '업데이트'
+
+      return {
+        noticeId: notice.noticeId,
+        category,
+        title: notice.noticeTitle,
+        createdAt: notice.noticeCreatedAt,
+      }
+    })
+  }, [noticeListResponse])
 
   const rowSelection = {
-    // 체크박스 핸들러
-    onSelectAll: (selected: boolean, selectedRows: NoticeType[], changeRows: NoticeType[]) => {
-      console.log('onselectall', selected, selectedRows, changeRows)
+    onChange: (selectedRowKeys: React.Key[], selectedRows: NoticeType[]) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
     },
-    onSelect: (record: NoticeType, selected: boolean, selectedRows: NoticeType[]) => {
-      console.log('onselect', record, selected, selectedRows)
-    },
+    getCheckboxProps: (record: NoticeType) => ({
+      name: record.title,
+    }),
+  }
+
+  const handleCreateNotice = () => {
+    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${ROUTE_PATH.BOARD_NOTICE_EDIT}`)
   }
 
   const handleRowClick = (record: NoticeType) => {
-    const noticeId = record.noticeId
-    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${noticeId}`)
+    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${record.noticeId}`)
   }
 
   return (
-    <section className={styles.noticeList}>
+    <div style={{ padding: 24 }}>
+      <Button className={styles.noticeListPage__button} onClick={handleCreateNotice}>
+        공지사항 작성
+      </Button>
       <Table<NoticeType>
         columns={columns}
-        dataSource={data}
+        dataSource={noticeList}
         rowKey='noticeId'
         rowSelection={rowSelection}
-        onRow={record => {
-          return {
-            onClick: () => handleRowClick(record),
-          }
-        }}
+        onRow={record => ({
+          onClick: () => handleRowClick(record),
+          style: { cursor: 'pointer' },
+        })}
         pagination={{
-          position: ['bottomCenter'],
+          current: noticePage,
+          onChange: setNoticePage,
         }}
       />
-    </section>
+    </div>
   )
 }
 
 export default NoticeListPage
-
-const data: NoticeType[] = [
-  {
-    noticeId: 1,
-    category: '공지사항',
-    title: '공지사항 1',
-    createdAt: '2025-01-01',
-  },
-  {
-    noticeId: 2,
-    category: '업데이트',
-    title: '이벤트 | 업데이트 1',
-    createdAt: '2025-01-01',
-  },
-  {
-    noticeId: 3,
-    category: '공지사항',
-    title: '공지사항 3',
-    createdAt: '2025-01-01',
-  },
-  {
-    noticeId: 4,
-    category: '이벤트',
-    title: '공지사항 4',
-    createdAt: '2025-01-01',
-  },
-]

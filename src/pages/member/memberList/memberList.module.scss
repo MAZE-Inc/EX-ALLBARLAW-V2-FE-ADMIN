@@ -1,0 +1,57 @@
+.member-list-container {
+  :global {
+    // 체크박스 스타일 커스터마이징
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: $color-green-02;
+      border-color: $color-green-02;
+    }
+
+    .ant-checkbox:hover .ant-checkbox-inner {
+      border-color: $color-green-02;
+    }
+
+    .ant-checkbox-input:focus + .ant-checkbox-inner {
+      border-color: $color-green-02;
+      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.12);
+    }
+
+    // 테이블 행 호버 스타일
+    .ant-table-tbody > tr:hover > td {
+      background-color: rgba(82, 196, 26, 0.05) !important;
+    }
+
+    // 선택된 행 스타일
+    .ant-table-tbody > tr.ant-table-row-selected > td {
+      background-color: rgba(82, 196, 26, 0.1);
+    }
+
+    // 정렬 아이콘 색상
+    .ant-table-column-sorter-up.active,
+    .ant-table-column-sorter-down.active {
+      color: $color-green-02;
+    }
+  }
+}
+
+.account-management-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  span {
+    margin-right: 8px;
+  }
+
+  button {
+    &:hover {
+      color: $color-green-02;
+      border-color: $color-green-02;
+    }
+  }
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}

@@ -1,0 +1,138 @@
+.login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: $color-bg-gray-02;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.logo {
+  width: 200px;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  h2 {
+    font-size: 2rem;
+    font-weight: $font-weight-bold;
+    color: $color-icon-darkgreen;
+  }
+  p {
+    font-size: 1rem;
+    color: $color-text-caption;
+  }
+}
+
+.login-form {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.login-form-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1rem;
+  h2 {
+    font-size: 1.75rem;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.login-form-fields {
+  width: 100%;
+}
+
+.login-form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-form-forgot {
+  color: $color-text-caption;
+  &:hover {
+    color: $color-icon-darkgreen;
+  }
+}
+
+.login-form-button {
+  width: 100%;
+  background-color: $color-icon-darkgreen;
+  border-color: $color-icon-darkgreen;
+  color: $color-white;
+
+  &:hover,
+  &:focus {
+    background-color: $color-green-hover !important;
+    border-color: $color-green-hover !important;
+    color: $color-white;
+  }
+  &:active {
+    background-color: #1e6450 !important;
+    border-color: #1e6450 !important;
+    color: $color-white;
+  }
+}
+
+:global {
+  .ant-input-affix-wrapper:focus-within,
+  .ant-input-password:focus-within,
+  .ant-input:focus,
+  .ant-input-focused {
+    border-color: $color-icon-darkgreen;
+    box-shadow: 0 0 0 2px rgba(35, 115, 93, 0.2);
+  }
+
+  .ant-input-affix-wrapper:hover,
+  .ant-input:hover {
+    border-color: $color-icon-darkgreen;
+  }
+
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: $color-icon-darkgreen;
+    border-color: $color-icon-darkgreen;
+  }
+  .ant-checkbox-wrapper:hover .ant-checkbox-inner,
+  .ant-checkbox:hover .ant-checkbox-inner,
+  .ant-checkbox-input:focus + .ant-checkbox-inner {
+    border-color: $color-icon-darkgreen;
+  }
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  p {
+    margin: 0;
+    white-space: pre-line;
+  }
+}
+
+.modal-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  label {
+    // font-size: 1rem;
+    width: 100px;
+  }
+}

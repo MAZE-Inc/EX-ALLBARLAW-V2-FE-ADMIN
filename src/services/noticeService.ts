@@ -1,33 +1,41 @@
 import instance from '@/lib/axios'
-import { NoticePostRequest } from '@/types/noticeTypes'
+import { NoticeDetailResponse, NoticeListResponse, NoticePostRequest } from '@/types/noticeTypes'
 
 export const noticeService = {
-  //   getNoticeList: async (request: NoticeListRequest) => {
-  //     const { take, cursor, cursorId } = request
-  //     const params = new URLSearchParams()
-  //     if (take !== undefined) params.append('take', take.toString())
-  //     if (cursor !== undefined) params.append('cursor', cursor.toString())
-  //     if (cursorId !== undefined) params.append('cursorId', cursorId.toString())
-  //     // 쿼리스트링 생성
-  //     const queryString = params.toString()
-  //     const url = `/notice/${queryString ? `?${queryString}` : ''}`
-  //     try {
-  //       const response = await instance.get<NoticeListResponse>(url)
-  //       return response.data
-  //     } catch (error) {
-  //       console.error('Failed to fetch notice list:', error)
-  //       throw error
-  //     }
-  //   },
-  //   getNoticeDetail: async (noticeId: number) => {
-  //     try {
-  //       const response = await instance.get<NoticeDetailResponse>(`/notice/detail/${noticeId}`)
-  //       return response.data
-  //     } catch (error) {
-  //       console.error('Failed to fetch notice detail:', error)
-  //       throw error
-  //     }
-  //   },
+  getNoticeList: async (noticePage: number) => {
+    try {
+      const response = await instance.get<NoticeListResponse>('/notice', {
+        params: {
+          noticePage: noticePage,
+        },
+      })
+      console.log('API Response:', response.data)
+      return response.data
+    } catch (error) {
+      console.error('Failed to get notice list:', error)
+      throw error
+    }
+  },
+
+  getNoticeDetail: async (noticeId: number) => {
+    try {
+      const response = await instance.get<NoticeDetailResponse>(`/notice/${noticeId}`)
+      return response.data
+    } catch (error) {
+      console.error('Failed to get notice detail:', error)
+      throw error
+    }
+  },
+
+  deleteNotice: async (noticeId: number) => {
+    const response = await instance.delete(`/notice/${noticeId}`)
+    return response.data
+  },
+
+  updateNotice: async (noticeId: number, notice: NoticePostRequest) => {
+    const response = await instance.put(`/notice/${noticeId}`, notice)
+    return response.data
+  },
 
   postNotice: async (notice: NoticePostRequest) => {
     try {
