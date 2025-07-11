@@ -1,20 +1,8 @@
-import ReactQuill, { Quill } from 'react-quill-new'
-import 'react-quill-new/dist/quill.snow.css'
 import { useEffect, useRef, useCallback } from 'react'
+import { Editor } from '@toast-ui/react-editor'
+import '@toast-ui/editor/dist/toastui-editor.css'
 import styles from './rich-text-editor.module.scss'
 import apiClient from '@/lib/axios'
-// Quill 모듈 등록
-const Parchment = Quill.import('parchment')
-
-// 이미지 리사이즈 모듈 동적 임포트
-const loadImageResize = async () => {
-  try {
-    const ImageResize = (await import('quill-image-resize-module-react')).default
-    Quill.register('modules/imageResize', ImageResize)
-  } catch (error) {
-    console.error('이미지 리사이즈 모듈 로드 실패:', error)
-  }
-}
 
 interface RichTextEditorProps {
   value: string
@@ -23,7 +11,7 @@ interface RichTextEditorProps {
   height?: string
   className?: string
   readOnly?: boolean
-  theme?: 'snow' | 'bubble'
+  theme?: 'light' | 'dark'
 }
 
 const RichTextEditor = ({
@@ -33,20 +21,23 @@ const RichTextEditor = ({
   height = '400px',
   className,
   readOnly = false,
-  theme = 'snow',
+  theme = 'light',
 }: RichTextEditorProps) => {
-  const quillRef = useRef<ReactQuill>(null)
+  const editorRef = useRef<Editor>(null)
 
-  // 이미지 리사이즈 모듈 로드
+  // 초기 내용 설정
   useEffect(() => {
-    loadImageResize()
-  }, [])
+    const editorInstance = editorRef.current?.getInstance()
+    if (editorInstance && value !== editorInstance.getHTML()) {
+      editorInstance.setHTML(value)
+    }
+  }, [value])
 
   // 이미지 업로드 핸들러
-  const handleImageUpload = useCallback(async (file: File): Promise<string> => {
+  const handleImageUpload = useCallback(async (blob: Blob, callback: (url: string, alt: string) => void) => {
     try {
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', blob)
       formData.append('folder', 'notice')
 
       const response = await apiClient.post('/file/upload', formData, {
@@ -55,91 +46,43 @@ const RichTextEditor = ({
         },
       })
 
-      console.log(response.data.fileUrl)
-
-      return response.data.fileUrl
+      callback(response.data.fileUrl, 'image')
     } catch (error) {
       console.error('이미지 업로드 실패:', error)
-      throw new Error('이미지 업로드에 실패했습니다.')
     }
   }, [])
 
-  // 개발 환경에서만 deprecation 경고 필터링
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      const originalWarn = console.warn
-      console.warn = (...args) => {
-        if (args[0]?.includes?.('DOMNodeInserted')) {
-          return
-        }
-        originalWarn.apply(console, args)
-      }
-
-      return () => {
-        console.warn = originalWarn
-      }
+  // 에디터 변경 핸들러
+  const handleChange = useCallback(() => {
+    const editorInstance = editorRef.current?.getInstance()
+    if (editorInstance) {
+      const content = editorInstance.getHTML()
+      onChange(content)
     }
-  }, [])
-
-  const modules = {
-    toolbar: readOnly
-      ? false
-      : {
-          container: [
-            [{ header: [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ color: [] }, { background: [] }],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            [{ indent: '-1' }, { indent: '+1' }],
-            [{ align: [] }],
-            ['link', 'image', 'video'],
-            ['clean'],
-          ],
-          handlers: {
-            image: () => {
-              const input = document.createElement('input')
-              input.setAttribute('type', 'file')
-              input.setAttribute('accept', 'image/*')
-              input.click()
-
-              input.onchange = async () => {
-                const file = input.files?.[0]
-                if (file) {
-                  try {
-                    const url = await handleImageUpload(file)
-                    const quillInstance = quillRef.current?.getEditor()
-                    const range = quillInstance?.getSelection()
-                    if (quillInstance && range) {
-                      quillInstance.insertEmbed(range.index, 'image', url)
-                    }
-                  } catch (error) {
-                    console.error('이미지 삽입 실패:', error)
-                  }
-                }
-              }
-            },
-          },
-        },
-    imageResize: {
-      parchment: Parchment,
-      modules: ['Resize', 'DisplaySize'],
-    },
-  }
+  }, [onChange])
 
   return (
     <div className={`${styles.richTextEditor} ${className || ''}`}>
-      <ReactQuill
-        ref={quillRef}
-        theme={theme}
-        value={value}
-        onChange={onChange}
-        modules={modules}
+      <Editor
+        ref={editorRef}
+        initialValue={value}
         placeholder={placeholder}
-        readOnly={readOnly}
-        style={{
-          height: height,
-          marginBottom: readOnly ? '0' : '50px',
+        height={height}
+        theme={theme}
+        onChange={handleChange}
+        initialEditType='wysiwyg'
+        previewStyle='tab'
+        viewer={readOnly}
+        usageStatistics={false}
+        hooks={{
+          addImageBlobHook: handleImageUpload,
         }}
+        toolbarItems={[
+          ['heading', 'bold', 'italic', 'strike'],
+          ['hr', 'quote'],
+          ['ul', 'ol', 'task'],
+          ['table', 'image', 'link'],
+        ]}
       />
     </div>
   )
