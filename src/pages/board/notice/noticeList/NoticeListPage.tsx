@@ -5,6 +5,7 @@ import { useGetNoticeList } from '@/hooks/queries/useGetNoticeList'
 import { useState, useEffect, useMemo } from 'react'
 import { NoticeType, NoticeListResponse } from '@/types/noticeTypes'
 import React from 'react'
+import styles from './noticeList.module.scss'
 
 const columns: TableProps<NoticeType>['columns'] = [
   {
@@ -55,8 +56,6 @@ const NoticeListPage = () => {
     })
   }, [noticeListResponse])
 
-  console.log(noticeList)
-
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: NoticeType[]) => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
@@ -71,8 +70,10 @@ const NoticeListPage = () => {
   }
 
   return (
-    <div>
-      <Button onClick={handleCreateNotice}>공지사항 작성</Button>
+    <div style={{ padding: 24 }}>
+      <Button className={styles.noticeListPage__button} onClick={handleCreateNotice}>
+        공지사항 작성
+      </Button>
       <Table<NoticeType>
         columns={columns}
         dataSource={noticeList}
