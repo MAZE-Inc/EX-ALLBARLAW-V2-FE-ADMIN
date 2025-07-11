@@ -78,7 +78,10 @@ const NoticeDetailPage = () => {
           </div>
         </div>
         <div className={styles.noticeDetail__body}>
-          <Viewer initialValue={noticeDetail.noticeContent} />
+          <Viewer
+            initialValue={noticeDetail.noticeContent}
+            key={`notice-viewer-${noticeId}-${noticeDetail.noticeContent}`}
+          />
         </div>
       </div>
 

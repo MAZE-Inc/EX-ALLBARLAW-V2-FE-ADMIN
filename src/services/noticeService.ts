@@ -32,6 +32,11 @@ export const noticeService = {
     return response.data
   },
 
+  updateNotice: async (noticeId: number, notice: NoticePostRequest) => {
+    const response = await instance.put(`/notice/${noticeId}`, notice)
+    return response.data
+  },
+
   postNotice: async (notice: NoticePostRequest) => {
     try {
       const response = await instance.post('/notice', notice)
