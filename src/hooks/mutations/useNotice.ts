@@ -13,6 +13,9 @@ export const useDeleteNotice = () => {
       message.success('공지사항이 삭제되었습니다.')
       // NOTICE로 시작하는 모든 쿼리 무효화
       queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.NOTICE_DETAIL],
+      })
+      queryClient.invalidateQueries({
         queryKey: [QUERY_KEY.NOTICE_LIST],
       })
     },
@@ -31,6 +34,9 @@ export const useUpdateNotice = () => {
       noticeService.updateNotice(noticeId, notice),
     onSuccess: () => {
       message.success('공지사항이 수정되었습니다.')
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.NOTICE_LIST],
+      })
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEY.NOTICE_DETAIL],
       })
