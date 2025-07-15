@@ -29,4 +29,16 @@ export const memberService = {
 
     return response.data
   },
+
+  updateMemberStatus: async (userId: number, isActive: boolean) => {
+    try {
+      const response = await instance.patch(`/users/${userId}/status`, {
+        userIsActive: isActive,
+      })
+      return response.data
+    } catch (error) {
+      console.error('Failed to update member status:', error)
+      throw error
+    }
+  },
 }

@@ -2,6 +2,8 @@ import { Button, Table, TableProps } from 'antd'
 import styles from './memberList.module.scss'
 import { useState } from 'react'
 import { Member, MemberListRequest } from '@/types/memberType'
+import AccountManagementModal from '@/components/accountManagementModal/AccountManagementModal'
+import dayjs from 'dayjs'
 
 interface MemberListProps {
   data: Member[]
@@ -11,12 +13,20 @@ interface MemberListProps {
   currentSort: MemberListRequest['sort']
 }
 
-const handleManageAccount = (userId: string) => {
-  console.log(`계정 관리 버튼 클릭: ${userId}`)
-}
-
 const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: MemberListProps) => {
   const [selectedRows, setSelectedRows] = useState<Member[]>([])
+  const [modalVisible, setModalVisible] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<Member | null>(null)
+
+  const handleManageAccount = (user: Member) => {
+    setSelectedUser(user)
+    setModalVisible(true)
+  }
+
+  const handleModalClose = () => {
+    setModalVisible(false)
+    setSelectedUser(null)
+  }
 
   // Convert API sort type to Ant Design sort type
   const getSortOrder = (field: MemberListRequest['orderBy']) => {
@@ -60,6 +70,8 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
       onHeaderCell: () => ({
         onClick: () => onSort('createdAt'),
       }),
+      width: 150,
+      render: (value: string) => (value ? dayjs(value).format('YY-MM-DD HH:mm') : ''),
     },
     {
       title: '계정관리',
@@ -67,7 +79,7 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
       render: (isActive: boolean, record: Member) => (
         <div className={styles['account-management-cell']}>
           <span>{isActive ? '사용중' : '정지'}</span>
-          <Button size='small' onClick={() => handleManageAccount(record.userId.toString())}>
+          <Button size='small' onClick={() => handleManageAccount(record)}>
             계정관리
           </Button>
         </div>
@@ -107,6 +119,17 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
         loading={loading}
         onChange={() => {}} // 정렬은 헤더 클릭으로 처리
       />
+      {selectedUser && (
+        <AccountManagementModal
+          visible={modalVisible}
+          onClose={handleModalClose}
+          accountInfo={{
+            userId: selectedUser.userId,
+            userIsActive: selectedUser.userIsActive,
+            userBanReason: selectedUser.userBanReason || null,
+          }}
+        />
+      )}
     </div>
   )
 }
