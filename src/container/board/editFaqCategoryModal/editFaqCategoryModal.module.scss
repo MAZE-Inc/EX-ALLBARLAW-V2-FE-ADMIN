@@ -1,0 +1,83 @@
+.editFaqCategoryModal {
+  margin-top: 24px;
+
+  .ant-table {
+    .ant-table-tbody {
+      tr {
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+        cursor: default; // 기본 커서를 default로 변경
+
+        &:active {
+          cursor: default; // 드래그 중에도 default 커서 유지
+        }
+
+        &:hover {
+          background-color: #fafafa;
+        }
+
+        &.dragging-row {
+          background-color: #e6f7ff !important;
+          border: 2px solid #1890ff;
+          border-radius: 8px;
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+          opacity: 0.95;
+          z-index: 1000;
+          position: relative;
+          cursor: grabbing;
+
+          td {
+            border-radius: 8px;
+            background-color: transparent;
+          }
+        }
+
+        // 드래그 중이 아닌 행들의 부드러운 이동 애니메이션
+        &:not(.dragging-row) {
+          transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.2s ease,
+            box-shadow 0.2s ease;
+        }
+      }
+    }
+  }
+
+  // 햄버거 아이콘 스타일 (드래그 핸들러)
+  .hamburger-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #666;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: transparent;
+    border: none;
+    cursor: grab; // 드래그 가능한 커서
+    pointer-events: auto; // 클릭 이벤트 활성화
+    user-select: none; // 텍스트 선택 방지
+    touch-action: none; // 터치 액션 방지
+
+    &:hover {
+      color: #1890ff;
+      background-color: #f0f0f0;
+    }
+
+    &:active {
+      cursor: grabbing;
+      background-color: #e6f7ff;
+    }
+  }
+
+  // 테이블 헤더 스타일
+  .ant-table-thead {
+    th {
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #fafafa;
+      }
+    }
+  }
+}

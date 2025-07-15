@@ -1,12 +1,10 @@
+import SearchHeader, { SearchHeaderMenuItemType } from '@/components/searchHeader/SearchHeader'
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
-// import { Button } from 'antd'
-import SearchHeader, { SearchHeaderMenuItemType } from '../../../components/searchHeader/SearchHeader'
-import styles from './notice-layout.module.scss'
-// import { ROUTE_PATH } from '@/routes/routePath'
-import { noticeMenuItems } from '@/constants/board'
+import styles from './faqLayout.module.scss'
+import { MockupFaqMenuItems } from '@/constants/board'
 
-const NoticeLayout = () => {
+const FaqLayout = () => {
   const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>(null)
   const [_searchValue, setSearchValue] = useState('')
   // const navigate = useNavigate()
@@ -21,21 +19,21 @@ const NoticeLayout = () => {
   }
 
   return (
-    <div className={styles.noticeListPage}>
+    <div className={styles.faqListPage}>
       <SearchHeader
         selectedItem={selectedItem}
         onSelectionChange={handleSelectionChange}
         placeholder='분류 선택'
         searchPlaceholder='검색어를 입력하세요'
         onSearch={handleSearch}
-        menuItems={noticeMenuItems}
+        menuItems={MockupFaqMenuItems}
         bordered={false}
         title={`전체 : ${noticeCount}개가 등록되어 있습니다.`}
-        className={styles.noticeListPage__searchHeader}
+        className={styles.faqListPage__searchHeader}
       />
       <Outlet />
     </div>
   )
 }
 
-export default NoticeLayout
+export default FaqLayout

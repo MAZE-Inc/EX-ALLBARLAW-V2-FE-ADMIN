@@ -12,7 +12,6 @@ import {
   BlogPage,
   CategoryManagementPage,
   ChatListPage,
-  FAQPage,
   KnowledgePage,
   LawyerManagementPage,
   LawyerMemberPage,
@@ -23,6 +22,8 @@ import {
   VideoPage,
   NoticeEditPage,
   NoticeListPage,
+  FaqLayout,
+  FaqListPage,
 } from '@/pages'
 import NoticeLayout from '@/pages/board/noticeLayout/NoticeListPage'
 import LoginPage from '@/pages/login/LoginPage'
@@ -117,7 +118,13 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.BOARD_FAQ,
-        element: <FAQPage />,
+        element: <FaqLayout />,
+        children: [
+          {
+            path: '',
+            element: <FaqListPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.BOARD_LEGAL_DICTIONARY,
