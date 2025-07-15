@@ -12,6 +12,11 @@ export type Member = {
   userEmail: string
   userCreatedAt: string
   userIsActive: boolean
+  userBanReason: string | null
 }
 
 export type MemberListResponse = Member[]
+
+export type MemberAccountManagementRequest = Pick<Member, 'userId' | 'userIsActive'> & {
+  userBanReason: string
+}

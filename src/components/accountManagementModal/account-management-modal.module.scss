@@ -1,0 +1,107 @@
+.form {
+  .formRow {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    .formItem {
+      flex: 1;
+      margin-bottom: 0;
+    }
+  }
+
+  .statusItem {
+    margin-bottom: 0;
+  }
+
+  :global {
+    .ant-form-item-label > label {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .ant-input[disabled] {
+      background-color: #f5f5f5;
+      color: #666;
+    }
+
+    .ant-radio-group {
+      font-size: 16px;
+      .ant-radio-wrapper {
+        margin-right: 32px;
+      }
+    }
+  }
+}
+
+.accountTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  td {
+    border: none;
+    padding: 16px 12px;
+    vertical-align: top;
+  }
+  .label {
+    width: 160px;
+    background: #f8f8f8;
+    font-weight: 500;
+    font-size: 16px;
+  }
+  .initBtn {
+    margin-bottom: 8px;
+    background: $color-green-02;
+    border-radius: 16px;
+    color: #fff;
+    border: 1px solid $color-green-02;
+    font-weight: 500;
+    transition: background 0.2s;
+    &:hover,
+    &:focus {
+      background: darken($color-green-02, 5%);
+      border-color: darken($color-green-02, 5%);
+      color: #fff;
+    }
+  }
+  .infoText {
+    font-size: 13px;
+    color: #222;
+    margin-top: 4px;
+  }
+}
+
+.accountTable td {
+  border: 1px solid $color-line-borderbox;
+}
+
+.statusItem {
+  margin-bottom: 0;
+}
+
+:global {
+  .ant-radio-group {
+    font-size: 16px;
+    .ant-radio-wrapper {
+      margin-right: 32px;
+    }
+  }
+  .ant-input,
+  .ant-input-textarea {
+    font-size: 16px;
+  }
+  .ant-radio-checked .ant-radio-inner {
+    border-color: $color-green-02;
+    background-color: $color-green-02;
+  }
+  .ant-radio-inner {
+    border-color: $color-green-02;
+  }
+  .ant-radio:hover .ant-radio-inner {
+    border-color: $color-green-02;
+  }
+  .ant-radio-input:focus + .ant-radio-inner {
+    border-color: $color-green-02;
+    box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.12);
+  }
+}
