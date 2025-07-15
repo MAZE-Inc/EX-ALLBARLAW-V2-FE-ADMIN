@@ -3,6 +3,7 @@ import styles from './memberList.module.scss'
 import { useState } from 'react'
 import { Member, MemberListRequest } from '@/types/memberType'
 import AccountManagementModal from '@/components/accountManagementModal/AccountManagementModal'
+import dayjs from 'dayjs'
 
 interface MemberListProps {
   data: Member[]
@@ -69,6 +70,8 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
       onHeaderCell: () => ({
         onClick: () => onSort('createdAt'),
       }),
+      width: 150,
+      render: (value: string) => (value ? dayjs(value).format('YY-MM-DD HH:mm') : ''),
     },
     {
       title: '계정관리',
