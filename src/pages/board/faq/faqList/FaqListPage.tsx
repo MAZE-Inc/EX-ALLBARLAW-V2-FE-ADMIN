@@ -33,6 +33,10 @@ const FaqListPage = () => {
     }
   }
 
+  const handleFaqRegister = (e: React.MouseEvent) => {
+    navigate(`${ROUTE_PATH.BOARD_FAQ_EDIT}`)
+  }
+
   // 체크박스 선택 처리
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys)
@@ -108,7 +112,7 @@ const FaqListPage = () => {
     <div style={{ padding: 24 }}>
       <section className={styles.faqListPage__buttonContainer}>
         <Button onClick={showModal}>FAQ 분류 등록하기</Button>
-        <Button>FAQ 등록하기</Button>
+        <Button onClick={handleFaqRegister}>FAQ 등록하기</Button>
       </section>
       <Table
         columns={columns}

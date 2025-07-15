@@ -23,6 +23,11 @@ const FaqEditPage = () => {
 
   const [loading, setLoading] = useState(false)
   const [faqData, setFaqData] = useState<FaqDetailResponse | null>(null)
+  const [formData, setFormData] = useState({
+    category: '',
+    question: '',
+    answer: '',
+  })
 
   useEffect(() => {
     if (isEditMode) {
@@ -32,11 +37,13 @@ const FaqEditPage = () => {
 
       if (passedData) {
         setFaqData(passedData)
-        form.setFieldsValue({
+        const initialData = {
           category: passedData.category,
           question: passedData.question,
           answer: passedData.answer,
-        })
+        }
+        setFormData(initialData)
+        form.setFieldsValue(initialData)
       } else {
         message.error('잘못된 접근입니다. 목록에서 다시 시도해주세요.')
         navigate(ROUTE_PATH.BOARD_FAQ)
@@ -105,8 +112,12 @@ const FaqEditPage = () => {
               options={categoryOptions}
               size='large'
               className={styles.selectInput}
-              value={form.getFieldValue('category')}
-              onChange={value => form.setFieldValue('category', value)}
+              value={formData.category}
+              onChange={value => {
+                const newData = { ...formData, category: value }
+                setFormData(newData)
+                form.setFieldValue('category', value)
+              }}
             />
           </div>
         </div>
@@ -120,8 +131,12 @@ const FaqEditPage = () => {
               placeholder='FAQ 질문을 입력하세요'
               size='large'
               className={styles.titleInput}
-              value={form.getFieldValue('question')}
-              onChange={e => form.setFieldValue('question', e.target.value)}
+              value={formData.question}
+              onChange={e => {
+                const newData = { ...formData, question: e.target.value }
+                setFormData(newData)
+                form.setFieldValue('question', e.target.value)
+              }}
             />
           </div>
         </div>
@@ -136,8 +151,12 @@ const FaqEditPage = () => {
               rows={8}
               size='large'
               className={styles.answerInput}
-              value={form.getFieldValue('answer')}
-              onChange={e => form.setFieldValue('answer', e.target.value)}
+              value={formData.answer}
+              onChange={e => {
+                const newData = { ...formData, answer: e.target.value }
+                setFormData(newData)
+                form.setFieldValue('answer', e.target.value)
+              }}
             />
           </div>
         </div>
@@ -152,10 +171,10 @@ const FaqEditPage = () => {
               loading={loading}
               size='large'
               className={styles.saveButton}
+              disabled={!formData.category.trim() || !formData.question.trim() || !formData.answer.trim()}
               onClick={() => {
-                const values = form.getFieldsValue()
-                if (values.category && values.question && values.answer) {
-                  handleSave(values)
+                if (formData.category.trim() && formData.question.trim() && formData.answer.trim()) {
+                  handleSave(formData)
                 } else {
                   message.error('모든 필드를 입력해주세요.')
                 }

@@ -131,6 +131,10 @@ const router = createBrowserRouter([
             element: <FaqDetailPage />,
           },
           {
+            path: ROUTE_PATH.BOARD_FAQ_EDIT,
+            element: <FaqEditPage />,
+          },
+          {
             path: `${ROUTE_PATH.BOARD_FAQ_EDIT}/:faqId`,
             element: <FaqEditPage />,
           },
