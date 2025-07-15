@@ -40,7 +40,6 @@ const NoticeListPage = () => {
   const noticeList = useMemo(() => {
     if (!noticeListResponse) return []
 
-    console.log('Component Data:', noticeListResponse)
     return noticeListResponse.map((notice: NoticeListResponse[number]) => {
       let category: '공지사항' | '이벤트' | '업데이트'
       if (notice.noticeTypeId === 1) category = '공지사항'

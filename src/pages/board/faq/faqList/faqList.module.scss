@@ -5,5 +5,87 @@
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
-  justify-content: flex-end;
+  justify-content: space-between;
+}
+
+.faqTable {
+  // 체크박스 컬럼 전체 스타일
+  :global(.ant-table-selection-column) {
+    text-align: center !important;
+    width: 5% !important;
+  }
+
+  // 체크박스 헤더
+  :global(.ant-table-thead .ant-table-selection-column) {
+    text-align: center !important;
+  }
+
+  // 체크박스 데이터 셀
+  :global(.ant-table-tbody .ant-table-selection-column) {
+    text-align: center !important;
+  }
+
+  // 체크박스 자체
+  :global(.ant-checkbox-wrapper) {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  // 체크박스 컨테이너
+  :global(.ant-table-selection) {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  // 체크박스 셀 내부 모든 요소
+  :global(.ant-table-selection-column .ant-table-cell) {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  // 체크박스 헤더 셀
+  :global(.ant-table-thead .ant-table-selection-column .ant-table-cell) {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  // 체크박스 데이터 셀
+  :global(.ant-table-tbody .ant-table-selection-column .ant-table-cell) {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+}
+
+.faqCategoryModal {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 8px 0;
+
+  margin-top: 24px;
+
+  border-bottom: 1px solid $color-line-borderbox;
+  border-top: 1px solid $color-line-borderbox;
+
+  label {
+    height: 100%;
+    font-size: 14px;
+    // font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    padding-right: 16px;
+
+    border-right: 1px dashed $color-line-borderbox;
+  }
 }

@@ -24,6 +24,8 @@ import {
   NoticeListPage,
   FaqLayout,
   FaqListPage,
+  FaqDetailPage,
+  FaqEditPage,
 } from '@/pages'
 import NoticeLayout from '@/pages/board/noticeLayout/NoticeListPage'
 import LoginPage from '@/pages/login/LoginPage'
@@ -123,6 +125,14 @@ const router = createBrowserRouter([
           {
             path: '',
             element: <FaqListPage />,
+          },
+          {
+            path: ':faqId',
+            element: <FaqDetailPage />,
+          },
+          {
+            path: `${ROUTE_PATH.BOARD_FAQ_EDIT}/:faqId`,
+            element: <FaqEditPage />,
           },
         ],
       },

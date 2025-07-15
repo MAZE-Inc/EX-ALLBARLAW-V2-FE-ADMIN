@@ -19,10 +19,14 @@ import NoticeEditPage from './board/notice/noticeEdit/NoticeEditPage'
 import NoticeListPage from './board/notice/noticeList/NoticeListPage'
 import FaqLayout from './board/faq/faqLayout/FaqLayout'
 import FaqListPage from './board/faq/faqList/FaqListPage'
+import FaqDetailPage from './board/faq/faqDetail/FaqDetailPage'
+import FaqEditPage from './board/faq/faqEdit/FaqEditPage'
 
 export {
   FaqLayout,
   FaqListPage,
+  FaqDetailPage,
+  FaqEditPage,
   LegalDictionary,
   AdminManagementPage,
   AdminRegisterPage,

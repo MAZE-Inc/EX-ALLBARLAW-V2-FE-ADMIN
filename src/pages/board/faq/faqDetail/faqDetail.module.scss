@@ -1,0 +1,45 @@
+.faqDetailTable {
+  // 테이블 전체에 보더 추가
+  :global(.ant-table) {
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+  }
+
+  // 첫 번째 컬럼(구분) 배경색을 회색으로 설정
+  :global(.ant-table-tbody .ant-table-cell:first-child) {
+    background-color: #f5f5f5;
+    font-weight: 600;
+  }
+
+  // 테이블 행에 보더 추가
+  :global(.ant-table-tbody .ant-table-row) {
+    border-bottom: 1px solid #d9d9d9;
+  }
+
+  // 마지막 행의 하단 보더 제거
+  :global(.ant-table-tbody .ant-table-row:last-child) {
+    border-bottom: none;
+  }
+
+  // 답변 행의 높이를 길게 설정
+  :global(.ant-table-tbody .ant-table-row:nth-child(3)) {
+    height: 300px;
+  }
+
+  // 답변 셀의 세로 정렬을 상단으로 설정
+  :global(.ant-table-tbody .ant-table-row:nth-child(3) .ant-table-cell) {
+    vertical-align: top;
+    padding-top: 16px;
+  }
+}
+
+.faqDetail__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.faqDetail__footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
