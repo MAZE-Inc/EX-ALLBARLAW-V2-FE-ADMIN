@@ -59,8 +59,8 @@
     transition: background 0.2s;
     &:hover,
     &:focus {
-      background: darken($color-green-02, 5%);
-      border-color: darken($color-green-02, 5%);
+      background: $color-green-02;
+      border-color: $color-green-02;
       color: #fff;
     }
   }
@@ -79,29 +79,56 @@
   margin-bottom: 0;
 }
 
+.fixedTextarea {
+  width: 100% !important;
+  height: 120px !important;
+  min-height: 120px !important;
+  max-height: 120px !important;
+  resize: none !important;
+}
+
 :global {
   .ant-radio-group {
     font-size: 16px;
     .ant-radio-wrapper {
       margin-right: 32px;
     }
+    // '정지' 라디오 버튼만 초록색
   }
   .ant-input,
   .ant-input-textarea {
     font-size: 16px;
   }
   .ant-radio-checked .ant-radio-inner {
-    border-color: $color-green-02;
-    background-color: $color-green-02;
+    border-color: $color-green-02 !important;
+    background-color: $color-green-02 !important;
   }
   .ant-radio-inner {
-    border-color: $color-green-02;
+    // border-color: $color-green-02 !important;
   }
   .ant-radio:hover .ant-radio-inner {
-    border-color: $color-green-02;
+    border-color: $color-green-02 !important;
   }
   .ant-radio-input:focus + .ant-radio-inner {
-    border-color: $color-green-02;
-    box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.12);
+    // border-color: $color-green-02 !important;
+    box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.12) !important;
+  }
+  // 저장 버튼(Modal 하단 primary)
+  .ant-btn-primary {
+    background: $color-green-02 !important;
+    border-color: $color-green-02 !important;
+    color: #fff !important;
+    font-weight: 500;
+    &:hover,
+    &:focus {
+      background: $color-green-02 !important;
+      border-color: $color-green-02 !important;
+      color: #fff !important;
+    }
+    &:disabled {
+      background: #e0e0e0 !important;
+      border-color: #e0e0e0 !important;
+      color: #fff !important;
+    }
   }
 }

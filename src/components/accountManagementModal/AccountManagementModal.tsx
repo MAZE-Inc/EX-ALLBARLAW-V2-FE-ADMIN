@@ -27,18 +27,20 @@ const AccountManagementModal = ({ visible, onClose, accountInfo }: AdminAccountM
     const values = form.getFieldsValue(['adminIsActive', 'suspendReason'])
     const isChanged =
       values.adminIsActive !== accountInfo.userIsActive || values.suspendReason !== (accountInfo.userBanReason || '')
+    // '정지'일 때만 정지사유 필수, '사용'일 때는 상관없음
     const isSuspendAndEmpty = values.adminIsActive === false && !values.suspendReason?.trim()
-    setIsFormValid(isChanged && !isSuspendAndEmpty)
+    setIsFormValid(isChanged && (values.adminIsActive === true || !isSuspendAndEmpty))
   }
 
-  // 계정 사용여부(라디오) 변경 시 인풋 에러 초기화
-  const handleActiveChange = (e: any) => {
+  // 계정 사용여부(라디오) 변경 시 인풋 및 값 초기화
+  const handleActiveChange = () => {
     form.setFields([
       {
         name: 'suspendReason',
         errors: [],
       },
     ])
+    form.setFieldsValue({ suspendReason: '' })
     handleFieldsChange()
   }
 
@@ -90,7 +92,11 @@ const AccountManagementModal = ({ visible, onClose, accountInfo }: AdminAccountM
               <td className={styles.label}>계정 정지사유</td>
               <td>
                 <Form.Item name='suspendReason' noStyle rules={[{ required: true, message: '정지사유를 입력하세요.' }]}>
-                  <Input.TextArea rows={4} placeholder='계정 정지 사유를 입력하세요.' style={{ width: '100%' }} />
+                  <Input.TextArea
+                    rows={4}
+                    placeholder='계정 정지 사유를 입력하세요.'
+                    className={styles.fixedTextarea}
+                  />
                 </Form.Item>
               </td>
             </tr>
