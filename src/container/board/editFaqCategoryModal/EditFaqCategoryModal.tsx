@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Form, Table } from 'antd'
+import { Modal, Form, Table, Button, Input } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import {
   DndContext,
@@ -64,6 +64,8 @@ const EditFaqCategoryModal = ({ isModalVisible, onCancle }: EditFaqCategoryModal
     { key: '2', id: 2, name: '로그인', description: '로그인 관련 FAQ', order: 2 },
     { key: '3', id: 3, name: '결제', description: '결제 관련 FAQ', order: 3 },
   ])
+  const [showAddForm, setShowAddForm] = useState(false)
+  const [newCategoryName, setNewCategoryName] = useState('')
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -95,6 +97,26 @@ const EditFaqCategoryModal = ({ isModalVisible, onCancle }: EditFaqCategoryModal
     }
   }
 
+  const handleAddCategory = () => {
+    if (newCategoryName.trim()) {
+      const newCategory: FaqCategory = {
+        key: String(categories.length + 1),
+        id: categories.length + 1,
+        name: newCategoryName.trim(),
+        description: `${newCategoryName.trim()} 관련 FAQ`,
+        order: categories.length + 1,
+      }
+      setCategories([...categories, newCategory])
+      setNewCategoryName('')
+      setShowAddForm(false)
+    }
+  }
+
+  const handleCancelAdd = () => {
+    setNewCategoryName('')
+    setShowAddForm(false)
+  }
+
   const columns: ColumnsType<FaqCategory> = [
     {
       title: 'FAQ 분류',
@@ -119,7 +141,7 @@ const EditFaqCategoryModal = ({ isModalVisible, onCancle }: EditFaqCategoryModal
   }
 
   return (
-    <Modal title='FAQ 분류 설정' open={isModalVisible} onCancel={handleCancel} width={800}>
+    <Modal title='FAQ 분류 설정' open={isModalVisible} onCancel={handleCancel} width={800} footer={null}>
       <div className={styles.editFaqCategoryModal}>
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={categories.map(item => item.key)} strategy={verticalListSortingStrategy}>
@@ -135,6 +157,33 @@ const EditFaqCategoryModal = ({ isModalVisible, onCancle }: EditFaqCategoryModal
             />
           </SortableContext>
         </DndContext>
+
+        <div className={styles.addCategorySection}>
+          {!showAddForm ? (
+            <Button
+              type='dashed'
+              onClick={() => setShowAddForm(true)}
+              icon={<span>+</span>}
+              className={styles.addButton}
+            >
+              카테고리 추가
+            </Button>
+          ) : (
+            <div className={styles.addForm}>
+              <Input
+                placeholder='카테고리 이름을 입력하세요'
+                value={newCategoryName}
+                onChange={e => setNewCategoryName(e.target.value)}
+                onPressEnter={handleAddCategory}
+                autoFocus
+              />
+              <Button type='primary' onClick={handleAddCategory}>
+                등록
+              </Button>
+              <Button onClick={handleCancelAdd}>취소</Button>
+            </div>
+          )}
+        </div>
       </div>
     </Modal>
   )
