@@ -17,8 +17,6 @@ const FaqListPage = () => {
   const { data: faqList, isLoading } = useReadFaq(1)
   const { mutate: createFaqType } = useCreateFaqType()
 
-  console.log('FAQ List:', faqList)
-
   const showModal = () => {
     setIsModalVisible(true)
   }

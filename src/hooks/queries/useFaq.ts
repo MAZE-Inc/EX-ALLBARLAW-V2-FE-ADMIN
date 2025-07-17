@@ -86,3 +86,13 @@ export const useDeleteFaq = () => {
     },
   })
 }
+
+export const useReadFaqCount = () => {
+  return useQuery({
+    queryKey: [QUERY_KEY.FAQ_COUNT],
+    queryFn: async () => {
+      const res = await faqService.readFaqCount()
+      return res.data
+    },
+  })
+}

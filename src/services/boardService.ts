@@ -55,6 +55,7 @@ export const noticeService = {
 }
 
 export const faqService = {
+  readFaqCount: async () => await instance.get('/faq/count'),
   readFaqType: async () => await instance.get('/faq/types'),
   createFaqType: async (faqTypeName: string) => await instance.post('/faq/types', { faqTypeName }),
   readFaq: async (faqPage: number) => await instance.get('/faq', { params: { faqPage } }),

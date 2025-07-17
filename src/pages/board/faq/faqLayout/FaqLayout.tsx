@@ -3,12 +3,12 @@ import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import styles from './faqLayout.module.scss'
 import { MockupFaqMenuItems } from '@/constants/board'
+import { useReadFaqCount } from '@/hooks/queries/useFaq'
 
 const FaqLayout = () => {
   const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>(null)
   const [_searchValue, setSearchValue] = useState('')
-  // const navigate = useNavigate()
-  const noticeCount = 10
+  const { data: faqCount } = useReadFaqCount()
 
   const handleSelectionChange = (item: SearchHeaderMenuItemType) => {
     setSelectedItem(item)
@@ -28,7 +28,7 @@ const FaqLayout = () => {
         onSearch={handleSearch}
         menuItems={MockupFaqMenuItems}
         bordered={false}
-        title={`전체 : ${noticeCount}개가 등록되어 있습니다.`}
+        title={`전체 : ${faqCount?.total}개가 등록되어 있습니다.`}
         className={styles.faqListPage__searchHeader}
       />
       <Outlet />
