@@ -15,9 +15,15 @@ const FaqListPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [categoryInput, setCategoryInput] = useState('')
-  const { data: faqList, isLoading } = useReadFaq(1)
+  const [currentPage, setCurrentPage] = useState(1)
+  const { data: faqList, isLoading } = useReadFaq(currentPage)
   const { mutate: createFaqType } = useCreateFaqType()
   const { data: faqCount } = useReadFaqCount()
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
 
   const showModal = () => {
     setIsModalVisible(true)
@@ -108,8 +114,8 @@ const FaqListPage = () => {
       <Pagination
         className={styles.faqListPage__pagination}
         totalPages={Math.ceil((faqCount?.total || 0) / (faqList?.size || 10))}
-        currentPage={faqList?.page || 1}
-        onPageChange={page => console.log('Page changed to:', page)}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
       />
       <Modal
         title='FAQ 분류 등록'

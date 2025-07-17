@@ -52,6 +52,7 @@ export const useCreateFaq = () => {
     mutationFn: (faq: FaqEditRequest) => faqService.createFaq(faq),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FAQ_LIST] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FAQ_COUNT] })
     },
     onError: (error: Error) => {
       console.error('FAQ 등록 실패:', error)
