@@ -2,12 +2,13 @@ import { Button, Space, Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import styles from './faqDetail.module.scss'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
 import { useDeleteFaq, useReadFaqDetail } from '@/hooks/queries/useFaq'
 
 const FaqDetailPage = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { faqId } = useParams()
   const { data: faqData } = useReadFaqDetail(Number(faqId))
   const { mutate: deleteFaq } = useDeleteFaq()
@@ -65,7 +66,11 @@ const FaqDetailPage = () => {
     },
   ]
 
-  const handleBack = () => navigate(ROUTE_PATH.BOARD_FAQ)
+  const handleBack = () => {
+    // 이전 페이지 정보가 있으면 해당 페이지로, 없으면 기본 페이지로
+    const fromPage = location.state?.fromPage || 1
+    navigate(`${ROUTE_PATH.BOARD_FAQ}?page=${fromPage}`)
+  }
 
   const handleEdit = () => {
     if (faqData) {

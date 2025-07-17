@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, Input, Modal, Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import styles from './faqList.module.scss'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
 import { useCreateFaqType, useReadFaq, useReadFaqCount } from '@/hooks/queries/useFaq'
 import { Faq } from '@/types/boardTypes'
@@ -12,17 +12,21 @@ const QuestionTitle = () => <div style={{ textAlign: 'center' }}>질문</div>
 
 const FaqListPage = () => {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [categoryInput, setCategoryInput] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
+
+  // URL에서 페이지 정보 가져오기 (기본값: 1)
+  const currentPage = Number(searchParams.get('page')) || 1
+
   const { data: faqList, isLoading } = useReadFaq(currentPage)
   const { mutate: createFaqType } = useCreateFaqType()
   const { data: faqCount } = useReadFaqCount()
 
   // 페이지 변경 핸들러
   const handlePageChange = (page: number) => {
-    setCurrentPage(page)
+    setSearchParams({ page: page.toString() })
   }
 
   const showModal = () => {
@@ -108,7 +112,10 @@ const FaqListPage = () => {
         size='middle'
         loading={isLoading}
         onRow={record => ({
-          onClick: () => navigate(`${ROUTE_PATH.BOARD_FAQ}/${record.id}`),
+          onClick: () =>
+            navigate(`${ROUTE_PATH.BOARD_FAQ}/${record.id}`, {
+              state: { fromPage: currentPage },
+            }),
         })}
       />
       <Pagination
