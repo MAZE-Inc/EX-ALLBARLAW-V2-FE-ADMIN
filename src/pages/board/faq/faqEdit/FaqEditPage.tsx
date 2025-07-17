@@ -81,7 +81,6 @@ const FaqEditPage = () => {
 
   const handleCancel = () => navigate(-1)
 
-  console.log(categoryOptions)
   return (
     <div className={styles.faqEditPage}>
       <section className={styles.faqEditPage__form}>
