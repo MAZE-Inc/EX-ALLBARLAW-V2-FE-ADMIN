@@ -5,7 +5,7 @@ import { message } from 'antd'
 import { NoticeDetailResponse } from '@/types/boardTypes'
 import { ROUTE_PATH } from '@/routes/routePath'
 import { usePostNotice } from '@/hooks/mutations/usePostNotice'
-import { useUpdateNotice } from '@/hooks/queries/useNotice'
+import { useReadNoticeType, useUpdateNotice } from '@/hooks/queries/useNotice'
 
 const NoticeEditPage = () => {
   const navigate = useNavigate()
@@ -14,15 +14,16 @@ const NoticeEditPage = () => {
   const isEditMode = Boolean(noticeId)
   const { mutate: postNotice } = usePostNotice()
   const { mutate: updateNotice } = useUpdateNotice()
+  const { noticeTypeResponse } = useReadNoticeType()
 
   const [loading, setLoading] = useState(false)
   const [noticeData, setNoticeData] = useState<NoticeDetailResponse | null>(null)
 
   useEffect(() => {
     if (isEditMode) {
-      console.log('Location State:', location.state)
+      // console.log('Location State:', location.state)
       const passedData = location.state?.noticeDetail as NoticeDetailResponse | undefined
-      console.log('Passed Data:', passedData)
+      // console.log('Passed Data:', passedData)
 
       if (passedData) {
         setNoticeData(passedData)
@@ -33,7 +34,7 @@ const NoticeEditPage = () => {
     }
   }, [isEditMode, location.state, navigate])
 
-  console.log('Notice Data:', noticeData)
+  // console.log('Notice Data:', noticeData)
 
   const handleSave = async (data: { title: string; content: string; radioValue?: string }) => {
     try {
@@ -93,11 +94,11 @@ const NoticeEditPage = () => {
     navigate(-1)
   }
 
-  const radioOptions = [
-    { label: '공지', value: '1' },
-    { label: '업데이트', value: '2' },
-    { label: '이벤트', value: '3' },
-  ]
+  // noticeTypeResponse를 라디오 옵션 형태로 변환
+  const radioOptions = noticeTypeResponse?.map((type: any) => ({
+    label: type.noticeTypeName,
+    value: String(type.noticeTypeId),
+  }))
 
   return (
     <section style={{ padding: 36 }}>

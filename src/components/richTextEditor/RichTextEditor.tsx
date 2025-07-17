@@ -25,7 +25,7 @@ const RichTextEditor = ({
 
   // 초기 내용 설정
   useEffect(() => {
-    console.log('Editor value changed:', value)
+    // console.log('Editor value changed:', value)
     const editorInstance = editorRef.current?.getInstance()
     if (editorInstance) {
       const currentContent = editorInstance.getHTML()

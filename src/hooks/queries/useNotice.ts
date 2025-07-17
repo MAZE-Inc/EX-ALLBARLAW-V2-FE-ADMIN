@@ -16,6 +16,8 @@ export const useReadNoticeType = () => {
       const res = await noticeService.readNoticeType()
       return res.data
     },
+    staleTime: 5 * 60 * 1000, // 5분간 캐시 유지
+    refetchOnMount: false, // 컴포넌트 마운트 시 재요청 방지
   })
 
   const getTypeName = (noticeTypeId: number) =>
