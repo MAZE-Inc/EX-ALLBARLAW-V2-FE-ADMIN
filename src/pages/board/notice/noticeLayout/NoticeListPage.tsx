@@ -5,12 +5,12 @@ import SearchHeader, { SearchHeaderMenuItemType } from '../../../../components/s
 import styles from './notice-layout.module.scss'
 // import { ROUTE_PATH } from '@/routes/routePath'
 import { noticeMenuItems } from '@/constants/board'
+import { useReadNoticeCount } from '@/hooks/queries/useNotice'
 
 const NoticeLayout = () => {
   const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>(null)
   const [_searchValue, setSearchValue] = useState('')
-  // const navigate = useNavigate()
-  const noticeCount = 10
+  const { data: noticeCount } = useReadNoticeCount()
 
   const handleSelectionChange = (item: SearchHeaderMenuItemType) => {
     setSelectedItem(item)
@@ -30,7 +30,7 @@ const NoticeLayout = () => {
         onSearch={handleSearch}
         menuItems={noticeMenuItems}
         bordered={false}
-        title={`전체 : ${noticeCount}개가 등록되어 있습니다.`}
+        title={`전체 : ${noticeCount?.total}개가 등록되어 있습니다.`}
         className={styles.noticeListPage__searchHeader}
       />
       <Outlet />

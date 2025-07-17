@@ -1,19 +1,23 @@
 import { Button, Table, TableProps } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
 import { useState, useEffect, useMemo } from 'react'
 import { NoticeType, ServerNoticeType } from '@/types/boardTypes'
 import React from 'react'
 import styles from './noticeList.module.scss'
 import dayjs from 'dayjs'
-import { useGetNoticeList, useReadNoticeType } from '@/hooks/queries/useNotice'
+import { useGetNoticeList, useReadNoticeCount, useReadNoticeType } from '@/hooks/queries/useNotice'
 import { Pagination } from '@/components/pagination'
 
 const NoticeListPage = () => {
   const navigate = useNavigate()
-  const [noticePage, _setNoticePage] = useState(1)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [noticePage, setNoticePage] = useState(() => {
+    const page = searchParams.get('page')
+    return page ? parseInt(page, 10) : 1
+  })
+  const { data: noticeCount } = useReadNoticeCount()
   const { getTypeName } = useReadNoticeType()
-
   const { data: noticeListResponse, isError, error } = useGetNoticeList(noticePage)
 
   useEffect(() => {
@@ -27,7 +31,7 @@ const NoticeListPage = () => {
   }
 
   const handleRowClick = (record: NoticeType) => {
-    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${record.noticeId}`)
+    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${record.noticeId}?page=${noticePage}`)
   }
 
   const noticeList = useMemo(() => {
@@ -95,8 +99,11 @@ const NoticeListPage = () => {
       <Pagination
         className={styles.noticeListPage__pagination}
         currentPage={noticePage}
-        totalPages={10}
-        onPageChange={() => {}}
+        totalPages={noticeCount?.totalPages}
+        onPageChange={page => {
+          setNoticePage(page)
+          setSearchParams({ page: page.toString() })
+        }}
       />
     </div>
   )
