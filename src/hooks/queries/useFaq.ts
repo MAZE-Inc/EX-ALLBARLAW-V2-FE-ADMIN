@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { message } from 'antd'
 import { faqService } from '@/services/boardService'
 import { QUERY_KEY } from '@/constants/query'
-import { FaqType } from '@/types/boardTypes'
+import { FaqCreateRequest, FaqType } from '@/types/boardTypes'
 
 export const useGetFaqType = () => {
   return useQuery({
@@ -31,6 +31,22 @@ export const useCreateFaqType = () => {
     onError: (error: Error) => {
       console.error('삭제 실패:', error)
       message.error('FAQ 분류 등록에 실패했습니다.')
+    },
+  })
+}
+
+export const useCreateFaq = () => {
+  // const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (faq: FaqCreateRequest) => faqService.createFaq(faq),
+    onSuccess: () => {
+      message.success('FAQ가 등록되었습니다.')
+      // queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FAQ_TYPE] })
+    },
+    onError: (error: Error) => {
+      console.error('FAQ 등록 실패:', error)
+      message.error('FAQ 등록에 실패했습니다.')
     },
   })
 }

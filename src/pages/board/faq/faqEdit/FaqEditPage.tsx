@@ -4,16 +4,10 @@ import { useState, useEffect } from 'react'
 import { message } from 'antd'
 import { ROUTE_PATH } from '@/routes/routePath'
 import styles from './faqEdit.module.scss'
-import { useGetFaqType } from '@/hooks/queries/useFaq'
+import { useCreateFaq, useGetFaqType } from '@/hooks/queries/useFaq'
+import { Faq } from '@/types/boardTypes'
 
 const { TextArea } = Input
-
-interface FaqDetailResponse {
-  id: number
-  category: string
-  question: string
-  answer: string
-}
 
 const FaqEditPage = () => {
   const navigate = useNavigate()
@@ -22,27 +16,26 @@ const FaqEditPage = () => {
   const isEditMode = Boolean(faqId)
   const [form] = Form.useForm()
   const { data: categoryOptions, isLoading } = useGetFaqType()
+  const { mutate: createFaq } = useCreateFaq()
 
   const [loading, setLoading] = useState(false)
-  const [_faqData, setFaqData] = useState<FaqDetailResponse | null>(null)
+  const [_faqData, setFaqData] = useState<Faq | null>(null)
   const [formData, setFormData] = useState({
-    category: '',
-    question: '',
-    answer: '',
+    faqTypeId: '',
+    faqContent: '',
+    faqTitle: '',
   })
 
   useEffect(() => {
     if (isEditMode) {
-      console.log('Location State:', location.state)
-      const passedData = location.state?.faqDetail as FaqDetailResponse | undefined
-      console.log('Passed Data:', passedData)
+      const passedData = location.state?.faqDetail as Faq | undefined
 
       if (passedData) {
         setFaqData(passedData)
         const initialData = {
-          category: passedData.category,
-          question: passedData.question,
-          answer: passedData.answer,
+          faqTypeId: String(passedData.faqTypeId),
+          faqTitle: passedData.faqTitle,
+          faqContent: passedData.faqContent,
         }
         setFormData(initialData)
         form.setFieldsValue(initialData)
@@ -53,7 +46,7 @@ const FaqEditPage = () => {
     }
   }, [isEditMode, location.state, navigate, form])
 
-  const handleSave = async (values: { category: string; question: string; answer: string }) => {
+  const handleSave = async (values: { faqTypeId: string; faqTitle: string; faqContent: string }) => {
     try {
       setLoading(true)
 
@@ -61,22 +54,18 @@ const FaqEditPage = () => {
         // TODO: FAQ 수정 API 호출
         console.log('FAQ 수정:', {
           faqId: Number(faqId),
-          category: values.category,
-          question: values.question,
-          answer: values.answer,
+          ...values,
         })
 
         message.success('FAQ가 수정되었습니다.')
         navigate(ROUTE_PATH.BOARD_FAQ)
       } else {
-        // TODO: FAQ 등록 API 호출
-        console.log('FAQ 등록:', {
-          category: values.category,
-          question: values.question,
-          answer: values.answer,
+        createFaq({
+          faqTitle: values.faqTitle,
+          faqContent: values.faqContent,
+          faqTypeId: Number(values.faqTypeId),
         })
 
-        message.success('FAQ가 등록되었습니다.')
         navigate(ROUTE_PATH.BOARD_FAQ)
       }
     } catch (error) {
@@ -87,9 +76,7 @@ const FaqEditPage = () => {
     }
   }
 
-  const handleCancel = () => {
-    navigate(-1)
-  }
+  const handleCancel = () => navigate(-1)
 
   return (
     <div className={styles.faqEditPage}>
@@ -105,11 +92,11 @@ const FaqEditPage = () => {
               size='large'
               className={styles.selectInput}
               loading={isLoading}
-              value={formData.category || undefined}
+              value={formData.faqTypeId || undefined}
               onChange={value => {
-                const newData = { ...formData, category: value }
+                const newData = { ...formData, faqTypeId: value }
                 setFormData(newData)
-                form.setFieldValue('category', value)
+                form.setFieldValue('faqTypeId', value)
               }}
             />
           </div>
@@ -124,11 +111,11 @@ const FaqEditPage = () => {
               placeholder='FAQ 질문을 입력하세요'
               size='large'
               className={styles.titleInput}
-              value={formData.question}
+              value={formData.faqTitle}
               onChange={e => {
-                const newData = { ...formData, question: e.target.value }
+                const newData = { ...formData, faqTitle: e.target.value }
                 setFormData(newData)
-                form.setFieldValue('question', e.target.value)
+                form.setFieldValue('faqTitle', e.target.value)
               }}
             />
           </div>
@@ -144,11 +131,11 @@ const FaqEditPage = () => {
               rows={8}
               size='large'
               className={styles.answerInput}
-              value={formData.answer}
+              value={formData.faqContent}
               onChange={e => {
-                const newData = { ...formData, answer: e.target.value }
+                const newData = { ...formData, faqContent: e.target.value }
                 setFormData(newData)
-                form.setFieldValue('answer', e.target.value)
+                form.setFieldValue('faqContent', e.target.value)
               }}
             />
           </div>
@@ -164,9 +151,9 @@ const FaqEditPage = () => {
               loading={loading}
               size='large'
               className={styles.saveButton}
-              disabled={!formData.category.trim() || !formData.question.trim() || !formData.answer.trim()}
+              disabled={!formData.faqTypeId || !formData.faqTitle.trim() || !formData.faqContent.trim()}
               onClick={() => {
-                if (formData.category.trim() && formData.question.trim() && formData.answer.trim()) {
+                if (formData.faqTypeId && formData.faqTitle.trim() && formData.faqContent.trim()) {
                   handleSave(formData)
                 } else {
                   message.error('모든 필드를 입력해주세요.')

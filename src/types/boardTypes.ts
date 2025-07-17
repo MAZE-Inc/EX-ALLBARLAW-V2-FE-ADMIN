@@ -32,3 +32,16 @@ export type FaqType = {
   faqTypeId: number
   faqTypeName: string
 }
+
+export type Faq = {
+  faqId: number
+  faqTitle: string
+  faqContent: string
+  faqCreatedAt: string
+} & Pick<FaqType, 'faqTypeId' | 'faqTypeName'>
+
+export type FaqCreateRequest = {
+  faqTitle: string
+  faqContent: string
+  faqTypeId: number
+}
