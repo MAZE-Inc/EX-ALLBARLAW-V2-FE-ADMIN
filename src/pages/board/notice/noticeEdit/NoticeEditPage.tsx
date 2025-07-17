@@ -52,7 +52,8 @@ const NoticeEditPage = () => {
           },
           {
             onSuccess: () => {
-              navigate(ROUTE_PATH.BOARD_NOTICE)
+              window.history.replaceState(null, '', window.location.pathname.replace('/edit', ''))
+              navigate(-1)
             },
             onError: () => {
               message.error('수정에 실패했습니다.')
@@ -72,7 +73,8 @@ const NoticeEditPage = () => {
           {
             onSuccess: () => {
               message.success('공지사항이 등록되었습니다.')
-              navigate(ROUTE_PATH.BOARD_NOTICE)
+              window.history.replaceState(null, '', window.location.pathname.replace('/edit', ''))
+              navigate(-1)
             },
             onError: () => {
               message.error('등록에 실패했습니다.')

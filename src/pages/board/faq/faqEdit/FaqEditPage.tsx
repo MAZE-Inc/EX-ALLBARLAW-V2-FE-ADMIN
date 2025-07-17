@@ -59,7 +59,8 @@ const FaqEditPage = () => {
         })
 
         message.success('FAQ가 수정되었습니다.')
-        navigate(ROUTE_PATH.BOARD_FAQ)
+        window.history.replaceState(null, '', window.location.pathname.replace('/edit', ''))
+        navigate(-1)
       } else {
         createFaq({
           faqTitle: values.faqTitle,
@@ -67,7 +68,8 @@ const FaqEditPage = () => {
           faqTypeId: Number(values.faqTypeId),
         })
 
-        navigate(ROUTE_PATH.BOARD_FAQ)
+        window.history.replaceState(null, '', window.location.pathname.replace('/edit', ''))
+        navigate(-1)
       }
     } catch (error) {
       console.error('저장 실패:', error)
