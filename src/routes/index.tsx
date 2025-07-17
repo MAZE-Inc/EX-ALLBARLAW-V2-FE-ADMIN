@@ -12,7 +12,6 @@ import {
   BlogPage,
   CategoryManagementPage,
   ChatListPage,
-  FAQPage,
   KnowledgePage,
   LawyerManagementPage,
   LawyerMemberPage,
@@ -23,8 +22,12 @@ import {
   VideoPage,
   NoticeEditPage,
   NoticeListPage,
+  FaqLayout,
+  FaqListPage,
+  FaqDetailPage,
+  FaqEditPage,
+  NoticeLayout,
 } from '@/pages'
-import NoticeLayout from '@/pages/board/noticeLayout/NoticeListPage'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
 import MemberLayout from '@/pages/member/memberLayout/MemberLayout'
@@ -117,7 +120,25 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.BOARD_FAQ,
-        element: <FAQPage />,
+        element: <FaqLayout />,
+        children: [
+          {
+            path: '',
+            element: <FaqListPage />,
+          },
+          {
+            path: ':faqId',
+            element: <FaqDetailPage />,
+          },
+          {
+            path: ROUTE_PATH.BOARD_FAQ_EDIT,
+            element: <FaqEditPage />,
+          },
+          {
+            path: `${ROUTE_PATH.BOARD_FAQ_EDIT}/:faqId`,
+            element: <FaqEditPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.BOARD_LEGAL_DICTIONARY,

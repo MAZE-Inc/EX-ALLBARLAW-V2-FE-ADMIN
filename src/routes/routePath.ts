@@ -30,6 +30,7 @@ export const ROUTE_PATH = {
   BOARD_NOTICE_EDIT: 'edit',
 
   BOARD_FAQ: '/board-faq',
+  BOARD_FAQ_EDIT: 'edit',
   BOARD_LEGAL_DICTIONARY: '/board-legalDictionary',
 
   // 광고 관리

@@ -1,13 +1,14 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { Button, Space, Modal } from 'antd'
+import { Button, Space, Modal, Table } from 'antd'
+import type { ColumnsType } from 'antd/es/table'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { Viewer } from '@toast-ui/react-editor'
 import '@toast-ui/editor/dist/toastui-editor-viewer.css'
 
 import { ROUTE_PATH } from '@/routes/routePath'
-import { useGetNoticeDetail } from '@/hooks/queries/useGetNotice'
-import { useDeleteNotice } from '@/hooks/mutations/useNotice'
+import { useDeleteNotice, useGetNoticeDetail } from '@/hooks/queries/useNotice'
 import styles from './notice-detail.module.scss'
+import dayjs from 'dayjs'
 
 const NoticeDetailPage = () => {
   const { noticeId } = useParams()
@@ -15,6 +16,63 @@ const NoticeDetailPage = () => {
   const { mutate: deleteNotice } = useDeleteNotice()
 
   const { data: noticeDetail, isPending } = useGetNoticeDetail(Number(noticeId))
+
+  // 행 기준 테이블 데이터
+  const dataSource = [
+    {
+      key: '1',
+      label: '공지사항 분류',
+      content: noticeDetail?.noticeTypeId === 1 ? '공지사항' : noticeDetail?.noticeTypeId === 2 ? '업데이트' : '이벤트',
+    },
+    {
+      key: '2',
+      label: '제목',
+      content: noticeDetail?.noticeTitle || '로딩 중...',
+    },
+    {
+      key: '3',
+      label: '내용',
+      content: noticeDetail?.noticeContent || '로딩 중...',
+    },
+    {
+      key: '4',
+      label: '등록일자',
+      content: dayjs(noticeDetail?.noticeCreatedAt).format('YY-MM-DD HH:mm') || '로딩 중...',
+    },
+  ]
+
+  interface TableItem {
+    key: string
+    label: string
+    content: string
+  }
+
+  const columns: ColumnsType<TableItem> = [
+    {
+      title: '구분',
+      dataIndex: 'label',
+      key: 'label',
+      width: '10%',
+      align: 'center',
+    },
+    {
+      title: '내용',
+      dataIndex: 'content',
+      key: 'content',
+      width: '80%',
+      align: 'left',
+      render: (content, record) => {
+        if (record.label === '내용') {
+          return (
+            <div className={styles.customContent}>
+              <Viewer initialValue={content} key={`notice-viewer-${noticeId}-${content}`} />
+            </div>
+          )
+        }
+        return content
+      },
+    },
+  ]
 
   const handleEdit = () => {
     console.log('Sending notice detail:', noticeDetail)
@@ -53,43 +111,33 @@ const NoticeDetailPage = () => {
   }
 
   return (
-    <section className={styles.noticeDetail}>
-      {/* 상단 액션 버튼 */}
-      <div className={styles.noticeDetail__actions}>
-        <Space>
-          <Button icon={<EditOutlined />} onClick={handleEdit}>
-            수정
-          </Button>
-          <Button danger icon={<DeleteOutlined />} onClick={handleDelete}>
-            삭제
-          </Button>
-        </Space>
-      </div>
-
-      {/* 공지사항 내용 */}
-      <div className={styles.noticeDetail__content}>
-        <div className={styles.noticeDetail__header}>
-          <h1>{noticeDetail.noticeTitle}</h1>
-          <div className={styles.noticeDetail__meta}>
-            <span className={styles.noticeDetail__category}>
-              {noticeDetail.noticeTypeId === 1 ? '공지사항' : noticeDetail.noticeTypeId === 2 ? '업데이트' : '이벤트'}
-            </span>
-            <span className={styles.noticeDetail__date}>{noticeDetail.noticeCreatedAt}</span>
-          </div>
+    <div style={{ padding: 24 }}>
+      <section style={{ marginBottom: 20 }}>
+        <div className={styles.noticeDetail__actions}>
+          <Space>
+            <Button icon={<EditOutlined />} onClick={handleEdit}>
+              수정
+            </Button>
+            <Button danger icon={<DeleteOutlined />} onClick={handleDelete}>
+              삭제
+            </Button>
+          </Space>
         </div>
-        <div className={styles.noticeDetail__body}>
-          <Viewer
-            initialValue={noticeDetail.noticeContent}
-            key={`notice-viewer-${noticeId}-${noticeDetail.noticeContent}`}
-          />
-        </div>
-      </div>
+      </section>
 
-      {/* 하단 버튼 */}
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        pagination={false}
+        size='middle'
+        showHeader={false}
+        className={styles.noticeDetailTable}
+        bordered
+      />
       <div className={styles.noticeDetail__footer}>
         <Button onClick={handleBack}>목록으로</Button>
       </div>
-    </section>
+    </div>
   )
 }
 

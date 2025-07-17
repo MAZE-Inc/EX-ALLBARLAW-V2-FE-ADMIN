@@ -1,6 +1,5 @@
 import AdminManagementPage from './admin/adminManagement/AdminManagementPage'
 import AdminRegisterPage from './admin/adminRegister/AdminRegisterPage'
-import FAQPage from './board/faq/FAQPage'
 import LegalDictionary from './board/legalDictionary/LegalDictionaryPage'
 import MemberPage from './member/member/MemberPage'
 import LawyerMemberPage from './member/lawyerMember/LawyerMemberPage'
@@ -15,12 +14,20 @@ import AdBannerPage from './ad/adBanner/AdBanner'
 import StatisticsPage from './statistics/statistics/StatisticsPage'
 import ChatListPage from './chat/chatList/ChatListPage'
 import LegalDictionaryPage from './board/legalDictionary/LegalDictionaryPage'
+import NoticeLayout from './board/notice/noticeLayout/NoticeListPage'
 import NoticeDetailPage from './board/notice/noticeDetail/NoticeDetailPage'
 import NoticeEditPage from './board/notice/noticeEdit/NoticeEditPage'
 import NoticeListPage from './board/notice/noticeList/NoticeListPage'
+import FaqLayout from './board/faq/faqLayout/FaqLayout'
+import FaqListPage from './board/faq/faqList/FaqListPage'
+import FaqDetailPage from './board/faq/faqDetail/FaqDetailPage'
+import FaqEditPage from './board/faq/faqEdit/FaqEditPage'
 
 export {
-  FAQPage,
+  FaqLayout,
+  FaqListPage,
+  FaqDetailPage,
+  FaqEditPage,
   LegalDictionary,
   AdminManagementPage,
   AdminRegisterPage,
@@ -37,6 +44,7 @@ export {
   StatisticsPage,
   ChatListPage,
   LegalDictionaryPage,
+  NoticeLayout,
   NoticeDetailPage,
   NoticeEditPage,
   NoticeListPage,

@@ -10,7 +10,7 @@ interface SearchHeaderProps {
   onSelectionChange: (item: SearchHeaderMenuItemType) => void
   placeholder?: string
   searchPlaceholder?: string
-  menuItems: MenuProps['items']
+  menuItems?: MenuProps['items']
   className?: string
   style?: CSSProperties
   buttonComponent?: React.ReactNode
@@ -70,10 +70,10 @@ const SearchHeader = ({
 
   return (
     <header className={headerClasses} style={style}>
-      {menuItems && (
-        <div className={styles.searchHeader__container}>
-          {title && <h3 className={styles.searchHeader__container__title}>{title}</h3>}
-          <div className={styles.searchHeader__controls}>
+      <div className={styles.searchHeader__container}>
+        {title && <h3 className={styles.searchHeader__container__title}>{title}</h3>}
+        <div className={styles.searchHeader__controls}>
+          {menuItems && (
             <Dropdown menu={menuProps} trigger={['click']}>
               <Button className={styles.searchHeader__container__button}>
                 <Space>
@@ -82,6 +82,8 @@ const SearchHeader = ({
                 </Space>
               </Button>
             </Dropdown>
+          )}
+          {onSearch && (
             <Input.Search
               placeholder={searchPlaceholder}
               variant='filled'
@@ -90,9 +92,10 @@ const SearchHeader = ({
               onSearch={handleSearch}
               onPressEnter={() => handleSearch(searchValue)}
             />
-          </div>
+          )}
         </div>
-      )}
+      </div>
+
       {buttonComponent && <div>{buttonComponent}</div>}
     </header>
   )

@@ -1,33 +1,23 @@
 import { Button, Table, TableProps } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
-import { useGetNoticeList } from '@/hooks/queries/useGetNotice'
 import { useState, useEffect, useMemo } from 'react'
-import { NoticeType, NoticeListResponse } from '@/types/noticeTypes'
+import { NoticeType, ServerNoticeType } from '@/types/boardTypes'
 import React from 'react'
 import styles from './noticeList.module.scss'
-
-const columns: TableProps<NoticeType>['columns'] = [
-  {
-    title: '카테고리',
-    dataIndex: 'category',
-    key: 'category',
-  },
-  {
-    title: '제목',
-    dataIndex: 'title',
-    key: 'title',
-  },
-  {
-    title: '작성일',
-    dataIndex: 'createdAt',
-    key: 'createdAt',
-  },
-]
+import dayjs from 'dayjs'
+import { useGetNoticeList, useReadNoticeCount, useReadNoticeType } from '@/hooks/queries/useNotice'
+import { Pagination } from '@/components/pagination'
 
 const NoticeListPage = () => {
   const navigate = useNavigate()
-  const [noticePage, setNoticePage] = useState(1)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [noticePage, setNoticePage] = useState(() => {
+    const page = searchParams.get('page')
+    return page ? parseInt(page, 10) : 1
+  })
+  const { data: noticeCount } = useReadNoticeCount()
+  const { getTypeName } = useReadNoticeType()
   const { data: noticeListResponse, isError, error } = useGetNoticeList(noticePage)
 
   useEffect(() => {
@@ -36,20 +26,21 @@ const NoticeListPage = () => {
     }
   }, [isError, error])
 
-  // 응답 데이터를 프론트엔드 타입으로 변환
+  const handleCreateNotice = () => {
+    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${ROUTE_PATH.BOARD_NOTICE_EDIT}`)
+  }
+
+  const handleRowClick = (record: NoticeType) => {
+    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${record.noticeId}?page=${noticePage}`)
+  }
+
   const noticeList = useMemo(() => {
     if (!noticeListResponse) return []
 
-    console.log('Component Data:', noticeListResponse)
-    return noticeListResponse.map((notice: NoticeListResponse[number]) => {
-      let category: '공지사항' | '이벤트' | '업데이트'
-      if (notice.noticeTypeId === 1) category = '공지사항'
-      else if (notice.noticeTypeId === 2) category = '이벤트'
-      else category = '업데이트'
-
+    return noticeListResponse.map((notice: ServerNoticeType) => {
       return {
         noticeId: notice.noticeId,
-        category,
+        category: getTypeName(notice.noticeTypeId),
         title: notice.noticeTitle,
         createdAt: notice.noticeCreatedAt,
       }
@@ -65,13 +56,29 @@ const NoticeListPage = () => {
     }),
   }
 
-  const handleCreateNotice = () => {
-    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${ROUTE_PATH.BOARD_NOTICE_EDIT}`)
-  }
-
-  const handleRowClick = (record: NoticeType) => {
-    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${record.noticeId}`)
-  }
+  const columns: TableProps<NoticeType>['columns'] = [
+    {
+      title: '구분',
+      dataIndex: 'category',
+      key: 'category',
+      align: 'center',
+      width: '15%',
+    },
+    {
+      title: '제목',
+      dataIndex: 'title',
+      key: 'title',
+      width: '60%',
+      align: 'center',
+    },
+    {
+      title: '등록 일자',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      align: 'center',
+      render: (value: string) => (value ? dayjs(value).format('YY-MM-DD') : ''),
+    },
+  ]
 
   return (
     <div style={{ padding: 24 }}>
@@ -83,13 +90,19 @@ const NoticeListPage = () => {
         dataSource={noticeList}
         rowKey='noticeId'
         rowSelection={rowSelection}
+        pagination={false}
         onRow={record => ({
           onClick: () => handleRowClick(record),
           style: { cursor: 'pointer' },
         })}
-        pagination={{
-          current: noticePage,
-          onChange: setNoticePage,
+      />
+      <Pagination
+        className={styles.noticeListPage__pagination}
+        currentPage={noticePage}
+        totalPages={noticeCount?.totalPages}
+        onPageChange={page => {
+          setNoticePage(page)
+          setSearchParams({ page: page.toString() })
         }}
       />
     </div>

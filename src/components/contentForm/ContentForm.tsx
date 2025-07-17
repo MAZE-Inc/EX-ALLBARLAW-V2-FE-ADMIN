@@ -65,7 +65,7 @@ const ContentForm = ({
 
   // 초기값이 변경될 때 상태 업데이트
   useEffect(() => {
-    console.log('Initial values changed:', { initialTitle, initialContent, initialRadioValue })
+    // console.log('Initial values changed:', { initialTitle, initialContent, initialRadioValue })
     setTitle(initialTitle)
     setContent(initialContent)
     setRadioValue(initialRadioValue)
