@@ -5,4 +5,5 @@ export const QUERY_KEY = {
   NOTICE_LIST: 'noticeList',
   NOTICE_DETAIL: 'noticeDetail',
   FAQ_TYPE: 'faqType',
+  FAQ_LIST: 'faqList',
 } as const

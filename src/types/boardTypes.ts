@@ -36,7 +36,6 @@ export type FaqType = {
 export type Faq = {
   faqId: number
   faqTitle: string
-  faqContent: string
   faqCreatedAt: string
 } & Pick<FaqType, 'faqTypeId' | 'faqTypeName'>
 

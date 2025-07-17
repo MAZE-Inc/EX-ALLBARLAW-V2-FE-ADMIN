@@ -4,7 +4,7 @@ import { faqService } from '@/services/boardService'
 import { QUERY_KEY } from '@/constants/query'
 import { FaqCreateRequest, FaqType } from '@/types/boardTypes'
 
-export const useGetFaqType = () => {
+export const useReadFaqType = () => {
   return useQuery({
     queryKey: [QUERY_KEY.FAQ_TYPE],
     queryFn: async () => {
@@ -31,6 +31,16 @@ export const useCreateFaqType = () => {
     onError: (error: Error) => {
       console.error('삭제 실패:', error)
       message.error('FAQ 분류 등록에 실패했습니다.')
+    },
+  })
+}
+
+export const useReadFaq = (faqPage: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.FAQ_LIST, faqPage],
+    queryFn: async () => {
+      const res = await faqService.readFaq(faqPage)
+      return res.data.faqs
     },
   })
 }

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { message } from 'antd'
 import { ROUTE_PATH } from '@/routes/routePath'
 import styles from './faqEdit.module.scss'
-import { useCreateFaq, useGetFaqType } from '@/hooks/queries/useFaq'
+import { useCreateFaq, useReadFaqType } from '@/hooks/queries/useFaq'
 import { Faq } from '@/types/boardTypes'
 
 const { TextArea } = Input
@@ -15,7 +15,7 @@ const FaqEditPage = () => {
   const location = useLocation()
   const isEditMode = Boolean(faqId)
   const [form] = Form.useForm()
-  const { data: categoryOptions, isLoading } = useGetFaqType()
+  const { data: categoryOptions, isLoading } = useReadFaqType()
   const { mutate: createFaq } = useCreateFaq()
 
   const [loading, setLoading] = useState(false)

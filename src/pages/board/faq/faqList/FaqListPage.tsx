@@ -4,7 +4,8 @@ import type { ColumnsType } from 'antd/es/table'
 import styles from './faqList.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
-import { useCreateFaqType } from '@/hooks/queries/useFaq'
+import { useCreateFaqType, useReadFaq } from '@/hooks/queries/useFaq'
+import { Faq } from '@/types/boardTypes'
 
 const QuestionTitle = () => <div style={{ textAlign: 'center' }}>질문</div>
 
@@ -13,7 +14,10 @@ const FaqListPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [categoryInput, setCategoryInput] = useState('')
+  const { data: faqList, isLoading } = useReadFaq(1)
   const { mutate: createFaqType } = useCreateFaqType()
+
+  console.log('FAQ List:', faqList)
 
   const showModal = () => {
     setIsModalVisible(true)
@@ -50,40 +54,16 @@ const FaqListPage = () => {
     columnTitle: '',
   }
 
-  interface FaqItem {
-    key: string
-    id: number
-    category: string
-    question: string
-    answer: string
-  }
+  // 실제 API 데이터를 테이블 형식으로 변환
+  const dataSource =
+    faqList?.map((faq: Faq) => ({
+      key: String(faq.faqId),
+      id: faq.faqId,
+      category: faq.faqTypeName,
+      question: faq.faqTitle,
+    })) || []
 
-  // 테이블 데이터
-  const dataSource: FaqItem[] = [
-    {
-      key: '1',
-      id: 1,
-      category: '회원가입',
-      question: '회원가입은 어떻게 하나요?',
-      answer: '회원가입은 이메일과 비밀번호를 입력하여 진행할 수 있습니다.',
-    },
-    {
-      key: '2',
-      id: 2,
-      category: '로그인',
-      question: '비밀번호를 잊어버렸어요',
-      answer: '비밀번호 찾기 기능을 통해 이메일로 임시 비밀번호를 받을 수 있습니다.',
-    },
-    {
-      key: '3',
-      id: 3,
-      category: '결제',
-      question: '결제 방법은 어떤 것들이 있나요?',
-      answer: '신용카드, 계좌이체, 간편결제 등 다양한 방법을 지원합니다.',
-    },
-  ]
-
-  const columns: ColumnsType<FaqItem> = [
+  const columns: ColumnsType<{ key: string; id: number; category: string; question: string }> = [
     {
       title: '',
       dataIndex: 'checkbox',
@@ -120,6 +100,7 @@ const FaqListPage = () => {
         className={styles.faqTable}
         pagination={false}
         size='middle'
+        loading={isLoading}
         onRow={record => ({
           onClick: () => navigate(`${ROUTE_PATH.BOARD_FAQ}/${record.id}`),
         })}

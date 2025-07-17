@@ -2,18 +2,22 @@ import { Button, Space, Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import styles from './faqDetail.module.scss'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
+import { Faq } from '@/types/boardTypes'
 
 const FaqDetailPage = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+  const { faqId } = useParams()
 
-  const faqData = {
-    id: 1,
-    category: '회원가입',
-    question: '회원가입은 어떻게 하나요?',
-    answer:
-      '회원가입은 이메일과 비밀번호를 입력하여 진행할 수 있습니다. 회원가입 페이지에서 이메일 주소와 비밀번호를 입력한 후, 이메일 인증을 완료하면 회원가입이 완료됩니다.',
+  // 전달받은 FAQ 데이터 또는 기본값
+  const faqData: Faq = location.state?.faqDetail || {
+    faqId: Number(faqId),
+    faqTitle: '데이터를 불러올 수 없습니다.',
+    faqContent: '데이터를 불러올 수 없습니다.',
+    faqTypeName: '알 수 없음',
+    faqCreatedAt: '',
   }
 
   // 행 기준 테이블 데이터
@@ -21,17 +25,17 @@ const FaqDetailPage = () => {
     {
       key: '1',
       label: 'FAQ 분류',
-      content: faqData.category,
+      content: faqData.faqTypeName,
     },
     {
       key: '2',
       label: '질문',
-      content: faqData.question,
+      content: faqData.faqTitle,
     },
     {
       key: '3',
       label: '답변',
-      content: faqData.answer,
+      content: faqData.faqContent,
     },
   ]
 
@@ -63,7 +67,7 @@ const FaqDetailPage = () => {
   }
 
   const handleEdit = () => {
-    navigate(`${ROUTE_PATH.BOARD_FAQ}/edit/${faqData.id}`, {
+    navigate(`${ROUTE_PATH.BOARD_FAQ}/edit/${faqData.faqId}`, {
       state: { faqDetail: faqData },
     })
   }
