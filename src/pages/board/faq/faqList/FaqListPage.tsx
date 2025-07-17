@@ -4,7 +4,7 @@ import type { ColumnsType } from 'antd/es/table'
 import styles from './faqList.module.scss'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
-import { useCreateFaqType, useReadFaq, useReadFaqCount } from '@/hooks/queries/useFaq'
+import { useCreateFaqType, useReadFaq, useReadFaqCount, useReadFaqType } from '@/hooks/queries/useFaq'
 import { Faq } from '@/types/boardTypes'
 import { Pagination } from '@/components/pagination'
 
@@ -16,6 +16,7 @@ const FaqListPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [categoryInput, setCategoryInput] = useState('')
+  const { getTypeName } = useReadFaqType()
 
   // URL에서 페이지 정보 가져오기 (기본값: 1)
   const currentPage = Number(searchParams.get('page')) || 1
@@ -69,7 +70,7 @@ const FaqListPage = () => {
     faqList?.map((faq: Faq) => ({
       key: String(faq.faqId),
       id: faq.faqId,
-      category: faq.faqTypeName,
+      category: getTypeName(faq.faqTypeId),
       question: faq.faqTitle,
     })) || []
 

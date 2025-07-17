@@ -5,18 +5,39 @@ import { QUERY_KEY } from '@/constants/query'
 import { FaqEditRequest, FaqType } from '@/types/boardTypes'
 
 export const useReadFaqType = () => {
-  return useQuery({
+  const {
+    data: faqTypeResponse,
+    isError,
+    error,
+    ...rest
+  } = useQuery({
     queryKey: [QUERY_KEY.FAQ_TYPE],
     queryFn: async () => {
       const res = await faqService.readFaqType()
-      return Array.isArray(res.data) // categoryOptions 형태로 가공
-        ? res.data.map((faqType: FaqType) => ({
-            label: faqType.faqTypeName,
-            value: faqType.faqTypeId,
-          }))
-        : []
+      return res.data
     },
+    staleTime: 5 * 60 * 1000, // 5분간 캐시 유지
+    refetchOnMount: false, // 컴포넌트 마운트 시 재요청 방지
   })
+
+  const getTypeName = (faqTypeId: number) =>
+    faqTypeResponse?.find((type: FaqType) => type.faqTypeId === faqTypeId)?.faqTypeName
+
+  // categoryOptions 형태로 가공
+  const categoryOptions =
+    faqTypeResponse?.map((faqType: FaqType) => ({
+      label: faqType.faqTypeName,
+      value: faqType.faqTypeId,
+    })) || []
+
+  return {
+    data: faqTypeResponse,
+    categoryOptions,
+    isError,
+    error,
+    getTypeName,
+    ...rest,
+  }
 }
 
 export const useCreateFaqType = () => {
