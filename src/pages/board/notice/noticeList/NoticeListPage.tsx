@@ -7,10 +7,11 @@ import React from 'react'
 import styles from './noticeList.module.scss'
 import dayjs from 'dayjs'
 import { useGetNoticeList, useReadNoticeType } from '@/hooks/queries/useNotice'
+import { Pagination } from '@/components/pagination'
 
 const NoticeListPage = () => {
   const navigate = useNavigate()
-  const [noticePage, setNoticePage] = useState(1)
+  const [noticePage, _setNoticePage] = useState(1)
   const { getTypeName } = useReadNoticeType()
 
   const { data: noticeListResponse, isError, error } = useGetNoticeList(noticePage)
@@ -85,14 +86,17 @@ const NoticeListPage = () => {
         dataSource={noticeList}
         rowKey='noticeId'
         rowSelection={rowSelection}
+        pagination={false}
         onRow={record => ({
           onClick: () => handleRowClick(record),
           style: { cursor: 'pointer' },
         })}
-        pagination={{
-          current: noticePage,
-          onChange: setNoticePage,
-        }}
+      />
+      <Pagination
+        className={styles.noticeListPage__pagination}
+        currentPage={noticePage}
+        totalPages={10}
+        onPageChange={() => {}}
       />
     </div>
   )
