@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { message } from 'antd'
-import { noticeService } from '@/services/noticeService'
+import { noticeService } from '@/services/boardService'
 import { QUERY_KEY } from '@/constants/query'
-import { NoticePostRequest } from '@/types/noticeTypes'
+import { NoticePostRequest } from '@/types/boardTypes'
 
 export const useDeleteNotice = () => {
   const queryClient = useQueryClient()

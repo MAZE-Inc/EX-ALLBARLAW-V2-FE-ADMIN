@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { message } from 'antd'
 import { ROUTE_PATH } from '@/routes/routePath'
 import styles from './faqEdit.module.scss'
+import { useGetFaqType } from '@/hooks/queries/useFaq'
 
 const { TextArea } = Input
 
@@ -20,9 +21,10 @@ const FaqEditPage = () => {
   const location = useLocation()
   const isEditMode = Boolean(faqId)
   const [form] = Form.useForm()
+  const { data: categoryOptions, isLoading } = useGetFaqType()
 
   const [loading, setLoading] = useState(false)
-  const [faqData, setFaqData] = useState<FaqDetailResponse | null>(null)
+  const [_faqData, setFaqData] = useState<FaqDetailResponse | null>(null)
   const [formData, setFormData] = useState({
     category: '',
     question: '',
@@ -50,8 +52,6 @@ const FaqEditPage = () => {
       }
     }
   }, [isEditMode, location.state, navigate, form])
-
-  console.log('FAQ Data:', faqData)
 
   const handleSave = async (values: { category: string; question: string; answer: string }) => {
     try {
@@ -90,14 +90,6 @@ const FaqEditPage = () => {
   const handleCancel = () => {
     navigate(-1)
   }
-
-  const categoryOptions = [
-    { label: '회원가입', value: '회원가입' },
-    { label: '로그인', value: '로그인' },
-    { label: '결제', value: '결제' },
-    { label: '서비스 이용', value: '서비스 이용' },
-    { label: '기타', value: '기타' },
-  ]
 
   return (
     <div className={styles.faqEditPage}>

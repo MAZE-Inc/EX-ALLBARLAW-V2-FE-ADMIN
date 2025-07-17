@@ -27,3 +27,8 @@ export type NoticeListResponse = ServerNoticeType[]
 export type NoticeDetailResponse = ServerNoticeType & { noticeContent: string }
 
 export type NoticePostRequest = Notice
+
+export type FaqType = {
+  faqTypeId: number
+  faqTypeName: string
+}

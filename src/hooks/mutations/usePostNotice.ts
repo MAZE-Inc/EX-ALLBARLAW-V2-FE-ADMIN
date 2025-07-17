@@ -1,6 +1,6 @@
 import { QUERY_KEY } from '@/constants/query'
-import { noticeService } from '@/services/noticeService'
-import { NoticePostRequest } from '@/types/noticeTypes'
+import { noticeService } from '@/services/boardService'
+import { NoticePostRequest } from '@/types/boardTypes'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 // 공지사항을 작성하는 뮤테이션 훅

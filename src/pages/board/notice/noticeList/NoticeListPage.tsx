@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
 import { useGetNoticeList } from '@/hooks/queries/useGetNotice'
 import { useState, useEffect, useMemo } from 'react'
-import { NoticeType, NoticeListResponse } from '@/types/noticeTypes'
+import { NoticeType, NoticeListResponse } from '@/types/boardTypes'
 import React from 'react'
 import styles from './noticeList.module.scss'
 

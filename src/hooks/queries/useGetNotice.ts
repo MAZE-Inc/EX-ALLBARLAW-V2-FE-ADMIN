@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { QUERY_KEY } from '@/constants/query'
-import { noticeService } from '@/services/noticeService'
+import { noticeService } from '@/services/boardService'
 // import { NoticeListResponse } from '@/types/noticeTypes'
 
 export const useGetNoticeList = (noticePage: number) => {

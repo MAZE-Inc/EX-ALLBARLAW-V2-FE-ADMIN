@@ -5,6 +5,8 @@ import styles from './faqList.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
 
+const QuestionTitle = () => <div style={{ textAlign: 'center' }}>질문</div>
+
 const FaqListPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
@@ -20,7 +22,7 @@ const FaqListPage = () => {
     setCategoryInput('')
   }
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCategoryInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCategoryInput(e.target.value)
   }
 
@@ -33,7 +35,7 @@ const FaqListPage = () => {
     }
   }
 
-  const handleFaqRegister = (e: React.MouseEvent) => {
+  const handleFaqRegister = () => {
     navigate(`${ROUTE_PATH.BOARD_FAQ_EDIT}`)
   }
 
@@ -56,8 +58,6 @@ const FaqListPage = () => {
     question: string
     answer: string
   }
-
-  const QuestionTitle = () => <div style={{ textAlign: 'center' }}>질문</div>
 
   // 테이블 데이터
   const dataSource: FaqItem[] = [
@@ -145,7 +145,7 @@ const FaqListPage = () => {
       >
         <div className={styles.faqCategoryModal}>
           <label>FAQ 분류 등록</label>
-          <Input placeholder='FAQ 분류를 입력해주세요.' value={categoryInput} onChange={handleCategoryChange} />
+          <Input placeholder='FAQ 분류를 입력해주세요.' value={categoryInput} onChange={handleCategoryInput} />
         </div>
       </Modal>
     </div>
