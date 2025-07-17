@@ -2,40 +2,31 @@ import { Button, Space, Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import styles from './faqDetail.module.scss'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { useNavigate, useLocation, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
-import { Faq } from '@/types/boardTypes'
+import { useReadFaqDetail } from '@/hooks/queries/useFaq'
 
 const FaqDetailPage = () => {
   const navigate = useNavigate()
-  const location = useLocation()
   const { faqId } = useParams()
-
-  // 전달받은 FAQ 데이터 또는 기본값
-  const faqData: Faq = location.state?.faqDetail || {
-    faqId: Number(faqId),
-    faqTitle: '데이터를 불러올 수 없습니다.',
-    faqContent: '데이터를 불러올 수 없습니다.',
-    faqTypeName: '알 수 없음',
-    faqCreatedAt: '',
-  }
+  const { data: faqData } = useReadFaqDetail(Number(faqId))
 
   // 행 기준 테이블 데이터
   const dataSource = [
     {
       key: '1',
       label: 'FAQ 분류',
-      content: faqData.faqTypeName,
+      content: faqData?.faqTypeName || '로딩 중...',
     },
     {
       key: '2',
       label: '질문',
-      content: faqData.faqTitle,
+      content: faqData?.faqTitle || '로딩 중...',
     },
     {
       key: '3',
       label: '답변',
-      content: faqData.faqContent,
+      content: faqData?.faqContent || '로딩 중...',
     },
   ]
 
@@ -67,9 +58,11 @@ const FaqDetailPage = () => {
   }
 
   const handleEdit = () => {
-    navigate(`${ROUTE_PATH.BOARD_FAQ}/edit/${faqData.faqId}`, {
-      state: { faqDetail: faqData },
-    })
+    if (faqData) {
+      navigate(`${ROUTE_PATH.BOARD_FAQ}/edit/${faqData.faqId}`, {
+        state: { faqDetail: faqData },
+      })
+    }
   }
 
   return (

@@ -6,4 +6,5 @@ export const QUERY_KEY = {
   NOTICE_DETAIL: 'noticeDetail',
   FAQ_TYPE: 'faqType',
   FAQ_LIST: 'faqList',
+  FAQ_DETAIL: 'faqDetail',
 } as const

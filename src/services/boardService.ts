@@ -1,5 +1,11 @@
 import instance from '@/lib/axios'
-import { FaqCreateRequest, NoticeDetailResponse, NoticeListResponse, NoticePostRequest } from '@/types/boardTypes'
+import {
+  FaqCreateRequest,
+  FaqDetailResponse,
+  NoticeDetailResponse,
+  NoticeListResponse,
+  NoticePostRequest,
+} from '@/types/boardTypes'
 
 export const noticeService = {
   getNoticeList: async (noticePage: number) => {
@@ -53,4 +59,5 @@ export const faqService = {
   createFaqType: async (faqTypeName: string) => await instance.post('/faq/types', { faqTypeName }),
   readFaq: async (faqPage: number) => await instance.get('/faq', { params: { faqPage } }),
   createFaq: async (faq: FaqCreateRequest) => await instance.post('/faq', faq),
+  readFaqDetail: async (faqId: number) => await instance.get<FaqDetailResponse>(`/faq/${faqId}`),
 }

@@ -44,3 +44,5 @@ export type FaqCreateRequest = {
   faqContent: string
   faqTypeId: number
 }
+
+export type FaqDetailResponse = Faq & { faqContent: string }

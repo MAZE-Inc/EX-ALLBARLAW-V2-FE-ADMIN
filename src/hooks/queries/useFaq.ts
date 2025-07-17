@@ -46,17 +46,27 @@ export const useReadFaq = (faqPage: number) => {
 }
 
 export const useCreateFaq = () => {
-  // const queryClient = useQueryClient()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (faq: FaqCreateRequest) => faqService.createFaq(faq),
     onSuccess: () => {
       message.success('FAQ가 등록되었습니다.')
-      // queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FAQ_TYPE] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FAQ_LIST] })
     },
     onError: (error: Error) => {
       console.error('FAQ 등록 실패:', error)
       message.error('FAQ 등록에 실패했습니다.')
+    },
+  })
+}
+
+export const useReadFaqDetail = (faqId: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.FAQ_DETAIL, faqId],
+    queryFn: async () => {
+      const res = await faqService.readFaqDetail(faqId)
+      return res.data
     },
   })
 }
