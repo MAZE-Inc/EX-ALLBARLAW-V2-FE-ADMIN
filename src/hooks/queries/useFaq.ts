@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { message } from 'antd'
 import { faqService } from '@/services/boardService'
 import { QUERY_KEY } from '@/constants/query'
-import { FaqCreateRequest, FaqType } from '@/types/boardTypes'
+import { FaqEditRequest, FaqType } from '@/types/boardTypes'
 
 export const useReadFaqType = () => {
   return useQuery({
@@ -49,9 +49,8 @@ export const useCreateFaq = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (faq: FaqCreateRequest) => faqService.createFaq(faq),
+    mutationFn: (faq: FaqEditRequest) => faqService.createFaq(faq),
     onSuccess: () => {
-      message.success('FAQ가 등록되었습니다.')
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FAQ_LIST] })
     },
     onError: (error: Error) => {
@@ -83,6 +82,22 @@ export const useDeleteFaq = () => {
     onError: (error: Error) => {
       console.error('FAQ 삭제 실패:', error)
       message.error('FAQ 삭제에 실패했습니다.')
+    },
+  })
+}
+
+export const useUpdateFaq = (faqId: number) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (faq: FaqEditRequest) => faqService.updateFaq(faqId, faq),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FAQ_LIST] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FAQ_DETAIL, faqId] })
+    },
+    onError: (error: Error) => {
+      console.error('FAQ 수정 실패:', error)
+      message.error('FAQ 수정에 실패했습니다.')
     },
   })
 }

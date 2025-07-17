@@ -39,7 +39,7 @@ export type Faq = {
   faqCreatedAt: string
 } & Pick<FaqType, 'faqTypeId' | 'faqTypeName'>
 
-export type FaqCreateRequest = {
+export type FaqEditRequest = {
   faqTitle: string
   faqContent: string
   faqTypeId: number

@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react'
 import { message } from 'antd'
 import { ROUTE_PATH } from '@/routes/routePath'
 import styles from './faqEdit.module.scss'
-import { useCreateFaq, useReadFaqType } from '@/hooks/queries/useFaq'
-import { Faq } from '@/types/boardTypes'
+import { useCreateFaq, useReadFaqType, useUpdateFaq } from '@/hooks/queries/useFaq'
+import { Faq, FaqDetailResponse } from '@/types/boardTypes'
 
 const { TextArea } = Input
 
@@ -17,23 +17,24 @@ const FaqEditPage = () => {
   const [form] = Form.useForm()
   const { data: categoryOptions, isLoading } = useReadFaqType()
   const { mutate: createFaq } = useCreateFaq()
+  const { mutate: updateFaq } = useUpdateFaq(Number(faqId))
 
   const [loading, setLoading] = useState(false)
   const [_faqData, setFaqData] = useState<Faq | null>(null)
   const [formData, setFormData] = useState({
-    faqTypeId: '',
+    faqTypeId: 0,
     faqContent: '',
     faqTitle: '',
   })
 
   useEffect(() => {
     if (isEditMode) {
-      const passedData = location.state?.faqDetail as Faq | undefined
+      const passedData = location.state?.faqDetail as FaqDetailResponse | undefined
 
       if (passedData) {
         setFaqData(passedData)
         const initialData = {
-          faqTypeId: String(passedData.faqTypeId),
+          faqTypeId: passedData.faqTypeId,
           faqTitle: passedData.faqTitle,
           faqContent: passedData.faqContent,
         }
@@ -46,15 +47,15 @@ const FaqEditPage = () => {
     }
   }, [isEditMode, location.state, navigate, form])
 
-  const handleSave = async (values: { faqTypeId: string; faqTitle: string; faqContent: string }) => {
+  const handleSave = async (values: { faqTypeId: number; faqTitle: string; faqContent: string }) => {
     try {
       setLoading(true)
 
       if (isEditMode && faqId) {
-        // TODO: FAQ 수정 API 호출
-        console.log('FAQ 수정:', {
-          faqId: Number(faqId),
-          ...values,
+        updateFaq({
+          faqTitle: values.faqTitle,
+          faqContent: values.faqContent,
+          faqTypeId: Number(values.faqTypeId),
         })
 
         message.success('FAQ가 수정되었습니다.')
