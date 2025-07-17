@@ -15,7 +15,7 @@ const FaqEditPage = () => {
   const location = useLocation()
   const isEditMode = Boolean(faqId)
   const [form] = Form.useForm()
-  const { data: categoryOptions, isLoading } = useReadFaqType()
+  const { categoryOptions, isLoading } = useReadFaqType()
   const { mutate: createFaq } = useCreateFaq()
   const { mutate: updateFaq } = useUpdateFaq(Number(faqId))
 
@@ -81,6 +81,7 @@ const FaqEditPage = () => {
 
   const handleCancel = () => navigate(-1)
 
+  console.log(categoryOptions)
   return (
     <div className={styles.faqEditPage}>
       <section className={styles.faqEditPage__form}>
