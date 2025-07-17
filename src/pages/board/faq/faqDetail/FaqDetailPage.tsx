@@ -1,4 +1,4 @@
-import { Button, Space, Table } from 'antd'
+import { Button, Space, Table, Modal } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import styles from './faqDetail.module.scss'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
@@ -80,10 +80,19 @@ const FaqDetailPage = () => {
   }
 
   const handleDelete = () => {
-    if (faqData) {
-      deleteFaq(faqData.faqId)
-      navigate(ROUTE_PATH.BOARD_FAQ)
-    }
+    Modal.confirm({
+      title: 'FAQ 삭제',
+      content: '이 FAQ를 삭제하시겠습니까?',
+      okText: '삭제',
+      cancelText: '취소',
+      okButtonProps: { danger: true },
+      onOk: () => {
+        if (faqData) {
+          deleteFaq(faqData.faqId)
+          navigate(ROUTE_PATH.BOARD_FAQ)
+        }
+      },
+    })
   }
 
   return (
