@@ -5,7 +5,7 @@ import { message } from 'antd'
 import { NoticeDetailResponse } from '@/types/boardTypes'
 import { ROUTE_PATH } from '@/routes/routePath'
 import { usePostNotice } from '@/hooks/mutations/usePostNotice'
-import { useUpdateNotice } from '@/hooks/mutations/useNotice'
+import { useUpdateNotice } from '@/hooks/queries/useNotice'
 
 const NoticeEditPage = () => {
   const navigate = useNavigate()

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 // import { Button } from 'antd'
-import SearchHeader, { SearchHeaderMenuItemType } from '../../../components/searchHeader/SearchHeader'
+import SearchHeader, { SearchHeaderMenuItemType } from '../../../../components/searchHeader/SearchHeader'
 import styles from './notice-layout.module.scss'
 // import { ROUTE_PATH } from '@/routes/routePath'
 import { noticeMenuItems } from '@/constants/board'

@@ -1,16 +1,18 @@
 import { Button, Table, TableProps } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
-import { useGetNoticeList } from '@/hooks/queries/useGetNotice'
 import { useState, useEffect, useMemo } from 'react'
-import { NoticeType, NoticeListResponse } from '@/types/boardTypes'
+import { NoticeType, ServerNoticeType } from '@/types/boardTypes'
 import React from 'react'
 import styles from './noticeList.module.scss'
 import dayjs from 'dayjs'
+import { useGetNoticeList, useReadNoticeType } from '@/hooks/queries/useNotice'
 
 const NoticeListPage = () => {
   const navigate = useNavigate()
   const [noticePage, setNoticePage] = useState(1)
+  const { getTypeName } = useReadNoticeType()
+
   const { data: noticeListResponse, isError, error } = useGetNoticeList(noticePage)
 
   useEffect(() => {
@@ -27,19 +29,13 @@ const NoticeListPage = () => {
     navigate(`${ROUTE_PATH.BOARD_NOTICE}/${record.noticeId}`)
   }
 
-  // 응답 데이터를 프론트엔드 타입으로 변환
   const noticeList = useMemo(() => {
     if (!noticeListResponse) return []
 
-    return noticeListResponse.map((notice: NoticeListResponse[number]) => {
-      let category: '공지사항' | '이벤트' | '업데이트'
-      if (notice.noticeTypeId === 1) category = '공지사항'
-      else if (notice.noticeTypeId === 2) category = '이벤트'
-      else category = '업데이트'
-
+    return noticeListResponse.map((notice: ServerNoticeType) => {
       return {
         noticeId: notice.noticeId,
-        category,
+        category: getTypeName(notice.noticeTypeId),
         title: notice.noticeTitle,
         createdAt: notice.noticeCreatedAt,
       }

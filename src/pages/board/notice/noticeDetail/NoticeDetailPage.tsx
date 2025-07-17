@@ -6,8 +6,7 @@ import { Viewer } from '@toast-ui/react-editor'
 import '@toast-ui/editor/dist/toastui-editor-viewer.css'
 
 import { ROUTE_PATH } from '@/routes/routePath'
-import { useGetNoticeDetail } from '@/hooks/queries/useGetNotice'
-import { useDeleteNotice } from '@/hooks/mutations/useNotice'
+import { useDeleteNotice, useGetNoticeDetail } from '@/hooks/queries/useNotice'
 import styles from './notice-detail.module.scss'
 import dayjs from 'dayjs'
 

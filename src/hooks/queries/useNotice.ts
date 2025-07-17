@@ -1,8 +1,53 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { message } from 'antd'
 import { noticeService } from '@/services/boardService'
 import { QUERY_KEY } from '@/constants/query'
 import { NoticePostRequest } from '@/types/boardTypes'
+
+export const useReadNoticeType = () => {
+  const {
+    data: noticeTypeResponse,
+    isError,
+    error,
+    ...rest
+  } = useQuery({
+    queryKey: [QUERY_KEY.NOTICE_TYPE],
+    queryFn: async () => {
+      const res = await noticeService.readNoticeType()
+      return res.data
+    },
+  })
+
+  const getTypeName = (noticeTypeId: number) =>
+    noticeTypeResponse?.find((type: any) => type.noticeTypeId === noticeTypeId)?.noticeTypeName
+
+  return {
+    noticeTypeResponse,
+    isError,
+    error,
+    getTypeName,
+    ...rest,
+  }
+}
+export const useGetNoticeList = (noticePage: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.NOTICE_LIST, noticePage],
+    queryFn: async () => {
+      const res = await noticeService.readNoticeList(noticePage)
+      return res.data.notices
+    },
+  })
+}
+
+export const useGetNoticeDetail = (noticeId: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.NOTICE_DETAIL, noticeId],
+    queryFn: async () => {
+      const res = await noticeService.readNoticeDetail(noticeId)
+      return res.data
+    },
+  })
+}
 
 export const useDeleteNotice = () => {
   const queryClient = useQueryClient()

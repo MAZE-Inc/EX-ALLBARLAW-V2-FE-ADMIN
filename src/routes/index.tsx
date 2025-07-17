@@ -26,8 +26,8 @@ import {
   FaqListPage,
   FaqDetailPage,
   FaqEditPage,
+  NoticeLayout,
 } from '@/pages'
-import NoticeLayout from '@/pages/board/noticeLayout/NoticeListPage'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
 import MemberLayout from '@/pages/member/memberLayout/MemberLayout'

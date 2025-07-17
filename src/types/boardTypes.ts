@@ -23,7 +23,7 @@ export type ServerNoticeType = {
   noticeCreatedAt: string
 }
 
-export type NoticeListResponse = ServerNoticeType[]
+export type NoticeListResponse = { notices: ServerNoticeType[] }
 export type NoticeDetailResponse = ServerNoticeType & { noticeContent: string }
 
 export type NoticePostRequest = Notice

@@ -8,50 +8,19 @@ import {
 } from '@/types/boardTypes'
 
 export const noticeService = {
-  getNoticeList: async (noticePage: number) => {
-    try {
-      const response = await instance.get<NoticeListResponse>('/notice', {
-        params: {
-          noticePage: noticePage,
-        },
-      })
-      console.log('API Response:', response.data)
-      return response.data
-    } catch (error) {
-      console.error('Failed to get notice list:', error)
-      throw error
-    }
-  },
-
-  getNoticeDetail: async (noticeId: number) => {
-    try {
-      const response = await instance.get<NoticeDetailResponse>(`/notice/${noticeId}`)
-      return response.data
-    } catch (error) {
-      console.error('Failed to get notice detail:', error)
-      throw error
-    }
-  },
-
-  deleteNotice: async (noticeId: number) => {
-    const response = await instance.delete(`/notice/${noticeId}`)
-    return response.data
-  },
-
-  updateNotice: async (noticeId: number, notice: NoticePostRequest) => {
-    const response = await instance.put(`/notice/${noticeId}`, notice)
-    return response.data
-  },
-
-  postNotice: async (notice: NoticePostRequest) => {
-    try {
-      const response = await instance.post('/notice', notice)
-      return response.data
-    } catch (error) {
-      console.error('Failed to post notice:', error)
-      throw error
-    }
-  },
+  readNoticeCount: async () => await instance.get('/notice/count'),
+  readNoticeType: async () => await instance.get('/notice/types'),
+  readNoticeList: async (noticePage: number) =>
+    await instance.get<NoticeListResponse>('/notice', {
+      params: {
+        noticePage: noticePage,
+      },
+    }),
+  readNoticeDetail: async (noticeId: number) => await instance.get<NoticeDetailResponse>(`/notice/${noticeId}`),
+  deleteNotice: async (noticeId: number) => await instance.delete(`/notice/${noticeId}`),
+  updateNotice: async (noticeId: number, notice: NoticePostRequest) =>
+    await instance.put(`/notice/${noticeId}`, notice),
+  postNotice: async (notice: NoticePostRequest) => await instance.post('/notice', notice),
 }
 
 export const faqService = {
