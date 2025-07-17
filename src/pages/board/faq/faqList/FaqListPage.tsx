@@ -4,14 +4,16 @@ import type { ColumnsType } from 'antd/es/table'
 import styles from './faqList.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
+import { useCreateFaqType } from '@/hooks/queries/useFaq'
 
 const QuestionTitle = () => <div style={{ textAlign: 'center' }}>질문</div>
 
 const FaqListPage = () => {
+  const navigate = useNavigate()
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [categoryInput, setCategoryInput] = useState('')
-  const navigate = useNavigate()
+  const { mutate: createFaqType } = useCreateFaqType()
 
   const showModal = () => {
     setIsModalVisible(true)
@@ -22,14 +24,11 @@ const FaqListPage = () => {
     setCategoryInput('')
   }
 
-  const handleCategoryInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCategoryInput(e.target.value)
-  }
+  const handleCategoryInput = (e: React.ChangeEvent<HTMLInputElement>) => setCategoryInput(e.target.value)
 
   const handleSubmit = () => {
     if (categoryInput.trim()) {
-      // TODO: API 호출 로직 추가
-      console.log('등록할 카테고리:', categoryInput)
+      createFaqType(categoryInput)
       setCategoryInput('')
       setIsModalVisible(false)
     }

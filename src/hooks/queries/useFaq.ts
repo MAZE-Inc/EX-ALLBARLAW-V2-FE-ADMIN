@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { message } from 'antd'
 import { faqService } from '@/services/boardService'
 import { QUERY_KEY } from '@/constants/query'
@@ -20,10 +20,13 @@ export const useGetFaqType = () => {
 }
 
 export const useCreateFaqType = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (faqTypeName: string) => faqService.createFaqType(faqTypeName),
     onSuccess: (_data, _variables) => {
       message.success('FAQ 분류가 등록되었습니다.')
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FAQ_TYPE] })
     },
     onError: (error: Error) => {
       console.error('삭제 실패:', error)

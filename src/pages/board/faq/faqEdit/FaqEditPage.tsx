@@ -104,7 +104,8 @@ const FaqEditPage = () => {
               options={categoryOptions}
               size='large'
               className={styles.selectInput}
-              value={formData.category}
+              loading={isLoading}
+              value={formData.category || undefined}
               onChange={value => {
                 const newData = { ...formData, category: value }
                 setFormData(newData)
