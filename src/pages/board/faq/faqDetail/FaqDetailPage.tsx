@@ -4,12 +4,13 @@ import styles from './faqDetail.module.scss'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
-import { useReadFaqDetail } from '@/hooks/queries/useFaq'
+import { useDeleteFaq, useReadFaqDetail } from '@/hooks/queries/useFaq'
 
 const FaqDetailPage = () => {
   const navigate = useNavigate()
   const { faqId } = useParams()
   const { data: faqData } = useReadFaqDetail(Number(faqId))
+  const { mutate: deleteFaq } = useDeleteFaq()
 
   // 행 기준 테이블 데이터
   const dataSource = [
@@ -53,15 +54,20 @@ const FaqDetailPage = () => {
     },
   ]
 
-  const handleBack = () => {
-    navigate(ROUTE_PATH.BOARD_FAQ)
-  }
+  const handleBack = () => navigate(ROUTE_PATH.BOARD_FAQ)
 
   const handleEdit = () => {
     if (faqData) {
       navigate(`${ROUTE_PATH.BOARD_FAQ}/edit/${faqData.faqId}`, {
         state: { faqDetail: faqData },
       })
+    }
+  }
+
+  const handleDelete = () => {
+    if (faqData) {
+      deleteFaq(faqData.faqId)
+      navigate(ROUTE_PATH.BOARD_FAQ)
     }
   }
 
@@ -73,7 +79,7 @@ const FaqDetailPage = () => {
             <Button icon={<EditOutlined />} onClick={handleEdit}>
               수정
             </Button>
-            <Button danger icon={<DeleteOutlined />}>
+            <Button danger icon={<DeleteOutlined />} onClick={handleDelete}>
               삭제
             </Button>
           </Space>

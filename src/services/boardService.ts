@@ -60,4 +60,5 @@ export const faqService = {
   readFaq: async (faqPage: number) => await instance.get('/faq', { params: { faqPage } }),
   createFaq: async (faq: FaqCreateRequest) => await instance.post('/faq', faq),
   readFaqDetail: async (faqId: number) => await instance.get<FaqDetailResponse>(`/faq/${faqId}`),
+  deleteFaq: async (faqId: number) => await instance.delete(`/faq/${faqId}`),
 }

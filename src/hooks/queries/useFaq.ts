@@ -70,3 +70,19 @@ export const useReadFaqDetail = (faqId: number) => {
     },
   })
 }
+
+export const useDeleteFaq = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (faqId: number) => faqService.deleteFaq(faqId),
+    onSuccess: () => {
+      message.success('FAQ가 삭제되었습니다.')
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FAQ_LIST] })
+    },
+    onError: (error: Error) => {
+      console.error('FAQ 삭제 실패:', error)
+      message.error('FAQ 삭제에 실패했습니다.')
+    },
+  })
+}
