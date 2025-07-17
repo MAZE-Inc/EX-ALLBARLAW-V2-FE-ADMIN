@@ -1,6 +1,7 @@
 import { Modal, Form, Input, Radio, Button, message } from 'antd'
 import { useState, useEffect } from 'react'
 import styles from './account-management-modal.module.scss'
+import { useResetPassword, useUpdateMemberStatus } from '@/hooks/mutations/useMember'
 
 interface AdminAccountManagementModalProps {
   visible: boolean
@@ -12,7 +13,8 @@ interface AdminAccountManagementModalProps {
 const AccountManagementModal = ({ visible, onClose, accountInfo }: AdminAccountManagementModalProps) => {
   const [form] = Form.useForm()
   const [isFormValid, setIsFormValid] = useState(false)
-  console.log(accountInfo)
+  const { mutate: resetPassword } = useResetPassword()
+  const { mutate: updateMemberStatus } = useUpdateMemberStatus()
 
   useEffect(() => {
     if (visible && accountInfo) {
@@ -45,13 +47,32 @@ const AccountManagementModal = ({ visible, onClose, accountInfo }: AdminAccountM
   }
 
   const handleSubmit = async () => {
-    const values = await form.validateFields()
-    console.log(values)
-    onClose()
+    try {
+      const values = await form.validateFields()
+
+      const mutationData = {
+        userId: accountInfo.userId,
+        isActive: values.adminIsActive,
+        userBanReason: values.suspendReason,
+      }
+
+      updateMemberStatus(mutationData, {
+        onSuccess: () => {
+          message.success('계정 상태가 업데이트되었습니다.')
+          onClose()
+        },
+        onError: error => {
+          console.error('Mutation error:', error)
+          // 에러 시 모달은 열어둠
+        },
+      })
+    } catch (error) {
+      console.error('Form validation error:', error)
+    }
   }
 
   const handlePasswordInit = () => {
-    message.info('비밀번호 초기화')
+    resetPassword(accountInfo.userId)
   }
 
   return (
