@@ -138,6 +138,7 @@ const FaqEditPage = () => {
                 setFormData(newData)
                 form.setFieldValue('faqContent', e.target.value)
               }}
+              style={{ resize: 'none' }}
             />
           </div>
         </div>

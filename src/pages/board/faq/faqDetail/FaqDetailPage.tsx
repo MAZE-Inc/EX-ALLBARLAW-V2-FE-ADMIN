@@ -56,7 +56,6 @@ const FaqDetailPage = () => {
         if (record.label === '답변') {
           return (
             <div className={styles.customAnswer}>
-              {/* 커스텀 답변 컴포넌트 */}
               <div dangerouslySetInnerHTML={{ __html: content }} />
             </div>
           )
