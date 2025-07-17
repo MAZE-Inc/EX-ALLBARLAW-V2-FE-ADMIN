@@ -89,3 +89,9 @@
     border-right: 1px dashed $color-line-borderbox;
   }
 }
+
+.faqListPage__pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}

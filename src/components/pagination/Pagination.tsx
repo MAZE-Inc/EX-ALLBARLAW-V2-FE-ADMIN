@@ -4,11 +4,12 @@ interface PaginationProps {
   totalPages: number
   onPageChange: (page: number) => void
   currentPage?: number
+  className?: string
 }
 
-export const Pagination = ({ totalPages, onPageChange, currentPage = 1 }: PaginationProps) => {
+export const Pagination = ({ totalPages, onPageChange, currentPage = 1, className }: PaginationProps) => {
   return (
-    <div className={styles.pagination}>
+    <div className={`${styles.pagination} ${className}`}>
       <div className={styles.pageInfo}>
         {currentPage} / {totalPages}
       </div>

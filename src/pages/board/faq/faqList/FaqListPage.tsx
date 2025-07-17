@@ -4,8 +4,9 @@ import type { ColumnsType } from 'antd/es/table'
 import styles from './faqList.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
-import { useCreateFaqType, useReadFaq } from '@/hooks/queries/useFaq'
+import { useCreateFaqType, useReadFaq, useReadFaqCount } from '@/hooks/queries/useFaq'
 import { Faq } from '@/types/boardTypes'
+import { Pagination } from '@/components/pagination'
 
 const QuestionTitle = () => <div style={{ textAlign: 'center' }}>질문</div>
 
@@ -16,6 +17,7 @@ const FaqListPage = () => {
   const [categoryInput, setCategoryInput] = useState('')
   const { data: faqList, isLoading } = useReadFaq(1)
   const { mutate: createFaqType } = useCreateFaqType()
+  const { data: faqCount } = useReadFaqCount()
 
   const showModal = () => {
     setIsModalVisible(true)
@@ -102,6 +104,12 @@ const FaqListPage = () => {
         onRow={record => ({
           onClick: () => navigate(`${ROUTE_PATH.BOARD_FAQ}/${record.id}`),
         })}
+      />
+      <Pagination
+        className={styles.faqListPage__pagination}
+        totalPages={Math.ceil((faqCount?.total || 0) / (faqList?.size || 10))}
+        currentPage={faqList?.page || 1}
+        onPageChange={page => console.log('Page changed to:', page)}
       />
       <Modal
         title='FAQ 분류 등록'
