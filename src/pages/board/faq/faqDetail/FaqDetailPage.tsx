@@ -4,12 +4,13 @@ import styles from './faqDetail.module.scss'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
-import { useDeleteFaq, useReadFaqDetail } from '@/hooks/queries/useFaq'
+import { useDeleteFaq, useReadFaqDetail, useReadFaqType } from '@/hooks/queries/useFaq'
 
 const FaqDetailPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { faqId } = useParams()
+  const { getTypeName } = useReadFaqType()
   const { data: faqData } = useReadFaqDetail(Number(faqId))
   const { mutate: deleteFaq } = useDeleteFaq()
 
@@ -18,7 +19,7 @@ const FaqDetailPage = () => {
     {
       key: '1',
       label: 'FAQ 분류',
-      content: faqData?.faqTypeName || '로딩 중...',
+      content: faqData ? getTypeName(faqData.faqTypeId) : '로딩 중...',
     },
     {
       key: '2',
