@@ -6,24 +6,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { NoticeType, NoticeListResponse } from '@/types/boardTypes'
 import React from 'react'
 import styles from './noticeList.module.scss'
-
-const columns: TableProps<NoticeType>['columns'] = [
-  {
-    title: '카테고리',
-    dataIndex: 'category',
-    key: 'category',
-  },
-  {
-    title: '제목',
-    dataIndex: 'title',
-    key: 'title',
-  },
-  {
-    title: '작성일',
-    dataIndex: 'createdAt',
-    key: 'createdAt',
-  },
-]
+import dayjs from 'dayjs'
 
 const NoticeListPage = () => {
   const navigate = useNavigate()
@@ -35,6 +18,14 @@ const NoticeListPage = () => {
       console.error('공지사항 목록을 불러오는데 실패했습니다:', error)
     }
   }, [isError, error])
+
+  const handleCreateNotice = () => {
+    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${ROUTE_PATH.BOARD_NOTICE_EDIT}`)
+  }
+
+  const handleRowClick = (record: NoticeType) => {
+    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${record.noticeId}`)
+  }
 
   // 응답 데이터를 프론트엔드 타입으로 변환
   const noticeList = useMemo(() => {
@@ -64,13 +55,29 @@ const NoticeListPage = () => {
     }),
   }
 
-  const handleCreateNotice = () => {
-    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${ROUTE_PATH.BOARD_NOTICE_EDIT}`)
-  }
-
-  const handleRowClick = (record: NoticeType) => {
-    navigate(`${ROUTE_PATH.BOARD_NOTICE}/${record.noticeId}`)
-  }
+  const columns: TableProps<NoticeType>['columns'] = [
+    {
+      title: '구분',
+      dataIndex: 'category',
+      key: 'category',
+      align: 'center',
+      width: '15%',
+    },
+    {
+      title: '제목',
+      dataIndex: 'title',
+      key: 'title',
+      width: '60%',
+      align: 'center',
+    },
+    {
+      title: '등록 일자',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      align: 'center',
+      render: (value: string) => (value ? dayjs(value).format('YY-MM-DD') : ''),
+    },
+  ]
 
   return (
     <div style={{ padding: 24 }}>
