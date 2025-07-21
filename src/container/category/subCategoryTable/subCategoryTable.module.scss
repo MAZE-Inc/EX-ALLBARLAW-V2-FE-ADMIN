@@ -1,0 +1,33 @@
+.subCategoryTable {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .addButton {
+    background-color: #20bf62 !important;
+    border-color: #20bf62 !important;
+
+    &:hover {
+      background-color: #1ca855 !important;
+      border-color: #1ca855 !important;
+    }
+
+    &:focus {
+      background-color: #20bf62 !important;
+      border-color: #20bf62 !important;
+    }
+  }
+}
+
+.categoryEmpty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #999;
+
+  h3 {
+    margin: 0;
+    font-weight: normal;
+  }
+}

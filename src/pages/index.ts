@@ -3,7 +3,7 @@ import AdminRegisterPage from './admin/adminRegister/AdminRegisterPage'
 import LegalDictionary from './board/legalDictionary/LegalDictionaryPage'
 import MemberPage from './member/member/MemberPage'
 import LawyerMemberPage from './member/lawyerMember/LawyerMemberPage'
-import CategoryManagementPage from './category/categoryManagement/CategoryManagementPage'
+
 import BlogPage from './content/blog/BlogPage'
 import KnowledgePage from './content/knowledge/KnowledgePage'
 import VideoPage from './content/video/VideoPage'
@@ -22,16 +22,13 @@ import FaqLayout from './board/faq/faqLayout/FaqLayout'
 import FaqListPage from './board/faq/faqList/FaqListPage'
 import FaqDetailPage from './board/faq/faqDetail/FaqDetailPage'
 import FaqEditPage from './board/faq/faqEdit/FaqEditPage'
+import CategoryLayout from './category/categoryLayout/CategoryLayout'
+import CategoryManagementPage from './category/categoryManagement/CategoryManagementPage'
 
 export {
-  FaqLayout,
-  FaqListPage,
-  FaqDetailPage,
-  FaqEditPage,
   LegalDictionary,
   AdminManagementPage,
   AdminRegisterPage,
-  CategoryManagementPage,
   BlogPage,
   KnowledgePage,
   VideoPage,
@@ -48,4 +45,10 @@ export {
   NoticeDetailPage,
   NoticeEditPage,
   NoticeListPage,
+  FaqLayout,
+  FaqListPage,
+  FaqDetailPage,
+  FaqEditPage,
+  CategoryLayout,
+  CategoryManagementPage,
 }

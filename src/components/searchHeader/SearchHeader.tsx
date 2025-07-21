@@ -6,8 +6,8 @@ import styles from './search-header.module.scss'
 export type SearchHeaderMenuItemType = NonNullable<MenuProps['items']>[number]
 
 interface SearchHeaderProps {
-  selectedItem: SearchHeaderMenuItemType | null
-  onSelectionChange: (item: SearchHeaderMenuItemType) => void
+  selectedItem?: SearchHeaderMenuItemType | null
+  onSelectionChange?: (item: SearchHeaderMenuItemType) => void
   placeholder?: string
   searchPlaceholder?: string
   menuItems?: MenuProps['items']
@@ -50,7 +50,7 @@ const SearchHeader = ({
     // 선택된 아이템 찾기
     const clickedItem = items?.find(item => item?.key === e.key)
     if (clickedItem) {
-      onSelectionChange(clickedItem)
+      onSelectionChange?.(clickedItem)
 
       const label = 'label' in clickedItem ? clickedItem.label : e.key
       message.info(`선택됨: ${label}`)
