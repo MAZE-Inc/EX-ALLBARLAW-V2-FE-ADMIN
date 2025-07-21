@@ -30,10 +30,12 @@ export const memberService = {
     return response.data
   },
 
-  updateMemberStatus: async (userId: number, isActive: boolean) => {
+  updateMemberStatus: async (userId: number, isActive: boolean, userBanReason?: string) => {
+    console.log(userId, isActive, userBanReason)
     try {
-      const response = await instance.patch(`/users/${userId}/status`, {
+      const response = await instance.put(`/users/${userId}/status`, {
         userIsActive: isActive,
+        userBanReason,
       })
       return response.data
     } catch (error) {
@@ -41,4 +43,5 @@ export const memberService = {
       throw error
     }
   },
+  resetPassword: async (userId: number) => await instance.post(`/users/${userId}/reset-password`),
 }
