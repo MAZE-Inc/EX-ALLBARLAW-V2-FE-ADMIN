@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Input, Modal, Table } from 'antd'
+import { Button, Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import styles from './faqList.module.scss'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -7,6 +7,7 @@ import { ROUTE_PATH } from '@/routes/routePath'
 import { useCreateFaqType, useReadFaq, useReadFaqCount, useReadFaqType } from '@/hooks/queries/useFaq'
 import { Faq } from '@/types/boardTypes'
 import { Pagination } from '@/components/pagination'
+import InputModal from '@/components/inputModal'
 
 const QuestionTitle = () => <div style={{ textAlign: 'center' }}>질문</div>
 
@@ -15,7 +16,6 @@ const FaqListPage = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  const [categoryInput, setCategoryInput] = useState('')
   const { getTypeName } = useReadFaqType()
 
   // URL에서 페이지 정보 가져오기 (기본값: 1)
@@ -36,17 +36,11 @@ const FaqListPage = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false)
-    setCategoryInput('')
   }
 
-  const handleCategoryInput = (e: React.ChangeEvent<HTMLInputElement>) => setCategoryInput(e.target.value)
-
-  const handleSubmit = () => {
-    if (categoryInput.trim()) {
-      createFaqType(categoryInput)
-      setCategoryInput('')
-      setIsModalVisible(false)
-    }
+  const handleSubmit = (categoryName: string) => {
+    createFaqType(categoryName)
+    setIsModalVisible(false)
   }
 
   const handleFaqRegister = () => {
@@ -125,29 +119,14 @@ const FaqListPage = () => {
         currentPage={currentPage}
         onPageChange={handlePageChange}
       />
-      <Modal
+      <InputModal
         title='FAQ 분류 등록'
         open={isModalVisible}
         onCancel={handleCancel}
-        footer={
-          <>
-            <Button onClick={handleCancel}>취소</Button>
-            <Button
-              type='primary'
-              onClick={handleSubmit}
-              disabled={!categoryInput.trim()}
-              style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }}
-            >
-              등록하기
-            </Button>
-          </>
-        }
-      >
-        <div className={styles.faqCategoryModal}>
-          <label>FAQ 분류 등록</label>
-          <Input placeholder='FAQ 분류를 입력해주세요.' value={categoryInput} onChange={handleCategoryInput} />
-        </div>
-      </Modal>
+        onSubmit={handleSubmit}
+        placeholder='FAQ 분류를 입력해주세요.'
+        label='FAQ 분류 등록'
+      />
     </div>
   )
 }
