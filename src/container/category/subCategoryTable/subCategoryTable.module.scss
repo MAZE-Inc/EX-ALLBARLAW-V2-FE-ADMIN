@@ -1,0 +1,36 @@
+.subCategoryTable {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .addButton {
+    background-color: $color-white !important;
+    color: $color-green-02 !important;
+    border-color: $color-green-02 !important;
+
+    &:hover {
+      background-color: $color-green-02 !important;
+      color: $color-white !important;
+      border-color: $color-green-02 !important;
+    }
+
+    &:focus {
+      background-color: $color-green-02 !important;
+      color: $color-white !important;
+      border-color: $color-green-02 !important;
+    }
+  }
+}
+
+.categoryEmpty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #999;
+
+  h3 {
+    margin: 0;
+    font-weight: normal;
+  }
+}

@@ -27,6 +27,7 @@ import {
   FaqDetailPage,
   FaqEditPage,
   NoticeLayout,
+  CategoryLayout,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
@@ -60,7 +61,13 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.CATEGORY_MANAGEMENT,
-        element: <CategoryManagementPage />,
+        element: <CategoryLayout />,
+        children: [
+          {
+            path: '',
+            element: <CategoryManagementPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.LAWYER_MANAGEMENT,

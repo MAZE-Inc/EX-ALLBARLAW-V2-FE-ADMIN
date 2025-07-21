@@ -1,0 +1,23 @@
+.mainCategoryTable {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .addButton {
+    background-color: $color-white !important;
+    color: $color-green-02 !important;
+    border-color: $color-green-02 !important;
+
+    &:hover {
+      background-color: $color-green-02 !important;
+      color: $color-white !important;
+      border-color: $color-green-02 !important;
+    }
+
+    &:focus {
+      background-color: $color-green-02 !important;
+      color: $color-white !important;
+      border-color: $color-green-02 !important;
+    }
+  }
+}

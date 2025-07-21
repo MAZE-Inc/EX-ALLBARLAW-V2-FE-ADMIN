@@ -1,0 +1,35 @@
+.categoryManagement {
+  padding: 24px;
+}
+
+.categoryManagement__button {
+  margin-bottom: 24px;
+  display: block;
+  margin-left: auto;
+}
+
+.categoryManagement__wrapper {
+  border-radius: 8px;
+
+  display: flex;
+
+  article {
+    flex: 1;
+    padding: 0 0.75rem;
+  }
+
+  article:first-child {
+    border-right: 1px solid $color-line-borderbox;
+  }
+}
+
+.categoryManagement__wrapper__button {
+  width: 100%;
+  border: 1px solid $color-line-borderbox;
+  border-radius: 8px;
+  background: transparent;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+}
