@@ -3,6 +3,7 @@ import { Button } from 'antd'
 import styles from '@/pages/category/categoryManagement/categoryManagement.module.scss'
 import MainCategoryTable, { MainCategoryData } from '@/container/category/mainCategoryTable/MainCategoryTable'
 import SubCategoryTable, { SubCategoryData } from '@/container/category/subCategoryTable/SubCategoryTable'
+import InputModal from '@/components/inputModal'
 
 // 초기 데이터 (추후 서버에서 받아올 예정)
 const initialMainData: MainCategoryData[] = [
@@ -43,6 +44,9 @@ const CategoryManagementPage: React.FC = () => {
   const [mainData, setMainData] = useState<MainCategoryData[]>(initialMainData)
   const [subData, setSubData] = useState<SubCategoryData[]>(initialSubData)
   const [selectedMainCategory, setSelectedMainCategory] = useState<string>('')
+  const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false)
+  const [selectedSubCategory, setSelectedSubCategory] = useState<SubCategoryData | null>(null)
+  const [modalMode, setModalMode] = useState<'add' | 'edit'>('add')
 
   // 대분류 관련 핸들러
   const handleMainCategoryAdd = () => {
@@ -68,8 +72,10 @@ const CategoryManagementPage: React.FC = () => {
 
   // 소분류 관련 핸들러
   const handleSubCategoryAdd = () => {
-    console.log('소분류 추가')
-    // TODO: 서버 API 호출
+    console.log('소분류 추가 버튼 클릭')
+    setModalMode('add')
+    setSelectedSubCategory(null)
+    setIsSubCategoryModalOpen(true)
   }
 
   const handleSubCategoryOrderChange = (newData: SubCategoryData[]) => {
@@ -79,12 +85,32 @@ const CategoryManagementPage: React.FC = () => {
 
   const handleSubCategoryClick = (record: SubCategoryData, index: number) => {
     console.log('소분류 클릭:', record, 'index:', index)
-    // TODO: 클릭 시 원하는 동작 구현
+    setModalMode('edit')
+    setSelectedSubCategory(record)
+    setIsSubCategoryModalOpen(true)
   }
 
   const handleSubCategoryDoubleClick = (record: SubCategoryData, index: number) => {
     console.log('소분류 더블클릭:', record, 'index:', index)
     // TODO: 더블클릭 시 원하는 동작 구현 (예: 수정 모달 열기)
+  }
+
+  // 모달 관련 핸들러
+  const handleSubCategoryModalCancel = () => {
+    setIsSubCategoryModalOpen(false)
+    setSelectedSubCategory(null)
+  }
+
+  const handleSubCategoryModalSubmit = (inputValue: string) => {
+    if (modalMode === 'add') {
+      console.log('소분류 추가:', inputValue)
+      // TODO: 서버 API 호출로 소분류 추가
+    } else {
+      console.log('소분류 수정:', selectedSubCategory, '새 이름:', inputValue)
+      // TODO: 서버 API 호출로 소분류 이름 수정
+    }
+    setIsSubCategoryModalOpen(false)
+    setSelectedSubCategory(null)
   }
 
   return (
@@ -113,6 +139,18 @@ const CategoryManagementPage: React.FC = () => {
           />
         </article>
       </section>
+
+      <InputModal
+        title={modalMode === 'add' ? '소분류 등록' : '분류명 변경'}
+        open={isSubCategoryModalOpen}
+        onCancel={handleSubCategoryModalCancel}
+        onSubmit={handleSubCategoryModalSubmit}
+        placeholder='소분류 이름을 입력해주세요.'
+        label='소분류 이름'
+        submitButtonText={modalMode === 'add' ? '등록하기' : '수정하기'}
+        cancelButtonText='취소'
+        defaultValue={modalMode === 'edit' ? selectedSubCategory?.subCategory : ''}
+      />
     </main>
   )
 }

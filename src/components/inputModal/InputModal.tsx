@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Input, Modal } from 'antd'
 import styles from './inputModal.module.scss'
 
@@ -14,6 +14,7 @@ interface InputModalProps {
   primaryButtonColor?: string
   inputType?: 'text' | 'textarea'
   maxLength?: number
+  defaultValue?: string
 }
 
 const InputModal: React.FC<InputModalProps> = ({
@@ -28,8 +29,15 @@ const InputModal: React.FC<InputModalProps> = ({
   primaryButtonColor = '#52c41a',
   inputType = 'text',
   maxLength,
+  defaultValue = '',
 }) => {
   const [inputValue, setInputValue] = useState('')
+
+  useEffect(() => {
+    if (open) {
+      setInputValue(defaultValue)
+    }
+  }, [open, defaultValue])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setInputValue(e.target.value)
