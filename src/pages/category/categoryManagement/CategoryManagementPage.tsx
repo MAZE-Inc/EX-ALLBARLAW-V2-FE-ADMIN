@@ -42,6 +42,7 @@ const initialSubData: SubCategoryData[] = [
 const CategoryManagementPage: React.FC = () => {
   const [mainData, setMainData] = useState<MainCategoryData[]>(initialMainData)
   const [subData, setSubData] = useState<SubCategoryData[]>(initialSubData)
+  const [selectedMainCategory, setSelectedMainCategory] = useState<string>('')
 
   // 대분류 관련 핸들러
   const handleMainCategoryAdd = () => {
@@ -56,7 +57,8 @@ const CategoryManagementPage: React.FC = () => {
 
   const handleMainCategoryClick = (record: MainCategoryData, index: number) => {
     console.log('대분류 클릭:', record, 'index:', index)
-    // TODO: 클릭 시 원하는 동작 구현
+    setSelectedMainCategory(record.mainCategory)
+    // TODO: 선택된 대분류에 해당하는 소분류 데이터를 서버에서 가져오기
   }
 
   const handleMainCategoryDoubleClick = (record: MainCategoryData, index: number) => {
@@ -107,7 +109,7 @@ const CategoryManagementPage: React.FC = () => {
             onAdd={handleSubCategoryAdd}
             onRowClick={handleSubCategoryClick}
             onRowDoubleClick={handleSubCategoryDoubleClick}
-            mainCategory={'민사'}
+            mainCategory={selectedMainCategory}
           />
         </article>
       </section>
