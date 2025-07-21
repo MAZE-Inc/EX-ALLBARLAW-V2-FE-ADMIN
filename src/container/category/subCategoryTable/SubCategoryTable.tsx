@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from 'antd'
 import DraggableTable from '@/components/draggableTable'
-import { SUB_CATEGORY_COLUMNS } from '@/constants/categoryColumns'
+import { createSubCategoryColumns } from '@/constants/categoryColumns'
 import styles from './subCategoryTable.module.scss'
 
 export interface SubCategoryData {
@@ -20,6 +20,7 @@ interface SubCategoryTableProps {
   onRowClick?: (record: SubCategoryData, index: number) => void
   onRowDoubleClick?: (record: SubCategoryData, index: number) => void
   mainCategory?: string
+  onDelete?: (record: SubCategoryData) => void
 }
 
 const SubCategoryTable: React.FC<SubCategoryTableProps> = ({
@@ -29,7 +30,11 @@ const SubCategoryTable: React.FC<SubCategoryTableProps> = ({
   onRowClick,
   onRowDoubleClick,
   mainCategory,
+  onDelete,
 }) => {
+  // 삭제 함수를 포함한 컬럼 생성
+  const columns = createSubCategoryColumns(onDelete)
+
   return mainCategory ? (
     <div className={styles.subCategoryTable}>
       <h3>대분류 &gt; {mainCategory}</h3>
@@ -37,7 +42,7 @@ const SubCategoryTable: React.FC<SubCategoryTableProps> = ({
         소분류 등록
       </Button>
       <DraggableTable
-        columns={SUB_CATEGORY_COLUMNS}
+        columns={columns}
         dataSource={data}
         rowKey='key'
         onChangeOrder={onChangeOrder}

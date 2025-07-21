@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Button } from 'antd'
+import { Button, Modal } from 'antd'
 import styles from '@/pages/category/categoryManagement/categoryManagement.module.scss'
 import MainCategoryTable, { MainCategoryData } from '@/container/category/mainCategoryTable/MainCategoryTable'
 import SubCategoryTable, { SubCategoryData } from '@/container/category/subCategoryTable/SubCategoryTable'
 import InputModal from '@/components/inputModal'
+import MainCategoryEditor from '@/container/category/MainCategoryEditor'
 
 // 초기 데이터 (추후 서버에서 받아올 예정)
 const initialMainData: MainCategoryData[] = [
@@ -47,11 +48,16 @@ const CategoryManagementPage: React.FC = () => {
   const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false)
   const [selectedSubCategory, setSelectedSubCategory] = useState<SubCategoryData | null>(null)
   const [modalMode, setModalMode] = useState<'add' | 'edit'>('add')
+  const [isMainCategoryEditorOpen, setIsMainCategoryEditorOpen] = useState(false)
+  const [mainCategoryEditorMode, setMainCategoryEditorMode] = useState<'add' | 'edit'>('add')
+  const [selectedMainCategoryData, setSelectedMainCategoryData] = useState<MainCategoryData | null>(null)
 
   // 대분류 관련 핸들러
   const handleMainCategoryAdd = () => {
-    console.log('대분류 추가')
-    // TODO: 서버 API 호출
+    console.log('대분류 추가 버튼 클릭')
+    setMainCategoryEditorMode('add')
+    setSelectedMainCategoryData(null)
+    setIsMainCategoryEditorOpen(true)
   }
 
   const handleMainCategoryOrderChange = (newData: MainCategoryData[]) => {
@@ -67,7 +73,24 @@ const CategoryManagementPage: React.FC = () => {
 
   const handleMainCategoryDoubleClick = (record: MainCategoryData, index: number) => {
     console.log('대분류 더블클릭:', record, 'index:', index)
-    // TODO: 더블클릭 시 원하는 동작 구현 (예: 수정 모달 열기)
+    setMainCategoryEditorMode('edit')
+    setSelectedMainCategoryData(record)
+    setIsMainCategoryEditorOpen(true)
+  }
+
+  const handleMainCategoryDelete = (record: MainCategoryData) => {
+    Modal.confirm({
+      title: '대분류 삭제',
+      content: `"${record.mainCategory}" 대분류를 삭제하시겠습니까?`,
+      okText: '삭제',
+      cancelText: '취소',
+      okType: 'danger',
+      onOk() {
+        console.log('대분류 삭제:', record)
+        setMainData(prev => prev.filter(item => item.key !== record.key))
+        // TODO: 서버 API 호출로 삭제
+      },
+    })
   }
 
   // 소분류 관련 핸들러
@@ -95,7 +118,22 @@ const CategoryManagementPage: React.FC = () => {
     // TODO: 더블클릭 시 원하는 동작 구현 (예: 수정 모달 열기)
   }
 
-  // 모달 관련 핸들러
+  const handleSubCategoryDelete = (record: SubCategoryData) => {
+    Modal.confirm({
+      title: '소분류 삭제',
+      content: `"${record.subCategory}" 소분류를 삭제하시겠습니까?`,
+      okText: '삭제',
+      cancelText: '취소',
+      okType: 'danger',
+      onOk() {
+        console.log('소분류 삭제:', record)
+        setSubData(prev => prev.filter(item => item.key !== record.key))
+        // TODO: 서버 API 호출로 삭제
+      },
+    })
+  }
+
+  // 소분류 모달 관련 핸들러
   const handleSubCategoryModalCancel = () => {
     setIsSubCategoryModalOpen(false)
     setSelectedSubCategory(null)
@@ -113,6 +151,24 @@ const CategoryManagementPage: React.FC = () => {
     setSelectedSubCategory(null)
   }
 
+  // 대분류 에디터 모달 관련 핸들러
+  const handleMainCategoryEditorCancel = () => {
+    setIsMainCategoryEditorOpen(false)
+    setSelectedMainCategoryData(null)
+  }
+
+  const handleMainCategoryEditorSubmit = (data: { name: string; onImage: File | null; offImage: File | null }) => {
+    if (mainCategoryEditorMode === 'add') {
+      console.log('대분류 등록:', data)
+      // TODO: 서버 API 호출로 대분류 추가
+    } else {
+      console.log('대분류 수정:', selectedMainCategoryData, '새 데이터:', data)
+      // TODO: 서버 API 호출로 대분류 수정
+    }
+    setIsMainCategoryEditorOpen(false)
+    setSelectedMainCategoryData(null)
+  }
+
   return (
     <main className={styles.categoryManagement}>
       <header>
@@ -126,6 +182,7 @@ const CategoryManagementPage: React.FC = () => {
             onAdd={handleMainCategoryAdd}
             onRowClick={handleMainCategoryClick}
             onRowDoubleClick={handleMainCategoryDoubleClick}
+            onDelete={handleMainCategoryDelete}
           />
         </article>
         <article>
@@ -136,6 +193,7 @@ const CategoryManagementPage: React.FC = () => {
             onRowClick={handleSubCategoryClick}
             onRowDoubleClick={handleSubCategoryDoubleClick}
             mainCategory={selectedMainCategory}
+            onDelete={handleSubCategoryDelete}
           />
         </article>
       </section>
@@ -150,6 +208,22 @@ const CategoryManagementPage: React.FC = () => {
         submitButtonText={modalMode === 'add' ? '등록하기' : '수정하기'}
         cancelButtonText='취소'
         defaultValue={modalMode === 'edit' ? selectedSubCategory?.subCategory : ''}
+      />
+
+      <MainCategoryEditor
+        title={mainCategoryEditorMode === 'add' ? '대분류 등록' : '대분류 수정'}
+        open={isMainCategoryEditorOpen}
+        onCancel={handleMainCategoryEditorCancel}
+        onSubmit={handleMainCategoryEditorSubmit}
+        defaultValues={
+          mainCategoryEditorMode === 'edit' && selectedMainCategoryData
+            ? {
+                name: selectedMainCategoryData.mainCategory,
+                onImage: selectedMainCategoryData.icons[0] || '',
+                offImage: selectedMainCategoryData.icons[1] || '',
+              }
+            : undefined
+        }
       />
     </main>
   )

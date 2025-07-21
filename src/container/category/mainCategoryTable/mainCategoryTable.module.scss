@@ -4,17 +4,20 @@
   gap: 16px;
 
   .addButton {
-    background-color: #20bf62 !important;
-    border-color: #20bf62 !important;
+    background-color: $color-white !important;
+    color: $color-green-02 !important;
+    border-color: $color-green-02 !important;
 
     &:hover {
-      background-color: #1ca855 !important;
-      border-color: #1ca855 !important;
+      background-color: $color-green-02 !important;
+      color: $color-white !important;
+      border-color: $color-green-02 !important;
     }
 
     &:focus {
-      background-color: #20bf62 !important;
-      border-color: #20bf62 !important;
+      background-color: $color-green-02 !important;
+      color: $color-white !important;
+      border-color: $color-green-02 !important;
     }
   }
 }
