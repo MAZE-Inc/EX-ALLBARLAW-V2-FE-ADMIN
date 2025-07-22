@@ -1,8 +1,14 @@
+import React from 'react'
 import { menuItems } from '@/constants/menu'
 import { Menu, MenuProps } from 'antd'
 import styles from './sidebar.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
+
+interface SidebarProps {
+  collapsed?: boolean
+  isTablet?: boolean
+}
 
 const SidebarHeader = () => {
   const navigate = useNavigate()
@@ -32,7 +38,7 @@ const SidebarHeader = () => {
   )
 }
 
-const Sidebar = () => {
+const Sidebar: React.FC<SidebarProps> = ({ collapsed = false, isTablet = false }) => {
   const navigate = useNavigate()
 
   const onClick: MenuProps['onClick'] = e => {
@@ -42,7 +48,9 @@ const Sidebar = () => {
   const alwaysOpenKeys = ['admin', 'category', 'member', 'lawyer', 'content', 'chat', 'board', 'ad', 'statistics']
 
   return (
-    <div className={styles.sidebar}>
+    <div
+      className={`${styles.sidebar} ${collapsed && isTablet ? styles.collapsed : ''} ${isTablet ? styles.tablet : ''}`}
+    >
       <SidebarHeader />
       <Menu onClick={onClick} mode='inline' items={menuItems} openKeys={alwaysOpenKeys} onOpenChange={() => {}} />
     </div>
