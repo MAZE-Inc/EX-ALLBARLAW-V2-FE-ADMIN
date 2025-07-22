@@ -14,7 +14,6 @@ import {
   ChatListPage,
   KnowledgePage,
   LawyerManagementPage,
-  LawyerMemberPage,
   LegalDictionaryPage,
   MemberPage,
   NoticeDetailPage,
@@ -28,6 +27,9 @@ import {
   FaqEditPage,
   NoticeLayout,
   CategoryLayout,
+  MemberDetailPage,
+  LawyerMemberLayout,
+  LawyerMemberPage,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
@@ -81,6 +83,10 @@ const router = createBrowserRouter([
             path: '',
             element: <MemberPage />,
           },
+          {
+            path: ':memberId',
+            element: <MemberDetailPage />,
+          },
         ],
       },
       {
@@ -101,7 +107,13 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.LAWYER_MEMBER,
-        element: <LawyerMemberPage />,
+        element: <LawyerMemberLayout />,
+        children: [
+          {
+            path: '',
+            element: <LawyerMemberPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.BOARD_NOTICE,

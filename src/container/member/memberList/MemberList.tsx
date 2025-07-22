@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { Member, MemberListRequest } from '@/types/memberType'
 import AccountManagementModal from '@/components/accountManagementModal/AccountManagementModal'
 import dayjs from 'dayjs'
+import { useNavigate } from 'react-router-dom'
+import { ROUTE_PATH } from '@/routes/routePath'
 
 interface MemberListProps {
   data: Member[]
@@ -17,6 +19,7 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
   const [selectedRows, setSelectedRows] = useState<Member[]>([])
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedUser, setSelectedUser] = useState<Member | null>(null)
+  const navigate = useNavigate()
 
   const handleManageAccount = (user: Member) => {
     setSelectedUser(user)
@@ -118,6 +121,9 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
         pagination={false}
         loading={loading}
         onChange={() => {}} // 정렬은 헤더 클릭으로 처리
+        onRow={record => ({
+          onClick: () => navigate(`${ROUTE_PATH.MEMBER}/${record.userId}`, { state: { userInfo: record } }),
+        })}
       />
       {selectedUser && (
         <AccountManagementModal

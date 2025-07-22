@@ -1,0 +1,216 @@
+.video-horizon {
+  display: flex;
+  gap: 0.5rem;
+
+  &.reverse {
+    @media (min-width: calc($breakpoint-desktop + 1px)) {
+      flex-direction: row-reverse;
+    }
+  }
+
+  &.small {
+    .video-horizon-figure {
+      width: 13rem;
+      height: 7.1875rem;
+    }
+    .video-content-section {
+      h1 {
+        font-size: 1rem;
+        -webkit-line-clamp: 1;
+      }
+      p {
+        font-size: 0.8125rem;
+        -webkit-line-clamp: 3;
+      }
+      .lawyer {
+        font-size: 1rem;
+      }
+      .lawfirm {
+        font-size: 0.875rem;
+      }
+    }
+    @media (max-width: $breakpoint-desktop) {
+      .video-horizon-figure {
+        width: 100%;
+        height: 10.5rem;
+      }
+      .video-content-section h1 {
+        font-size: 0.9375rem;
+        -webkit-line-clamp: 2;
+      }
+    }
+  }
+
+  &.xsmall {
+    gap: 0.3rem;
+    .video-horizon-figure {
+      width: 10rem;
+      height: 5.625rem;
+    }
+    .video-content-section {
+      h1 {
+        font-size: 0.875rem;
+        -webkit-line-clamp: 1;
+      }
+      p {
+        font-size: 0.75rem;
+        -webkit-line-clamp: 2;
+        display: block !important;
+      }
+      .lawyer {
+        font-size: 0.875rem;
+      }
+      .lawfirm {
+        font-size: 0.75rem;
+      }
+    }
+    @media (max-width: $breakpoint-desktop) {
+      .video-horizon-figure {
+        height: 8rem;
+      }
+      .video-content-section {
+        h1 {
+          font-size: 0.875rem;
+          -webkit-line-clamp: 2;
+        }
+        p {
+          display: none !important;
+        }
+      }
+    }
+  }
+
+  &.large {
+    gap: 0.75rem;
+    .video-horizon-figure {
+      width: 16rem;
+      height: 9rem;
+    }
+    .video-content-section {
+      h1 {
+        font-size: 1.125rem;
+        -webkit-line-clamp: 1;
+      }
+      p {
+        font-size: 0.875rem;
+        -webkit-line-clamp: 3;
+      }
+      .lawyer {
+        font-size: 1.125rem;
+      }
+      .lawfirm {
+        font-size: 1rem;
+      }
+    }
+    @media (max-width: $breakpoint-desktop) {
+      .video-horizon-figure {
+        height: 12rem;
+      }
+      .video-content-section h1 {
+        font-size: 1rem;
+        -webkit-line-clamp: 2;
+      }
+    }
+  }
+}
+
+.video-horizon-figure {
+  flex-shrink: 0;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem;
+  }
+}
+
+.video-content-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  p {
+    margin-bottom: 0.5rem;
+    color: $color-text-index;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.video-content-section-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 2.875rem;
+  h1 {
+    font-weight: $font-weight-semibold;
+    color: $color-07-black;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bookmark-icon {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.video-content-section-footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: $color-green-01;
+  .lawyer {
+    font-weight: $font-weight-semibold;
+  }
+  .video-content-section-footer-figure {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    img {
+      width: 1.5rem;
+      height: 1.5rem;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .lawfirm {
+      font-weight: $font-weight-semibold;
+      color: $color-text-index;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-desktop) {
+  .video-horizon {
+    flex-direction: column;
+  }
+
+  .video-horizon-figure {
+    width: 100%;
+    img {
+      border-radius: 0;
+      object-fit: cover;
+    }
+  }
+
+  .video-content-section {
+    padding: 0 20px;
+    p {
+      display: none;
+    }
+  }
+
+  .video-content-section-header {
+    gap: 0.5rem;
+    h1 {
+      word-break: keep-all;
+    }
+  }
+
+  .video-content-section-footer {
+    flex-direction: column;
+  }
+}

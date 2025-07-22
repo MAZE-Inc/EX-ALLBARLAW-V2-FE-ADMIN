@@ -1,0 +1,32 @@
+.keepSidebar {
+  width: 11.25rem;
+  height: 100%;
+  background-color: $color-bg-gray-01;
+  display: flex;
+  flex-direction: column;
+}
+
+.keepSidebarButton {
+  width: 100%;
+  text-align: center;
+  background-color: $color-bg-gray-03;
+
+  border-bottom: 1px solid $color-line-divider;
+  border-right: 1px solid $color-line-divider;
+
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+
+  &:hover {
+    background-color: rgba($color-white, 0.5);
+  }
+
+  &.active {
+    background-color: $color-white;
+  }
+
+  &:first-child {
+    border-top: 1px solid $color-line-divider;
+  }
+}
