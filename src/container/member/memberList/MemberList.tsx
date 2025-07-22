@@ -1,6 +1,6 @@
+import React, { useState } from 'react'
 import { Button, Table, TableProps } from 'antd'
 import styles from './memberList.module.scss'
-import { useState } from 'react'
 import { Member, MemberListRequest } from '@/types/memberType'
 import AccountManagementModal from '@/components/accountManagementModal/AccountManagementModal'
 import dayjs from 'dayjs'
@@ -21,7 +21,8 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
   const [selectedUser, setSelectedUser] = useState<Member | null>(null)
   const navigate = useNavigate()
 
-  const handleManageAccount = (user: Member) => {
+  const handleManageAccount = (user: Member, e: React.MouseEvent) => {
+    e.stopPropagation() // 이벤트 버블링 방지
     setSelectedUser(user)
     setModalVisible(true)
   }
@@ -82,7 +83,7 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
       render: (isActive: boolean, record: Member) => (
         <div className={styles['account-management-cell']}>
           <span>{isActive ? '사용중' : '정지'}</span>
-          <Button size='small' onClick={() => handleManageAccount(record)}>
+          <Button size='small' onClick={e => handleManageAccount(record, e)}>
             계정관리
           </Button>
         </div>

@@ -1,0 +1,12 @@
+.lawyer-member-list-container {
+  .approval-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    span {
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+}
