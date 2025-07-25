@@ -13,7 +13,7 @@ import {
   CategoryManagementPage,
   ChatListPage,
   KnowledgePage,
-  LawyerManagementPage,
+  LawyerLayout,
   LegalDictionaryPage,
   MemberPage,
   NoticeDetailPage,
@@ -73,7 +73,13 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.LAWYER_MANAGEMENT,
-        element: <LawyerManagementPage />,
+        element: <LawyerLayout />,
+        children: [
+          {
+            path: '',
+            element: <LawyerMemberPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.MEMBER,

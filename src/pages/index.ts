@@ -6,7 +6,7 @@ import LawyerMemberLayout from './member/lawyerMemberLayout/LawyerMemberLayout'
 import BlogPage from './content/blog/BlogPage'
 import KnowledgePage from './content/knowledge/KnowledgePage'
 import VideoPage from './content/video/VideoPage'
-import LawyerManagementPage from './lawyer/lawyerManagement/LawyerManagementPage'
+import LawyerLayout from './lawyer/lawyerLayout/LawyerLayout'
 import AdLawfirmPage from './ad/adLawfirm/AdLawfirmPage'
 import AdLawyerPage from './ad/adLawyer/AdLawyerPage'
 import AdBannerPage from './ad/adBanner/AdBanner'
@@ -25,6 +25,7 @@ import CategoryLayout from './category/categoryLayout/CategoryLayout'
 import CategoryManagementPage from './category/categoryManagement/CategoryManagementPage'
 import MemberDetailPage from './member/memberDetail/MemberDetailPage'
 import LawyerMemberPage from './member/lawyerMember/LawyerMemberPage'
+import LawyerListPage from './lawyer/lawyerList/LawyerListPage'
 
 export {
   LegalDictionary,
@@ -33,7 +34,7 @@ export {
   BlogPage,
   KnowledgePage,
   VideoPage,
-  LawyerManagementPage,
+  LawyerLayout,
   MemberPage,
   LawyerMemberLayout,
   AdLawfirmPage,
@@ -54,4 +55,5 @@ export {
   CategoryManagementPage,
   MemberDetailPage,
   LawyerMemberPage,
+  LawyerListPage,
 }
