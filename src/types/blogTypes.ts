@@ -1,4 +1,4 @@
-// import { SortType } from './sortTypes'
+import { SortType } from './sortType'
 
 export type BlogCountRequest = {
   subcategoryId: number | 'all'
@@ -10,7 +10,7 @@ export type BlogListRequest = {
   take?: number
   cursor?: number
   cursorId?: number
-  // orderBy?: SortType
+  orderBy?: SortType
 }
 
 export type RandomBlogListRequest = {

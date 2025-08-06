@@ -1,6 +1,8 @@
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { ConfigProvider } from 'antd'
+import { COLOR } from '@/styles/abstracts/color'
 import './styles/main.scss'
 import Router from '@/routes'
 
@@ -17,9 +19,18 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById('root')!).render(
   // <StrictMode>
-  <QueryClientProvider client={queryClient}>
-    <Router />
-    {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
-  </QueryClientProvider>
+  <ConfigProvider
+    theme={{
+      token: {
+        colorPrimary: COLOR.GREEN_01, // #20BF62
+        colorPrimaryHover: COLOR.GREEN_HOVER, // #20BF62
+      },
+    }}
+  >
+    <QueryClientProvider client={queryClient}>
+      <Router />
+      {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
+    </QueryClientProvider>
+  </ConfigProvider>
   // </StrictMode>
 )

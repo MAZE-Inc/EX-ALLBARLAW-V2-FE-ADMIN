@@ -4,12 +4,16 @@ import { Outlet } from 'react-router-dom'
 
 const LawyerMemberLayout = () => {
   return (
-    <div>
-      <div className={styles['admin-layout']}>
-        <SearchHeader className={styles['admin-layout__searchHeader']} bordered={false} title='' placeholder='선택' />
-        <Outlet />
-      </div>
-    </div>
+    <main>
+      <section className={styles['admin-layout']}>
+        <header>
+          <SearchHeader className={styles['admin-layout__searchHeader']} bordered={false} title='' placeholder='선택' />
+        </header>
+        <article>
+          <Outlet />
+        </article>
+      </section>
+    </main>
   )
 }
 

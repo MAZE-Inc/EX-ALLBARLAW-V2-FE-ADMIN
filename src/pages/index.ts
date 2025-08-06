@@ -26,6 +26,7 @@ import CategoryManagementPage from './category/categoryManagement/CategoryManage
 import MemberDetailPage from './member/memberDetail/MemberDetailPage'
 import LawyerMemberPage from './member/lawyerMember/LawyerMemberPage'
 import LawyerListPage from './lawyer/lawyerList/LawyerListPage'
+import ContentLayout from './content/contentLayout/ContentLayout'
 
 export {
   LegalDictionary,
@@ -56,4 +57,5 @@ export {
   MemberDetailPage,
   LawyerMemberPage,
   LawyerListPage,
+  ContentLayout,
 }

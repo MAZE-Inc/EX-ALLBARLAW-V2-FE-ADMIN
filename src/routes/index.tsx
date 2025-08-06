@@ -30,6 +30,7 @@ import {
   MemberDetailPage,
   LawyerMemberLayout,
   LawyerMemberPage,
+  ContentLayout,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
@@ -96,16 +97,22 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: ROUTE_PATH.CONTENT_BLOG,
-        element: <BlogPage />,
-      },
-      {
-        path: ROUTE_PATH.CONTENT_VIDEO,
-        element: <VideoPage />,
-      },
-      {
-        path: ROUTE_PATH.CONTENT_KNOWLEDGE,
-        element: <KnowledgePage />,
+        path: ROUTE_PATH.CONTENT,
+        element: <ContentLayout />,
+        children: [
+          {
+            path: ROUTE_PATH.CONTENT_BLOG,
+            element: <BlogPage />,
+          },
+          {
+            path: ROUTE_PATH.CONTENT_VIDEO,
+            element: <VideoPage />,
+          },
+          {
+            path: ROUTE_PATH.CONTENT_KNOWLEDGE,
+            element: <KnowledgePage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.CHAT_LIST,
