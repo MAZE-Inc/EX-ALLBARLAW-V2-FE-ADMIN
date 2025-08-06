@@ -20,3 +20,9 @@ export type MemberListResponse = Member[]
 export type MemberAccountManagementRequest = Pick<Member, 'userId' | 'userIsActive'> & {
   userBanReason: string
 }
+
+export interface MemberInfoItem {
+  label: string
+  key: keyof Member | 'formattedCreatedAt' | 'accountStatus'
+  formatter?: (value: any) => string
+}

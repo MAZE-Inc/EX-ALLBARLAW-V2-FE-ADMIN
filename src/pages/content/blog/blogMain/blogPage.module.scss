@@ -1,0 +1,17 @@
+.blog-page {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.5rem;
+  gap: 1rem;
+}
+
+.blog-page__header {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.blog-page__content {
+  display: flex;
+  gap: 1rem;
+}

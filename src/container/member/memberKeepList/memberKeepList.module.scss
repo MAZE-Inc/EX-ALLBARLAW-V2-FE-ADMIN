@@ -1,0 +1,44 @@
+.memberKeepList {
+  padding: 0;
+  background-color: #fff;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f0f0f0;
+
+  .icon {
+    color: $color-green-02; // 갈색 다이아몬드
+    font-size: 16px;
+  }
+
+  .number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: #8b4513; // 갈색 배경
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 8px;
+  }
+}
+
+.keepListContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.keepListContent {
+  flex: 1;
+}

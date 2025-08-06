@@ -1,0 +1,31 @@
+.video-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 1rem;
+
+  padding: 0 1.5rem;
+
+  &__header {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 1rem;
+  }
+
+  &__content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+
+    > :first-child {
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+
+    > :last-child {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+}

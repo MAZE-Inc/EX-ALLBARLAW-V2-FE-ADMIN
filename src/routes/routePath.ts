@@ -17,9 +17,12 @@ export const ROUTE_PATH = {
   LAWYER_MANAGEMENT: '/lawyer-management',
 
   // 분류별 컨텐츠 관리
-  CONTENT_BLOG: '/content-blog',
-  CONTENT_VIDEO: '/content-video',
-  CONTENT_KNOWLEDGE: '/content-knowledge',
+  CONTENT: '/content',
+  CONTENT_BLOG: 'content-blog',
+  CONTENT_VIDEO: 'content-video',
+  CONTENT_KNOWLEDGE: 'content-knowledge',
+  CONTENT_BLOG_EDIT: 'blog-edit',
+  CONTENT_VIDEO_EDIT: 'video-edit',
 
   // 채팅상담
   CHAT_LIST: '/chat-list',

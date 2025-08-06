@@ -2,12 +2,14 @@ import AdminManagementPage from './admin/adminManagement/AdminManagementPage'
 import AdminRegisterPage from './admin/adminRegister/AdminRegisterPage'
 import LegalDictionary from './board/legalDictionary/LegalDictionaryPage'
 import MemberPage from './member/member/MemberPage'
-import LawyerMemberPage from './member/lawyerMember/LawyerMemberPage'
-
-import BlogPage from './content/blog/BlogPage'
-import KnowledgePage from './content/knowledge/KnowledgePage'
-import VideoPage from './content/video/VideoPage'
-import LawyerManagementPage from './lawyer/lawyerManagement/LawyerManagementPage'
+import LawyerMemberLayout from './member/lawyerMemberLayout/LawyerMemberLayout'
+import BlogPage from './content/blog/blogMain/BlogPage'
+import KnowledgePage from './content/knowledge/knowledgeMain/KnowledgePage'
+import KnowledgeList from './content/knowledge/knowledgeList/KnowledgeList'
+import VideoPage from './content/video/videoMain/VideoPage'
+import VideoList from './content/video/videoList/VideoList'
+import VideoDetail from './content/video/videoDetail/VideoDetail'
+import LawyerLayout from './lawyer/lawyerLayout/LawyerLayout'
 import AdLawfirmPage from './ad/adLawfirm/AdLawfirmPage'
 import AdLawyerPage from './ad/adLawyer/AdLawyerPage'
 import AdBannerPage from './ad/adBanner/AdBanner'
@@ -24,6 +26,13 @@ import FaqDetailPage from './board/faq/faqDetail/FaqDetailPage'
 import FaqEditPage from './board/faq/faqEdit/FaqEditPage'
 import CategoryLayout from './category/categoryLayout/CategoryLayout'
 import CategoryManagementPage from './category/categoryManagement/CategoryManagementPage'
+import MemberDetailPage from './member/memberDetail/MemberDetailPage'
+import LawyerMemberPage from './member/lawyerMember/LawyerMemberPage'
+import LawyerListPage from './lawyer/lawyerList/LawyerListPage'
+import ContentLayout from './content/contentLayout/ContentLayout'
+import BlogDetail from './content/blog/blogDetail/BlogDetail'
+import BlogList from './content/blog/blogList/BlogList'
+import KnowledgeDetail from './content/knowledge/knowledgeDetail/LegalKnowledgeDetail'
 
 export {
   LegalDictionary,
@@ -31,10 +40,13 @@ export {
   AdminRegisterPage,
   BlogPage,
   KnowledgePage,
+  KnowledgeList,
   VideoPage,
-  LawyerManagementPage,
+  VideoList,
+  VideoDetail,
+  LawyerLayout,
   MemberPage,
-  LawyerMemberPage,
+  LawyerMemberLayout,
   AdLawfirmPage,
   AdLawyerPage,
   AdBannerPage,
@@ -51,4 +63,11 @@ export {
   FaqEditPage,
   CategoryLayout,
   CategoryManagementPage,
+  MemberDetailPage,
+  LawyerMemberPage,
+  LawyerListPage,
+  ContentLayout,
+  BlogDetail,
+  BlogList,
+  KnowledgeDetail,
 }

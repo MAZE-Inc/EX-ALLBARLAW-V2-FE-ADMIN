@@ -40,9 +40,9 @@ export const menuItems: MenuItem[] = [
     key: 'content',
     label: '분류별 컨텐츠 관리',
     children: [
-      { key: 'content-blog', label: '블로그글' },
-      { key: 'content-video', label: '법률영상' },
-      { key: 'content-knowledge', label: '법률지식인' },
+      { key: `${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_BLOG}`, label: '블로그글' },
+      { key: `${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_VIDEO}`, label: '법률영상' },
+      { key: `${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_KNOWLEDGE}`, label: '법률지식인' },
     ],
   },
   {

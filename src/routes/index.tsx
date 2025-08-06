@@ -9,17 +9,19 @@ import {
   AdLawyerPage,
   AdminManagementPage,
   AdminRegisterPage,
-  BlogPage,
   CategoryManagementPage,
   ChatListPage,
   KnowledgePage,
-  LawyerManagementPage,
-  LawyerMemberPage,
+  KnowledgeList,
+  KnowledgeDetail,
+  LawyerLayout,
   LegalDictionaryPage,
   MemberPage,
   NoticeDetailPage,
   StatisticsPage,
   VideoPage,
+  VideoList,
+  VideoDetail,
   NoticeEditPage,
   NoticeListPage,
   FaqLayout,
@@ -28,6 +30,13 @@ import {
   FaqEditPage,
   NoticeLayout,
   CategoryLayout,
+  MemberDetailPage,
+  LawyerMemberLayout,
+  LawyerMemberPage,
+  ContentLayout,
+  BlogDetail,
+  BlogPage,
+  BlogList,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
@@ -71,7 +80,13 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.LAWYER_MANAGEMENT,
-        element: <LawyerManagementPage />,
+        element: <LawyerLayout />,
+        children: [
+          {
+            path: '',
+            element: <LawyerMemberPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.MEMBER,
@@ -81,19 +96,71 @@ const router = createBrowserRouter([
             path: '',
             element: <MemberPage />,
           },
+          {
+            path: ':memberId',
+            element: <MemberDetailPage />,
+          },
         ],
       },
       {
-        path: ROUTE_PATH.CONTENT_BLOG,
-        element: <BlogPage />,
-      },
-      {
-        path: ROUTE_PATH.CONTENT_VIDEO,
-        element: <VideoPage />,
-      },
-      {
-        path: ROUTE_PATH.CONTENT_KNOWLEDGE,
-        element: <KnowledgePage />,
+        path: ROUTE_PATH.CONTENT,
+        element: <ContentLayout />,
+        children: [
+          {
+            path: ROUTE_PATH.CONTENT_BLOG,
+            element: <BlogPage />,
+            children: [
+              {
+                path: '',
+                element: <BlogList />,
+              },
+              {
+                path: ':subCategoryId',
+                element: <BlogList />,
+              },
+              {
+                path: ':subCategoryId/:blogCaseId',
+                element: <BlogDetail />,
+              },
+            ],
+          },
+          {
+            path: ROUTE_PATH.CONTENT_VIDEO,
+            element: <VideoPage />,
+            children: [
+              {
+                path: '',
+                element: <VideoList />,
+              },
+              {
+                path: ':subCategoryId',
+                element: <VideoList />,
+              },
+              {
+                path: ':subCategoryId/:videoCaseId',
+                element: <VideoDetail />,
+              },
+            ],
+          },
+          {
+            path: ROUTE_PATH.CONTENT_KNOWLEDGE,
+            element: <KnowledgePage />,
+            children: [
+              {
+                path: '',
+                element: <KnowledgeList />,
+              },
+              {
+                path: ':subCategoryId',
+                element: <KnowledgeList />,
+              },
+              {
+                path: ':subCategoryId/:knowledgeId',
+                element: <KnowledgeDetail />,
+              },
+            ],
+          },
+        ],
       },
       {
         path: ROUTE_PATH.CHAT_LIST,
@@ -101,7 +168,13 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.LAWYER_MEMBER,
-        element: <LawyerMemberPage />,
+        element: <LawyerMemberLayout />,
+        children: [
+          {
+            path: '',
+            element: <LawyerMemberPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.BOARD_NOTICE,

@@ -1,0 +1,102 @@
+.consultation-content-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.card-container {
+  background-color: $color-white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+
+  h4 {
+    font-size: 1.125rem;
+    font-weight: $font-weight-extra-bold;
+    color: $color-green-01;
+    margin: 0;
+    flex-shrink: 0;
+  }
+}
+
+.card-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.last-answer-time {
+  font-size: 0.875rem;
+  color: $color-text-index;
+  white-space: nowrap;
+
+  strong {
+    color: $color-green-01;
+  }
+}
+
+.card-content {
+  white-space: pre-line;
+
+  font-size: 0.875rem;
+  line-height: 1;
+
+  ul {
+    padding-left: 1rem;
+    padding-bottom: 0;
+  }
+  li {
+    margin-bottom: -5px;
+  }
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  .tag-item {
+    &-text {
+      color: $color-text-index;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-desktop) {
+  .consultation-content-card {
+    gap: 0.5rem;
+  }
+
+  .card-container {
+    padding: 1.25rem;
+  }
+
+  .card-header {
+    margin-bottom: 0;
+  }
+
+  .card-header-meta {
+    display: none;
+  }
+
+  .card-content {
+    font-size: 0.75rem;
+  }
+
+  .tag-list {
+    .tag-item {
+      &-text {
+        font-size: 0.75rem;
+      }
+    }
+  }
+}

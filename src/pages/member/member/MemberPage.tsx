@@ -1,6 +1,6 @@
 import { Button, ConfigProvider, Tabs, TabsProps } from 'antd'
 import { COLOR } from '@/styles/abstracts/color'
-import MemberList from '../memberList/MemberList'
+import MemberList from '../../../container/member/memberList/MemberList'
 import styles from './memberPage.module.scss'
 import { Pagination } from '@/components/pagination'
 import { useGetTotalMemberPage } from '@/hooks/queries/useGetTotalMemberPage'

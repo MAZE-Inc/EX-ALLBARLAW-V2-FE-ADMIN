@@ -1,0 +1,50 @@
+.video-player-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 796px;
+
+  .video-player-container {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+
+    // 모바일에서 보더 제거
+    @media (max-width: 80rem) {
+      border-radius: 0 !important;
+    }
+  }
+
+  .video-error {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    color: #666;
+    font-size: 16px;
+    font-weight: 500;
+
+    // 모바일에서 보더 제거
+    @media (max-width: 80rem) {
+      border-radius: 0 !important;
+      border: none !important;
+    }
+  }
+
+  .video-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .tag-item {
+      font-size: 0.875rem;
+      color: $color-text-index;
+    }
+  }
+}

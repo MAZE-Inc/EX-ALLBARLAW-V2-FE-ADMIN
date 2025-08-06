@@ -1,9 +1,11 @@
+import React, { useState } from 'react'
 import { Button, Table, TableProps } from 'antd'
 import styles from './memberList.module.scss'
-import { useState } from 'react'
 import { Member, MemberListRequest } from '@/types/memberType'
 import AccountManagementModal from '@/components/accountManagementModal/AccountManagementModal'
 import dayjs from 'dayjs'
+import { useNavigate } from 'react-router-dom'
+import { ROUTE_PATH } from '@/routes/routePath'
 
 interface MemberListProps {
   data: Member[]
@@ -17,8 +19,10 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
   const [selectedRows, setSelectedRows] = useState<Member[]>([])
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedUser, setSelectedUser] = useState<Member | null>(null)
+  const navigate = useNavigate()
 
-  const handleManageAccount = (user: Member) => {
+  const handleManageAccount = (user: Member, e: React.MouseEvent) => {
+    e.stopPropagation() // 이벤트 버블링 방지
     setSelectedUser(user)
     setModalVisible(true)
   }
@@ -79,7 +83,7 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
       render: (isActive: boolean, record: Member) => (
         <div className={styles['account-management-cell']}>
           <span>{isActive ? '사용중' : '정지'}</span>
-          <Button size='small' onClick={() => handleManageAccount(record)}>
+          <Button size='small' onClick={e => handleManageAccount(record, e)}>
             계정관리
           </Button>
         </div>
@@ -118,6 +122,9 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
         pagination={false}
         loading={loading}
         onChange={() => {}} // 정렬은 헤더 클릭으로 처리
+        onRow={record => ({
+          onClick: () => navigate(`${ROUTE_PATH.MEMBER}/${record.userId}`, { state: { userInfo: record } }),
+        })}
       />
       {selectedUser && (
         <AccountManagementModal
