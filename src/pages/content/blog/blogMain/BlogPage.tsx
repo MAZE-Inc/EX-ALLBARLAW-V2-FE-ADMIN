@@ -3,20 +3,19 @@ import { useCategory } from '@/hooks/queries/useCategory'
 import { Button } from 'antd'
 import { useState } from 'react'
 import styles from './blogPage.module.scss'
-import BlogList from '@/container/content/blogList/BlogList'
+import { Outlet, useNavigate } from 'react-router-dom'
 
 const BlogPage = () => {
+  const navigate = useNavigate()
   const { data: categoryList } = useCategory()
-  console.log(categoryList)
 
   const [selectedMainCategory, setSelectedMainCategory] = useState<number | null>(null)
-  const [selectedSubcategory, setSelectedSubcategory] = useState<number | null>(null)
 
   const handleMainCategoryClick = (categoryId: number) => {
     setSelectedMainCategory(categoryId)
   }
   const handleSubcategoryClick = (subcategoryId: number) => {
-    setSelectedSubcategory(subcategoryId)
+    navigate(`${subcategoryId}`)
   }
 
   return (
@@ -30,12 +29,12 @@ const BlogPage = () => {
           <CategorySidebar
             categories={categoryList || []}
             selectedMainCategory={selectedMainCategory}
-            selectedSubcategory={selectedSubcategory}
+            selectedSubcategory={null}
             onMainCategoryClick={handleMainCategoryClick}
             onSubcategoryClick={handleSubcategoryClick}
           />
         </aside>
-        <BlogList subCategoryId={selectedSubcategory} />
+        <Outlet />
       </section>
     </main>
   )

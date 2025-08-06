@@ -9,7 +9,6 @@ import {
   AdLawyerPage,
   AdminManagementPage,
   AdminRegisterPage,
-  BlogPage,
   CategoryManagementPage,
   ChatListPage,
   KnowledgePage,
@@ -19,6 +18,8 @@ import {
   NoticeDetailPage,
   StatisticsPage,
   VideoPage,
+  VideoList,
+  VideoDetail,
   NoticeEditPage,
   NoticeListPage,
   FaqLayout,
@@ -31,6 +32,9 @@ import {
   LawyerMemberLayout,
   LawyerMemberPage,
   ContentLayout,
+  BlogDetail,
+  BlogPage,
+  BlogList,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
@@ -103,10 +107,38 @@ const router = createBrowserRouter([
           {
             path: ROUTE_PATH.CONTENT_BLOG,
             element: <BlogPage />,
+            children: [
+              {
+                path: '',
+                element: <BlogList />,
+              },
+              {
+                path: ':subCategoryId',
+                element: <BlogList />,
+              },
+              {
+                path: ':subCategoryId/:blogCaseId',
+                element: <BlogDetail />,
+              },
+            ],
           },
           {
             path: ROUTE_PATH.CONTENT_VIDEO,
             element: <VideoPage />,
+            children: [
+              {
+                path: '',
+                element: <VideoList />,
+              },
+              {
+                path: ':subCategoryId',
+                element: <VideoList />,
+              },
+              {
+                path: ':subCategoryId/:videoCaseId',
+                element: <VideoDetail />,
+              },
+            ],
           },
           {
             path: ROUTE_PATH.CONTENT_KNOWLEDGE,

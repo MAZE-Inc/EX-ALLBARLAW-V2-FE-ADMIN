@@ -1,0 +1,89 @@
+.blog-detail {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-detail-container {
+  width: 100%;
+  flex: 1;
+  border-radius: 0.5rem;
+  background-color: $color-bg-gray-03;
+}
+
+.blog-detail-content {
+  width: 100%;
+  border-radius: 0.5rem;
+  background-color: $color-white;
+}
+
+.blog-detail-content-wrapper {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  .blog-button-section {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: $font-weight-extra-bold;
+    color: $color-text-black;
+  }
+
+  .summary {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    white-space: pre-line;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .lawyer-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+
+    .lawyer-item {
+      position: relative;
+      padding-left: 10px; /* 불릿+간격 공간 확보 */
+
+      &::before {
+        content: '•';
+        position: absolute;
+        left: 0.25rem;
+        color: $color-text-black;
+        font-size: 0.875rem;
+      }
+
+      span {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        word-break: keep-all;
+      }
+    }
+  }
+
+  .tag-list {
+    display: flex;
+    margin-top: 1rem;
+    gap: 1rem;
+
+    span {
+      font-size: 0.875rem;
+      color: $color-text-index;
+    }
+  }
+}
+
+.line-driver {
+  border: none;
+  border-top: 1px solid $color-line-divider;
+  margin: 16px 0; /* 상하 여백 16px 적용 */
+  padding: 0;
+}

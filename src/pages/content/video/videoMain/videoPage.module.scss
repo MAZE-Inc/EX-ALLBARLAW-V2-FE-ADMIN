@@ -9,6 +9,7 @@
   &__header {
     display: flex;
     justify-content: flex-end;
+
     gap: 1rem;
   }
 
@@ -16,12 +17,15 @@
     display: flex;
     flex: 1;
     overflow: hidden;
-  }
 
-  &__sidebar {
-    width: 280px;
-    flex-shrink: 0;
-    border-right: 1px solid #e0e0e0;
-    overflow-y: auto;
+    > :first-child {
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+
+    > :last-child {
+      flex: 1;
+      min-width: 0;
+    }
   }
 }

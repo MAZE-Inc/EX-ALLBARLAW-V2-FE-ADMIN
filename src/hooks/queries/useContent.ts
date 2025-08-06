@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { contentService } from '@/services/contentService'
 import { QUERY_KEY } from '@/constants/query'
-import { BlogListRequest } from '@/types/blogTypes'
+import { BlogDetailRequest, BlogListRequest } from '@/types/blogTypes'
 import { VideoListRequest } from '@/types/videoTypes'
 
 export const useBlogList = (request: BlogListRequest) => {
@@ -35,6 +35,16 @@ export const useInfiniteBlogList = (request: Omit<BlogListRequest, 'cursor' | 'c
     ...query,
     hasNextPage: query.data?.pages[query.data.pages.length - 1]?.hasNextPage ?? false,
   }
+}
+
+export const useGetBlogDetail = (request: BlogDetailRequest) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.BLOG_DETAIL, request.blogCaseId],
+    queryFn: () => contentService.getBlogDetail(request),
+    enabled: request.blogCaseId !== undefined,
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 30,
+  })
 }
 
 export const useVideoList = (request: VideoListRequest) => {

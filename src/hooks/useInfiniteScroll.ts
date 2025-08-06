@@ -22,15 +22,6 @@ export const useInfiniteScroll = ({
     // 스크롤이 끝에서 100px 이내에 도달했을 때 다음 페이지 로드
     const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100
 
-    console.log('🔍 useInfiniteScroll - 스크롤 상태:', {
-      scrollTop,
-      scrollHeight,
-      clientHeight,
-      isNearBottom,
-      hasNextPage,
-      isFetchingNextPage,
-    })
-
     if (isNearBottom && hasNextPage && !isFetchingNextPage) {
       console.log('🟢 useInfiniteScroll - 다음 페이지 로드 시작')
       fetchNextPage()
@@ -43,7 +34,7 @@ export const useInfiniteScroll = ({
     if (!scrollContainer) return
 
     const hasScroll = scrollContainer.scrollHeight > scrollContainer.clientHeight
-    
+
     // 스크롤이 없고, 다음 페이지가 있고, 로딩중이 아니면 추가 로드
     if (!hasScroll && hasNextPage && !isFetchingNextPage) {
       console.log('📚 스크롤이 없어서 추가 데이터 로드')

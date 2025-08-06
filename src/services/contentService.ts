@@ -1,4 +1,4 @@
-import { BlogListRequest, BlogListResponse } from '@/types/blogTypes'
+import { BlogDetailRequest, BlogDetailResponse, BlogListRequest, BlogListResponse } from '@/types/blogTypes'
 import { VideoListRequest, VideoListResponse } from '@/types/videoTypes'
 import axios from 'axios'
 
@@ -39,5 +39,18 @@ export const contentService = {
     const response = await axios.get<VideoListResponse>('https://v2.allbarlawbiz.com' + url)
 
     return response.data
+  },
+
+  getBlogDetail: async (request: BlogDetailRequest) => {
+    try {
+      const response = await axios.get<BlogDetailResponse>(
+        `https://v2.allbarlawbiz.com/blog-case/detail/${request.blogCaseId}`
+      )
+
+      return response.data
+    } catch (error) {
+      console.error('Failed to fetch blog detail:', error)
+      throw error
+    }
   },
 }
