@@ -3,6 +3,7 @@ import { contentService } from '@/services/contentService'
 import { QUERY_KEY } from '@/constants/query'
 import { BlogDetailRequest, BlogListRequest } from '@/types/blogTypes'
 import { VideoDetailRequest, VideoListRequest } from '@/types/videoTypes'
+import { KnowledgeListRequest, KnowledgeDetailRequest } from '@/types/knowledgeType'
 
 export const useBlogList = (request: BlogListRequest) => {
   return useQuery({
@@ -85,5 +86,53 @@ export const useGetVideoDetail = (request: VideoDetailRequest) => {
     queryKey: [QUERY_KEY.VIDEO_DETAIL, request.videoCaseId],
     queryFn: () => contentService.getVideoDetail(request),
     enabled: request.videoCaseId !== undefined,
+  })
+}
+
+export const useGetKnowledgeList = (request: KnowledgeListRequest) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.KNOWLEDGE_LIST, request.subcategoryId, request.cursorId, request.orderBy],
+    queryFn: () => contentService.getKnowledgeList(request),
+    enabled: request.subcategoryId !== undefined,
+  })
+}
+
+export const useInfiniteKnowledgeList = (request: Omit<KnowledgeListRequest, 'cursor' | 'cursorId'>) => {
+  const { data, isLoading, isError, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: [QUERY_KEY.KNOWLEDGE_LIST, 'infinite', request.subcategoryId, request.orderBy],
+    queryFn: ({ pageParam }) =>
+      contentService.getKnowledgeList({
+        ...request,
+        cursor: pageParam?.cursor,
+        cursorId: pageParam?.cursorId,
+      }),
+    enabled: request.subcategoryId !== undefined,
+    initialPageParam: undefined as { cursor?: number; cursorId?: number } | undefined,
+    getNextPageParam: lastPage => {
+      if (!lastPage.hasNextPage) return undefined
+      return {
+        cursor: lastPage.nextCursor,
+        cursorId: lastPage.nextCursorId,
+      }
+    },
+  })
+
+  const knowledgeList = data?.pages.flatMap(page => page.data) ?? []
+
+  return {
+    knowledgeList,
+    isLoading,
+    isError,
+    hasNextPage: hasNextPage ?? false,
+    fetchNextPage,
+    isFetchingNextPage,
+  }
+}
+
+export const useGetKnowledgeDetail = (request: KnowledgeDetailRequest) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.KNOWLEDGE_DETAIL, request.knowledgeId],
+    queryFn: () => contentService.getKnowledgeDetail(request),
+    enabled: request.knowledgeId !== undefined,
   })
 }

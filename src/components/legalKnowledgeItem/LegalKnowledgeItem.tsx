@@ -25,7 +25,7 @@ const LegalKnowledgeItem = ({
   onClick,
 }: LegalKnowledgeItemProps) => {
   const formattedTime = time ? formatTimeAgo(time) : ''
-  console.log(formattedTime)
+
   return (
     <article className={styles['legal-knowledge-item']} onClick={onClick}>
       <header className={styles['header']}>

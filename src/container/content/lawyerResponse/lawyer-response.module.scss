@@ -1,0 +1,186 @@
+.lawyer-response {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.lawyer-response-card {
+  padding: 1rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+
+  figure {
+    width: 4rem;
+    height: 4rem;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+
+      border-radius: 50%;
+    }
+  }
+
+  &-info {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    position: relative;
+
+    .info-header {
+      display: flex;
+      align-items: flex-end;
+      position: relative;
+      gap: 0.75rem;
+
+      .lawyer-name {
+        font-size: 1rem;
+        font-weight: $font-weight-semibold;
+        color: $color-text-black;
+      }
+
+      .lawfirm-name {
+        margin: 0;
+        font-size: 0.8125rem;
+        color: $color-text-caption;
+      }
+
+      .selected-badge {
+        background-color: $color-icon-darkgreen;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+
+        padding: 2px 6px;
+        border-radius: 0.5rem;
+
+        span {
+          font-size: 0.625rem;
+          font-weight: $font-weight-semibold;
+          color: $color-white;
+        }
+      }
+    }
+
+    .barotalk-btn {
+      position: absolute;
+      right: 0;
+      top: 12px;
+
+      height: 2.5rem;
+      padding: 0 1.5rem;
+
+      border-radius: 0.5rem;
+      background-color: $color-green-01;
+
+      font-size: 14px;
+      color: $color-white;
+      font-weight: $font-weight-semibold;
+    }
+
+    .info-description {
+      font-size: 0.8125rem;
+      line-height: 1.125rem;
+      margin: 0;
+      padding-right: 120px;
+      word-break: keep-all;
+    }
+  }
+}
+
+.description {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+
+  padding-top: 1.5rem;
+
+  .answer-date {
+    font-size: 0.875rem;
+    color: $color-text-caption;
+    font-weight: $font-weight-semibold;
+
+    strong {
+      color: $color-green-01;
+      font-weight: $font-weight-semibold;
+      margin-right: 5px;
+    }
+  }
+
+  .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    background-color: transparent;
+
+    font-size: 0.75rem;
+    color: $color-text-caption;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+@media (max-width: $breakpoint-desktop) {
+  .card-header {
+    flex-direction: row;
+    margin: 0 0 19px 0;
+
+    figure {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+
+  .card-header {
+    &-info {
+      .info-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+      }
+
+      .barotalk-btn {
+        position: relative;
+      }
+
+      .info-description {
+        padding-right: 0;
+      }
+    }
+  }
+
+  .mobile-barotalk-btn {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    background-color: $color-green-01;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    font-size: 14px;
+    color: $color-white;
+  }
+
+  .footer {
+    justify-content: flex-start;
+  }
+}

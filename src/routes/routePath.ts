@@ -21,6 +21,8 @@ export const ROUTE_PATH = {
   CONTENT_BLOG: 'content-blog',
   CONTENT_VIDEO: 'content-video',
   CONTENT_KNOWLEDGE: 'content-knowledge',
+  CONTENT_BLOG_EDIT: 'blog-edit',
+  CONTENT_VIDEO_EDIT: 'video-edit',
 
   // 채팅상담
   CHAT_LIST: '/chat-list',

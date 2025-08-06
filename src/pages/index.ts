@@ -4,7 +4,8 @@ import LegalDictionary from './board/legalDictionary/LegalDictionaryPage'
 import MemberPage from './member/member/MemberPage'
 import LawyerMemberLayout from './member/lawyerMemberLayout/LawyerMemberLayout'
 import BlogPage from './content/blog/blogMain/BlogPage'
-import KnowledgePage from './content/knowledge/KnowledgePage'
+import KnowledgePage from './content/knowledge/knowledgeMain/KnowledgePage'
+import KnowledgeList from './content/knowledge/knowledgeList/KnowledgeList'
 import VideoPage from './content/video/videoMain/VideoPage'
 import VideoList from './content/video/videoList/VideoList'
 import VideoDetail from './content/video/videoDetail/VideoDetail'
@@ -31,6 +32,7 @@ import LawyerListPage from './lawyer/lawyerList/LawyerListPage'
 import ContentLayout from './content/contentLayout/ContentLayout'
 import BlogDetail from './content/blog/blogDetail/BlogDetail'
 import BlogList from './content/blog/blogList/BlogList'
+import KnowledgeDetail from './content/knowledge/knowledgeDetail/LegalKnowledgeDetail'
 
 export {
   LegalDictionary,
@@ -38,6 +40,7 @@ export {
   AdminRegisterPage,
   BlogPage,
   KnowledgePage,
+  KnowledgeList,
   VideoPage,
   VideoList,
   VideoDetail,
@@ -66,4 +69,5 @@ export {
   ContentLayout,
   BlogDetail,
   BlogList,
+  KnowledgeDetail,
 }

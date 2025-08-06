@@ -12,6 +12,8 @@ import {
   CategoryManagementPage,
   ChatListPage,
   KnowledgePage,
+  KnowledgeList,
+  KnowledgeDetail,
   LawyerLayout,
   LegalDictionaryPage,
   MemberPage,
@@ -143,6 +145,20 @@ const router = createBrowserRouter([
           {
             path: ROUTE_PATH.CONTENT_KNOWLEDGE,
             element: <KnowledgePage />,
+            children: [
+              {
+                path: '',
+                element: <KnowledgeList />,
+              },
+              {
+                path: ':subCategoryId',
+                element: <KnowledgeList />,
+              },
+              {
+                path: ':subCategoryId/:knowledgeId',
+                element: <KnowledgeDetail />,
+              },
+            ],
           },
         ],
       },
