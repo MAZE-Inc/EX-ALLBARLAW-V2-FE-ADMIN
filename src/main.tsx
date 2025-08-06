@@ -13,6 +13,7 @@ const queryClient = new QueryClient({
       retry: 1,
       refetchOnWindowFocus: false,
       staleTime: 1000 * 60 * 5, // 5분
+      placeholderData: (previousData: unknown) => previousData, // 이전 데이터를 placeholder로 사용
     },
   },
 })
