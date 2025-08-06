@@ -1,0 +1,26 @@
+.container {
+  background-color: $color-white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: $font-weight-extra-bold;
+
+  color: $color-green-01;
+}
+
+.description {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: $font-weight-regular;
+
+  color: $color-text-black;
+  line-height: 20px;
+
+  word-break: keep-all;
+}

@@ -10,10 +10,8 @@ const BlogList = () => {
   const navigate = useNavigate()
   const { subCategoryId } = useParams<{ subCategoryId: string }>()
 
-  const categoryId = subCategoryId || 'all'
-
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteBlogList({
-    subcategoryId: Number(categoryId) || 'all',
+    subcategoryId: subCategoryId ? Number(subCategoryId) : 'all',
   })
 
   useInfiniteScroll({
@@ -24,7 +22,7 @@ const BlogList = () => {
   })
 
   const handleClickBlog = (blogCaseId: number) => {
-    navigate(`${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_BLOG}/${categoryId}/${blogCaseId}`)
+    navigate(`${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_BLOG}/${subCategoryId}/${blogCaseId}`)
   }
 
   return (

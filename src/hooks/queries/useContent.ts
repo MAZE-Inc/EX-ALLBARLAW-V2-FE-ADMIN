@@ -2,7 +2,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { contentService } from '@/services/contentService'
 import { QUERY_KEY } from '@/constants/query'
 import { BlogDetailRequest, BlogListRequest } from '@/types/blogTypes'
-import { VideoListRequest } from '@/types/videoTypes'
+import { VideoDetailRequest, VideoListRequest } from '@/types/videoTypes'
 
 export const useBlogList = (request: BlogListRequest) => {
   return useQuery({
@@ -78,4 +78,12 @@ export const useInfiniteVideoList = (request: Omit<VideoListRequest, 'cursor' | 
     ...query,
     hasNextPage: query.data?.pages[query.data.pages.length - 1]?.hasNextPage ?? false,
   }
+}
+
+export const useGetVideoDetail = (request: VideoDetailRequest) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.VIDEO_DETAIL, request.videoCaseId],
+    queryFn: () => contentService.getVideoDetail(request),
+    enabled: request.videoCaseId !== undefined,
+  })
 }
