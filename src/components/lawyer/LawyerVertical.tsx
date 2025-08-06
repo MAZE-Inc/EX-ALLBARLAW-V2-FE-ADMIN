@@ -1,11 +1,11 @@
 import React from 'react'
 import styles from './lawyer-vertical.module.scss'
-import Tag from '../tag/Tag'
-import { blog, instagram, youtube } from '@/assets/imgs'
-import ImageSlider from '../slider/imageSlider'
-import Button from '../button/Button'
-import SvgIcon from '../SvgIcon'
-import { SocialLink, Tag as TagType } from '@/types/lawyerTypes'
+// import Tag from '../tag/Tag'
+// import { blog, instagram, youtube } from '@/assets/imgs'
+// import ImageSlider from '../slider/imageSlider'
+// import Button from '../button/Button'
+// import SvgIcon from '../SvgIcon'
+// import { SocialLink, Tag as TagType } from '@/types/lawyerTypes'
 
 type LawyerVerticalProps = {
   name: string
@@ -17,31 +17,31 @@ type LawyerVerticalProps = {
   instagramUrl?: string
   shareHandler?: () => void
   saveHandler?: () => void
-  tags?: TagType[]
+  // tags?: TagType[]
   footer?: React.ReactNode
   profileImageWidth?: string | number
   profileImageHeight?: string | number
   className?: string
-  socialLink?: SocialLink[]
+  // socialLink?: SocialLink[]
 }
 
 const LawyerVertical = ({
-  name,
-  lawfirm,
-  profileImage,
+  // name,
+  // lawfirm,
+  // profileImage,
   type = 3,
-  blogUrl,
-  youtubeUrl,
-  instagramUrl,
-  tags,
+  // blogUrl,
+  // youtubeUrl,
+  // instagramUrl,
+  // tags,
   footer,
   className,
-  profileImageWidth,
-  profileImageHeight,
-}: LawyerVerticalProps) => {
+}: // profileImageWidth,
+// profileImageHeight,
+LawyerVerticalProps) => {
   return (
     <div className={`${styles['lawyer-vertical']} ${styles[`type-${type}`]} ${className}`}>
-      {type === 2 ? (
+      {/* {type === 2 ? (
         <ImageSlider
           images={profileImage as string[]}
           sliderSettings={{ arrows: false, infinite: false }}
@@ -64,10 +64,10 @@ const LawyerVertical = ({
             저장 <SvgIcon name='save' size={16} />
           </Button>
         </div>
-      </div>
+      </div> */}
       {type === 2 && <button className={styles['baro-talk-button']}>바로 톡</button>}
       <div className={styles['social-link']}>
-        {blogUrl && (
+        {/* {blogUrl && (
           <img
             src={blog}
             alt='블로그'
@@ -90,15 +90,15 @@ const LawyerVertical = ({
             className={styles['social-link-img']}
             onClick={() => window.open(instagramUrl, '_blank')}
           />
-        )}
+        )} */}
 
-        {tags && (
+        {/* {tags && (
           <div className={styles['tag-list']}>
             {tags.map(tagItem => (
               <Tag tag={tagItem.name} key={tagItem.id} />
             ))}
           </div>
-        )}
+        )} */}
       </div>
       <footer>{footer}</footer>
     </div>
