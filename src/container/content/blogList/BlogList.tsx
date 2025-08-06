@@ -2,6 +2,7 @@ import BlogItem from '@/components/blogItem/BlogItem'
 import { useInfiniteBlogList } from '@/hooks/queries/useContent'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import styles from './blogList.module.scss'
+import { Divider } from 'antd'
 
 interface BlogListProps {
   subCategoryId: number | null
@@ -21,9 +22,15 @@ const BlogList = ({ subCategoryId = null }: BlogListProps) => {
 
   return (
     <main className={styles['blog-list']}>
-      <header></header>
       <section className={`${styles['blog-list-container']} blog-list-container`}>
-        {data?.pages.map(page => page.data.map(blog => <BlogItem key={blog.blogCaseId} item={blog} />))}
+        {data?.pages.map(page =>
+          page.data.map(blog => (
+            <>
+              <BlogItem key={blog.blogCaseId} item={blog} />
+              <Divider style={{ margin: 0 }} />
+            </>
+          ))
+        )}
       </section>
     </main>
   )

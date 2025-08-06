@@ -1,0 +1,27 @@
+.video-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 1rem;
+
+  padding: 0 1.5rem;
+
+  &__header {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+
+  &__content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  &__sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    border-right: 1px solid #e0e0e0;
+    overflow-y: auto;
+  }
+}

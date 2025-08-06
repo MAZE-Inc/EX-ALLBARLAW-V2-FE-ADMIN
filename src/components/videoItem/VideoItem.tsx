@@ -14,7 +14,7 @@ type VideoHorizonProps = {
   onClick?: () => void
 }
 
-const VideoHorizon = ({
+const VideoItem = ({
   type = 'default',
   size = 'small',
   thumbnailUrl,
@@ -53,4 +53,4 @@ const VideoHorizon = ({
   )
 }
 
-export default VideoHorizon
+export default VideoItem

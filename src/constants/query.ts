@@ -20,4 +20,5 @@ export const QUERY_KEY = {
 
   //컨텐츠
   BLOG_LIST: 'blogList',
+  VIDEO_LIST: 'videoList',
 } as const

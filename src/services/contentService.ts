@@ -1,4 +1,5 @@
 import { BlogListRequest, BlogListResponse } from '@/types/blogTypes'
+import { VideoListRequest, VideoListResponse } from '@/types/videoTypes'
 import axios from 'axios'
 
 export const contentService = {
@@ -17,6 +18,25 @@ export const contentService = {
     const url = `/blog-case/${subcategoryId}${queryString ? `?${queryString}` : ''}`
 
     const response = await axios.get<BlogListResponse>('https://v2.allbarlawbiz.com' + url)
+
+    return response.data
+  },
+
+  getVideoList: async (request: VideoListRequest) => {
+    const { subcategoryId, take, cursor, cursorId, orderBy } = request
+
+    // 쿼리 파라미터 객체 생성 (값이 있을 때만 포함)
+    const params = new URLSearchParams()
+    if (take !== undefined) params.append('take', take.toString())
+    if (cursor !== undefined) params.append('cursor', cursor.toString())
+    if (cursorId !== undefined) params.append('cursorId', cursorId.toString())
+    if (orderBy !== undefined) params.append('orderBy', orderBy)
+
+    // 쿼리스트링 생성
+    const queryString = params.toString()
+    const url = `/video-case/${subcategoryId}${queryString ? `?${queryString}` : ''}`
+
+    const response = await axios.get<VideoListResponse>('https://v2.allbarlawbiz.com' + url)
 
     return response.data
   },
