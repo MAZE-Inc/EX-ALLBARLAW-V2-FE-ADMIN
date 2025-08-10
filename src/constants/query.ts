@@ -1,6 +1,12 @@
 export const QUERY_KEY = {
+  //멤버
   TOTAL_MEMBER_PAGE: 'totalMemberPage',
   MEMBER_LIST: 'memberList',
+  MEMBER_KEEP_BLOG_LIST: 'memberKeepBlogList',
+  MEMBER_KEEP_VIDEO_LIST: 'memberKeepVideoList',
+  MEMBER_KEEP_LEGAL_KNOWLEDGE_LIST: 'memberKeepLegalKnowledgeList',
+  MEMBER_KEEP_LAWYER_LIST: 'memberKeepLawyerList',
+  MEMBER_KEEP_LEGAL_DICTIONARY_LIST: 'memberKeepLegalDictionaryList',
 
   // 공지사항
   ADMIN_LIST: 'adminList',

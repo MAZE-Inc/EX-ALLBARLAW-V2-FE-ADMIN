@@ -1,0 +1,25 @@
+.legalDictionaryItem {
+  padding: 0.75rem 0;
+  background-color: $color-white;
+  border-radius: 0.5rem;
+
+  border: 1px solid $color-line-borderbox;
+
+  text-align: center;
+
+  p {
+    margin: 0;
+    line-height: 1.25rem;
+  }
+
+  .koreanName {
+    font-size: 0.875rem;
+    font-weight: $font-weight-semibold;
+  }
+
+  .otherName {
+    font-size: 0.75rem;
+
+    color: $color-text-index;
+  }
+}

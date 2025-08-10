@@ -1,7 +1,7 @@
 import { Modal, Form, Input, Radio, Button, message } from 'antd'
 import { useState, useEffect } from 'react'
 import styles from './account-management-modal.module.scss'
-import { useResetPassword, useUpdateMemberStatus } from '@/hooks/mutations/useMember'
+import { useResetPassword, useUpdateMemberStatus } from '@/hooks/queries/useMember'
 
 interface AdminAccountManagementModalProps {
   visible: boolean

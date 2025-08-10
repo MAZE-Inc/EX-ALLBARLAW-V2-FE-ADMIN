@@ -13,7 +13,7 @@ export type KnowledgeDetailRequest = {
   subcategoryId?: number | 'all'
 }
 
-type KnowledgeItem = {
+export type KnowledgeItem = {
   knowledgeId: number
   knowledgeTitle: string
   summaryContent: string

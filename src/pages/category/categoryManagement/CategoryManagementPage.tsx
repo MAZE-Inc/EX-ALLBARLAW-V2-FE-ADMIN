@@ -90,7 +90,9 @@ const CategoryManagementPage: React.FC = () => {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-        <Spin size='large' tip='데이터를 불러오는 중...' />
+        <Spin size='large' spinning={true} tip='데이터를 불러오는 중...'>
+          <div style={{ padding: 50 }} />
+        </Spin>
       </div>
     )
   }

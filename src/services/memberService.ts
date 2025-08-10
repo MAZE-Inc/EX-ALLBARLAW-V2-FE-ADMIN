@@ -1,5 +1,11 @@
 import instance from '@/lib/axios'
+import { ApiResponse } from '@/types/axiosType'
+import { BlogCase } from '@/types/blogTypes'
+import { KnowledgeItem } from '@/types/knowledgeType'
+import { Lawyer } from '@/types/lawyerTypes'
+import { LegalTermItem } from '@/types/legalTermTypes'
 import { MemberListRequest, MemberListResponse } from '@/types/memberType'
+import { VideoCase } from '@/types/videoTypes'
 
 export const memberService = {
   getTotalMemberPages: async () => {
@@ -44,4 +50,25 @@ export const memberService = {
     }
   },
   resetPassword: async (userId: number) => await instance.post(`/users/${userId}/reset-password`),
+
+  memberKeepBlogList: async (userId: number) => {
+    const response = await instance.get<ApiResponse<BlogCase[]>>(`/mypages/${userId}/blog-cases`)
+    return response.data
+  },
+  memberKeepVideoList: async (userId: number) => {
+    const response = await instance.get<ApiResponse<VideoCase[]>>(`/mypages/${userId}/video-cases`)
+    return response.data
+  },
+  memberKeepLegalKnowledgeList: async (userId: number) => {
+    const response = await instance.get<ApiResponse<KnowledgeItem[]>>(`/mypages/${userId}/knowledge`)
+    return response.data
+  },
+  memberKeepLawyerList: async (userId: number) => {
+    const response = await instance.get<ApiResponse<Lawyer[]>>(`/mypages/${userId}/lawyes`)
+    return response.data
+  },
+  memberKeepLegalDictionaryList: async (userId: number) => {
+    const response = await instance.get<ApiResponse<LegalTermItem[]>>(`/mypages/${userId}/legal-terms`)
+    return response.data
+  },
 }

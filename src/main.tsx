@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ConfigProvider, message, Modal } from 'antd'
+import { ConfigProvider, message } from 'antd'
 import { COLOR } from '@/styles/abstracts/color'
 import './styles/main.scss'
 import Router from '@/routes'
@@ -15,10 +15,7 @@ message.config({
   getContainer: () => document.body,
 })
 
-Modal.config({
-  rootPrefixCls: 'ant',
-  getContainer: () => document.body,
-})
+// Modal.config is deprecated - removed
 
 // QueryClient 인스턴스 생성
 const queryClient = new QueryClient({

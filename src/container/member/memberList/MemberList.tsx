@@ -102,9 +102,7 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort, onSele
     },
     onSelect: (record: Member, selected: boolean) => {
       setSelectedRows(prev => {
-        const newSelectedRows = selected
-          ? [...prev, record]
-          : prev.filter(row => row.userId !== record.userId)
+        const newSelectedRows = selected ? [...prev, record] : prev.filter(row => row.userId !== record.userId)
         onSelectionChange?.(newSelectedRows)
         return newSelectedRows
       })
