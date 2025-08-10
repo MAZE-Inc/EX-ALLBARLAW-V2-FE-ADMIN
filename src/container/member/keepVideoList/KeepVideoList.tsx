@@ -1,29 +1,57 @@
+import React from 'react'
 import VideoItem from '@/components/videoItem/VideoItem'
 import styles from './keepVideoList.module.scss'
 import { Divider } from 'antd'
+import EmptyState from '@/components/emptyState/EmptyState'
+import { useInfiniteMemberKeepVideoList } from '@/hooks/queries/useMember'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import { useNavigate } from 'react-router-dom'
 
-const KeepVideoList = () => {
-  const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+const KeepVideoList = ({ userId }: { userId: number }) => {
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteMemberKeepVideoList(userId)
+  const navigate = useNavigate()
+
+  useInfiniteScroll({
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    containerSelector: '.keep-video-list-container',
+  })
+
+  // 빈 상태 체크
+  const isEmpty = !data?.pages || data.pages.every(page => !page?.data || page.data.length === 0)
+
+  if (isEmpty && !isFetchingNextPage) {
+    return (
+      <div className={styles.keepVideoList}>
+        <EmptyState icon='🎥' message='Keep한 비디오가 없습니다' />
+      </div>
+    )
+  }
+
+  const handleClickVideo = (videoCaseId: number) => {
+    navigate(`/content/content-video/all/${videoCaseId}`)
+  }
+
   return (
-    <div className={styles.keepVideoList}>
-      {array.map((item, index) => (
-        <>
-          <VideoItem
-            key={item}
-            thumbnailUrl='https://picsum.photos/400/300'
-            title='법률정보의 글'
-            lawyerName='법률정보의 글'
-            lawfirmName='법률정보의 글'
-            channelName='법률정보의 글'
-            channelThumbnail='https://picsum.photos/150/150'
-            summaryContents={`음주후 주차장등에서 잠깐 운전하다가 적발될 경우, 
-    처벌받을 수 있습니다.혈중알코올 농도가 0.03% 이상이면 음주운전으로 간주되어 처벌대상이 됩니다.
-    음주후 주차장등에서 잠깐 운전하다가 적발될 경우, 처벌받을 수 있습니다.
-    혈중알코올 농도가 0.03% 이상이면 음주운전으로 간주되어 처벌대상이 됩니다.`}
-          />
-          {index !== array.length - 1 && <Divider />}
-        </>
-      ))}
+    <div className={`${styles.keepVideoList} keep-video-list-container`}>
+      {data?.pages.map(page =>
+        page?.data?.map((item, index) => (
+          <React.Fragment key={item.videoCaseId}>
+            <VideoItem
+              onClick={() => handleClickVideo(item.videoCaseId)}
+              thumbnailUrl={item.thumbnail}
+              title={item.title}
+              lawyerName={item.lawyerName}
+              lawfirmName={item.lawfirmName}
+              channelName={item.channelName}
+              channelThumbnail={item.channelThumbnail}
+              summaryContents={item.summaryContent}
+            />
+            {index !== page.data.length - 1 && <Divider />}
+          </React.Fragment>
+        ))
+      )}
     </div>
   )
 }

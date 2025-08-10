@@ -1,0 +1,24 @@
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/abstracts/variables' as *;
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  min-height: 300px;
+  
+  .emptyIcon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+  
+  .emptyMessage {
+    font-size: 1rem;
+    color: #666;
+    text-align: center;
+    margin: 0;
+  }
+}

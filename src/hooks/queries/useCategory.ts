@@ -71,3 +71,23 @@ export const useDeleteSubCategory = () => {
     },
   })
 }
+
+export const useUpdateCategoryOrder = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: categoryService.updateCategoryOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CATEGORY_LIST] })
+    },
+  })
+}
+
+export const useUpdateSubCategoryOrder = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: categoryService.updateSubCategoryOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CATEGORY_LIST] })
+    },
+  })
+}

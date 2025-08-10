@@ -1,44 +1,55 @@
+import React from 'react'
 import styles from './keepLegalKnowledgeList.module.scss'
 import LegalKnowledgeItem from '@/components/legalKnowledgeItem/LegalKnowledgeItem'
 import { Divider } from 'antd'
+import { useInfiniteMemberKeepLegalKnowledgeList } from '@/hooks/queries/useMember'
+import EmptyState from '@/components/emptyState/EmptyState'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import { useNavigate } from 'react-router-dom'
 
-const KeepLegalKnowledgeList = () => {
-  const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-  // const array: number[] = [] // 빈 상태 테스트용
+const KeepLegalKnowledgeList = ({ userId }: { userId: number }) => {
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteMemberKeepLegalKnowledgeList(userId)
+  const navigate = useNavigate()
+
+  useInfiniteScroll({
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    containerSelector: '.keep-legal-knowledge-list-container',
+  })
 
   // 빈 상태 체크
-  if (array.length === 0) {
+  const isEmpty = !data?.pages || data.pages.every(page => !page?.data || page.data.length === 0)
+
+  if (isEmpty && !isFetchingNextPage) {
     return (
       <div className={styles.keepLegalKnowledgeList}>
-        <div className={styles.emptyState}>
-          <div className={styles.emptyIcon}>🤔</div>
-          <p className={styles.emptyMessage}>Keep한 법률지식인이 없습니다</p>
-          <p className={styles.emptySubMessage}>관심있는 질문을 Keep해보세요!</p>
-        </div>
+        <EmptyState icon='📚' message='Keep한 법률지식이 없습니다' />
       </div>
     )
   }
 
+  const handleClickLegalKnowledge = (knowledgeId: number) => {
+    navigate(`/content/content-knowledge/all/${knowledgeId}`)
+  }
+
   return (
-    <div className={styles.keepLegalKnowledgeList}>
-      {array.map((item, index) => (
-        <>
-          <LegalKnowledgeItem
-            key={item}
-            title='법률정보의 글'
-            description={`음주후 주차장등에서 잠깐 운전하다가 적발될 경우, 
-    처벌받을 수 있습니다.혈중알코올 농도가 0.03% 이상이면 음주운전으로 간주되어 처벌대상이 됩니다.
-    음주후 주차장등에서 잠깐 운전하다가 적발될 경우, 처벌받을 수 있습니다.
-    혈중알코올 농도가 0.03% 이상이면 음주운전으로 간주되어 처벌대상이 됩니다.`}
-            time={new Date()}
-            isLastAnswer={true}
-            lawyerList={[
-              { lawyerId: 1, lawyerProfileImage: 'https://picsum.photos/150/150', lawyerName: '법률정보의 글' },
-            ]}
-          />
-          {index !== array.length - 1 && <Divider />}
-        </>
-      ))}
+    <div className={`${styles.keepLegalKnowledgeList} keep-legal-knowledge-list-container`}>
+      {data?.pages.map(page =>
+        page?.data?.map((item, index) => (
+          <React.Fragment key={item.knowledgeId}>
+            <LegalKnowledgeItem
+              onClick={() => handleClickLegalKnowledge(item.knowledgeId)}
+              title={item.knowledgeTitle}
+              description={item.summaryContent}
+              time={new Date(item.lastMessageAt)}
+              isLastAnswer={true}
+              lawyerList={item.lawyers}
+            />
+            {index !== page.data.length - 1 && <Divider />}
+          </React.Fragment>
+        ))
+      )}
     </div>
   )
 }

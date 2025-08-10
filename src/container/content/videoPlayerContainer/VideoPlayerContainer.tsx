@@ -4,7 +4,7 @@ import styles from './video-player-container.module.scss'
 
 type VideoPlayerContainerProps = {
   videoUrl?: string
-  tags?: string[]
+  tags?: { id: number; name: string }[]
   className?: string
   maxWidth?: string | number
 }
@@ -28,7 +28,7 @@ const VideoPlayerContainer = ({ videoUrl, tags = [], className, maxWidth }: Vide
         {tags.length > 0 && (
           <div className={styles['video-tag-list']}>
             {tags.map(tag => (
-              <span key={tag}>#{tag}</span>
+              <span key={tag.id}>#{tag.name}</span>
             ))}
           </div>
         )}
@@ -44,8 +44,8 @@ const VideoPlayerContainer = ({ videoUrl, tags = [], className, maxWidth }: Vide
       {tags.length > 0 && (
         <div className={styles['video-tag-list']}>
           {tags.map(tag => (
-            <span key={tag} className={styles['tag-item']}>
-              #{tag}
+            <span key={tag.id} className={styles['tag-item']}>
+              #{tag.name}
             </span>
           ))}
         </div>

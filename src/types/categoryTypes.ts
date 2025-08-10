@@ -6,6 +6,11 @@ export interface Category {
 export interface Subcategory {
   subcategoryId: number
   subcategoryName: string
+  subcategoryDisplayOrder?: number
+  subcategoryBlogCaseCount: number
+  subcategoryVideoCaseCount: number
+  subcategoryKnowledgeCount: number
+  subcategoryLawyerCount: number
 }
 
 type CategoryInfo = {
@@ -16,6 +21,7 @@ type CategoryInfo = {
   categoryCreatedAt: string
   categorySubcategoryCount: number
   isUncategorized: boolean
+  categoryDisplayOrder: number
   subcategories: Subcategory[]
 }
 
@@ -51,4 +57,29 @@ export type SubCategoryCreateResponse = {
   subcategoryCategoryId: number | null
   subcategoryCategoryName: string
   subcategoryCreatedAt: string
+}
+
+export type CategoryOrderUpdateRequest = {
+  categoryId: number
+  categoryDisplayOrder: number
+}
+
+export type CategoryOrderUpdateResponse = CategoryInfo
+
+export type SubCategoryOrderUpdateRequest = {
+  subcategoryId: number
+  subcategoryDisplayOrder: number
+}
+
+export type SubCategoryOrderUpdateResponse = {
+  subcategoryId: number
+  subcategoryName: string
+  subcategoryCategoryId: number | null
+  subcategoryDisplayOrder: number
+  subcategoryCategoryName: string
+  subcategoryCreatedAt: string
+  subcategoryBlogCaseCount: number
+  subcategoryVideoCaseCount: number
+  subcategoryKnowledgeCount: number
+  subcategoryLawyerCount: number
 }

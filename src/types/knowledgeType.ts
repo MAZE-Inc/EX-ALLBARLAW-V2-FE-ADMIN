@@ -13,7 +13,7 @@ export type KnowledgeDetailRequest = {
   subcategoryId?: number | 'all'
 }
 
-type KnowledgeItem = {
+export type KnowledgeItem = {
   knowledgeId: number
   knowledgeTitle: string
   summaryContent: string
@@ -37,7 +37,7 @@ export type KnowledgeDetailResponse = {
   knowledgeTitle: string
   knowledgeDescription: string
   lastMessageAt: string
-  tags: string[]
+  tags: { id: number; name: string }[]
   lawyers: {
     lawyerId: number
     lawyerName: string

@@ -1,4 +1,5 @@
 import { Button, ConfigProvider, Tabs, TabsProps } from 'antd'
+import { DownloadOutlined } from '@ant-design/icons'
 import { COLOR } from '@/styles/abstracts/color'
 import MemberList from '../../../container/member/memberList/MemberList'
 import styles from './memberPage.module.scss'
@@ -6,13 +7,17 @@ import { Pagination } from '@/components/pagination'
 import { useGetTotalMemberPage } from '@/hooks/queries/useGetTotalMemberPage'
 import { useState } from 'react'
 import { useGetMemberList } from '@/hooks/queries/useGetMemberList'
-import { MemberListRequest } from '@/types/memberType'
+import { Member, MemberListRequest } from '@/types/memberType'
+import { useExcelExport } from '@/hooks/useExcelExport'
 
 const MemberPage = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [activeTab, setActiveTab] = useState<'total' | 'active' | 'inactive'>('total')
   const [orderBy, setOrderBy] = useState<MemberListRequest['orderBy']>('createdAt')
   const [sort, setSort] = useState<MemberListRequest['sort']>('desc')
+  const [selectedMembers, setSelectedMembers] = useState<Member[]>([])
+  
+  const { exportData } = useExcelExport()
 
   const { data: totalPages } = useGetTotalMemberPage()
   const { data: memberList, isLoading } = useGetMemberList({
@@ -29,6 +34,28 @@ const MemberPage = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
+  }
+  
+  const handleSelectionChange = (selectedRows: Member[]) => {
+    setSelectedMembers(selectedRows)
+  }
+  
+  const handleExcelDownload = () => {
+    if (selectedMembers.length === 0) {
+      return
+    }
+    
+    // 엑셀에 표시할 데이터 형식으로 변환
+    const excelData = selectedMembers.map(member => ({
+      '아이디': member.userAccount,
+      '인증 전화번호': member.userPhone,
+      '이메일 주소': member.userEmail,
+      '가입일시': member.userCreatedAt,
+      '계정 상태': member.userIsActive ? '사용중' : '정지',
+      '정지 사유': member.userBanReason || '-',
+    }))
+    
+    exportData(excelData, '회원목록', '회원정보')
   }
 
   const handleSort = (field: MemberListRequest['orderBy']) => {
@@ -61,7 +88,13 @@ const MemberPage = () => {
   return (
     <div className={styles['member-page']}>
       <div className={styles['member-page__button-wrapper']}>
-        <Button>엑셀 다운로드</Button>
+        <Button 
+          icon={<DownloadOutlined />}
+          onClick={handleExcelDownload}
+          disabled={selectedMembers.length === 0}
+        >
+          선택 항목 엑셀 다운로드 ({selectedMembers.length}건)
+        </Button>
       </div>
       <ConfigProvider
         theme={{
@@ -78,6 +111,7 @@ const MemberPage = () => {
         onSort={handleSort}
         currentOrderBy={orderBy}
         currentSort={sort}
+        onSelectionChange={handleSelectionChange}
       />
       {totalPages?.totalPages && (
         <div className={styles['pagination-wrapper']}>

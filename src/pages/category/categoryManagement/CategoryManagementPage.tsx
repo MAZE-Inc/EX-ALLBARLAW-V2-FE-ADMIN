@@ -17,15 +17,23 @@ const CategoryManagementPage: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
   const { exportCategories } = useExcelExport()
 
-  // 서버 데이터를 컴포넌트 형식으로 변환
+  // 서버 데이터를 컴포넌트 형식으로 변환 (categoryDisplayOrder 순서대로 정렬)
   const mainData = useMemo<MainCategoryData[] | undefined>(() => {
     if (!categoryData) return undefined
 
-    return categoryData.map(category => ({
+    // categoryDisplayOrder 기준으로 오름차순 정렬 (낮은 숫자가 위로)
+    const sortedData = [...categoryData].sort((a, b) => {
+      const orderA = a.categoryDisplayOrder ?? Number.MAX_SAFE_INTEGER
+      const orderB = b.categoryDisplayOrder ?? Number.MAX_SAFE_INTEGER
+      return orderA - orderB
+    })
+
+    return sortedData.map(category => ({
       key: category.categoryId.toString(),
       mainCategory: category.categoryName,
       icons: [category.categoryImageUrl || '', category.categoryClickedImageUrl || ''],
       subCategory: category.categorySubcategoryCount,
+      displayOrder: category.categoryDisplayOrder, // displayOrder도 추가로 저장
     }))
   }, [categoryData])
 
@@ -36,13 +44,21 @@ const CategoryManagementPage: React.FC = () => {
 
     if (!selectedCategory) return undefined
 
-    return selectedCategory.subcategories.map(sub => ({
+    // subcategoryDisplayOrder 기준으로 오름차순 정렬 (낮은 숫자가 위로)
+    const sortedSubcategories = [...selectedCategory.subcategories].sort((a, b) => {
+      const orderA = a.subcategoryDisplayOrder ?? Number.MAX_SAFE_INTEGER
+      const orderB = b.subcategoryDisplayOrder ?? Number.MAX_SAFE_INTEGER
+      return orderA - orderB
+    })
+
+    return sortedSubcategories.map(sub => ({
       key: sub.subcategoryId.toString(),
       subCategory: sub.subcategoryName,
-      article: 0, // 실제 API에서 제공되지 않는 데이터는 0으로 초기화
-      video: 0,
-      knowledge: 0,
-      lawyer: 0,
+      article: sub.subcategoryBlogCaseCount || 0,
+      video: sub.subcategoryVideoCaseCount || 0,
+      knowledge: sub.subcategoryKnowledgeCount || 0,
+      lawyer: sub.subcategoryLawyerCount || 0,
+      displayOrder: sub.subcategoryDisplayOrder, // displayOrder도 추가로 저장
     }))
   }, [categoryData, selectedCategoryId])
 
@@ -90,7 +106,9 @@ const CategoryManagementPage: React.FC = () => {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-        <Spin size='large' tip='데이터를 불러오는 중...' />
+        <Spin size='large' spinning={true} tip='데이터를 불러오는 중...'>
+          <div style={{ padding: 50 }} />
+        </Spin>
       </div>
     )
   }
