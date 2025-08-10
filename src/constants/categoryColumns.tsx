@@ -28,7 +28,7 @@ export const renderIcons = (icons: string[]) => (
           alt={`icon${idx}`}
           width={32}
           height={32}
-          onError={(e) => {
+          onError={e => {
             console.error(`Failed to load image: ${imageSrc}`)
             e.currentTarget.style.display = 'none'
           }}
