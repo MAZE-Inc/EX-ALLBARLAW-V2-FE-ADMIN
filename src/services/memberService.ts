@@ -4,7 +4,7 @@ import { BlogCase } from '@/types/blogTypes'
 import { KnowledgeItem } from '@/types/knowledgeType'
 import { Lawyer } from '@/types/lawyerTypes'
 import { LegalTermItem } from '@/types/legalTermTypes'
-import { MemberListRequest, MemberListResponse } from '@/types/memberType'
+import { MemberKeepCountResponse, MemberListRequest, MemberListResponse } from '@/types/memberType'
 import { VideoCase } from '@/types/videoTypes'
 
 export const memberService = {
@@ -50,6 +50,11 @@ export const memberService = {
     }
   },
   resetPassword: async (userId: number) => await instance.post(`/users/${userId}/reset-password`),
+
+  memberKeepCount: async (userId: number) => {
+    const response = await instance.get<MemberKeepCountResponse>(`/mypages/${userId}/counts`)
+    return response.data
+  },
 
   memberKeepBlogList: async (userId: number, cursor?: number, cursorId?: number) => {
     const params: any = {}

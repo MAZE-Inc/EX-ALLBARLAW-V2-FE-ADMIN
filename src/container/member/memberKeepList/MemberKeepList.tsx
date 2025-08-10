@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import styles from './memberKeepList.module.scss'
 import KeepSidebar from '../keepSidebar/KeepSidebar'
 import KeepBlogList from '../keepBlogList/KeepBlogList'
@@ -7,24 +7,40 @@ import KeepLegalKnowledgeList from '../keepLegalKnowledgeList/KeepLegalKnowledge
 import { useParams } from 'react-router-dom'
 import KeepLegalDictionary from '../keepLegalDictionary/KeepLegalDictionary'
 import KeepLawyerList from '../keepLawyerList/KeepLawyerList'
+import { useMemberKeepCount } from '@/hooks/queries/useMember'
 
-const buttonList = ['법률정보의 글', '변호사의 영상', '법률 지식인', '변호사', '법률 사전']
+interface KeepButton {
+  name: string
+  count: number
+}
 
 const MemberKeepList = () => {
-  const [activeButton, setActiveButton] = useState(buttonList[0])
+  const [activeButton, setActiveButton] = useState('법률정보의 글')
   const { memberId } = useParams()
+  const { data: keepCount } = useMemberKeepCount(Number(memberId))
+  console.log(keepCount)
+  const buttonList: KeepButton[] = useMemo(
+    () => [
+      { name: '법률정보의 글', count: keepCount?.blogCaseCount || 0 },
+      { name: '변호사의 영상', count: keepCount?.videoCaseCount || 0 },
+      { name: '법률 지식인', count: keepCount?.knowledgeCount || 0 },
+      { name: '변호사', count: keepCount?.lawyerCount || 0 },
+      { name: '법률 사전', count: keepCount?.legalTermCount || 0 },
+    ],
+    [keepCount]
+  )
 
   const renderContent = () => {
     switch (activeButton) {
-      case buttonList[0]:
+      case '법률정보의 글':
         return <KeepBlogList userId={Number(memberId)} />
-      case buttonList[1]:
+      case '변호사의 영상':
         return <KeepVideoList userId={Number(memberId)} />
-      case buttonList[2]:
+      case '법률 지식인':
         return <KeepLegalKnowledgeList userId={Number(memberId)} />
-      case buttonList[3]:
+      case '변호사':
         return <KeepLawyerList userId={Number(memberId)} />
-      case buttonList[4]:
+      case '법률 사전':
         return <KeepLegalDictionary userId={Number(memberId)} />
       default:
         return <KeepBlogList userId={Number(memberId)} />
@@ -33,10 +49,15 @@ const MemberKeepList = () => {
 
   return (
     <main className={`${styles.keepList}`}>
-      <h2 className={styles.sectionTitle}>
-        <span className={styles.icon}>♦</span>
-        Keep
-      </h2>
+      <header>
+        <h2 className={styles.sectionTitle}>
+          <span className={styles.icon}>♦</span>
+          Keep
+        </h2>
+        <div>
+          <button></button>
+        </div>
+      </header>
       <div className={styles.keepListContainer}>
         <KeepSidebar buttonList={buttonList} activeButton={activeButton} setActiveButton={setActiveButton} />
         <section className={styles.keepListContent}>

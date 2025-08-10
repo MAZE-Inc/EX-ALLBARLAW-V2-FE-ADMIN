@@ -124,7 +124,8 @@ export const useInfiniteMemberKeepVideoList = (userId: number) => {
 export const useInfiniteMemberKeepLegalKnowledgeList = (userId: number) => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEY.MEMBER_KEEP_LEGAL_KNOWLEDGE_LIST, 'infinite', userId],
-    queryFn: ({ pageParam }) => memberService.memberKeepLegalKnowledgeList(userId, pageParam?.cursor, pageParam?.cursorId),
+    queryFn: ({ pageParam }) =>
+      memberService.memberKeepLegalKnowledgeList(userId, pageParam?.cursor, pageParam?.cursorId),
     getNextPageParam: lastPage => {
       if (lastPage?.hasNextPage) {
         return {
@@ -160,7 +161,8 @@ export const useInfiniteMemberKeepLawyerList = (userId: number) => {
 export const useInfiniteMemberKeepLegalDictionaryList = (userId: number) => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEY.MEMBER_KEEP_LEGAL_DICTIONARY_LIST, 'infinite', userId],
-    queryFn: ({ pageParam }) => memberService.memberKeepLegalDictionaryList(userId, pageParam?.cursor, pageParam?.cursorId),
+    queryFn: ({ pageParam }) =>
+      memberService.memberKeepLegalDictionaryList(userId, pageParam?.cursor, pageParam?.cursorId),
     getNextPageParam: lastPage => {
       if (lastPage?.hasNextPage) {
         return {
@@ -172,5 +174,14 @@ export const useInfiniteMemberKeepLegalDictionaryList = (userId: number) => {
     },
     enabled: userId !== undefined,
     initialPageParam: undefined as { cursor?: number; cursorId?: number } | undefined,
+  })
+}
+
+export const useMemberKeepCount = (userId: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.MEMBER_KEEP_COUNT, userId],
+    queryFn: () => memberService.memberKeepCount(userId),
+    enabled: userId !== undefined,
+    // select: response,
   })
 }

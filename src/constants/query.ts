@@ -7,6 +7,7 @@ export const QUERY_KEY = {
   MEMBER_KEEP_LEGAL_KNOWLEDGE_LIST: 'memberKeepLegalKnowledgeList',
   MEMBER_KEEP_LAWYER_LIST: 'memberKeepLawyerList',
   MEMBER_KEEP_LEGAL_DICTIONARY_LIST: 'memberKeepLegalDictionaryList',
+  MEMBER_KEEP_COUNT: 'memberKeepCount',
 
   // 공지사항
   ADMIN_LIST: 'adminList',
