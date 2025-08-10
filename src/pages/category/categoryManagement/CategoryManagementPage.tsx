@@ -156,6 +156,7 @@ const CategoryManagementPage: React.FC = () => {
         defaultValues={
           mainCategoryEditorMode === 'edit' && selectedMainCategoryData
             ? {
+                id: parseInt(selectedMainCategoryData.key),  // 카테고리 ID 추가
                 name: selectedMainCategoryData.mainCategory,
                 onImage: selectedMainCategoryData.icons[0] || '',
                 offImage: selectedMainCategoryData.icons[1] || '',

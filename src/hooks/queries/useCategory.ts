@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { categoryService } from '@/services/categoryService'
 import { QUERY_KEY } from '@/constants/query'
+import { CategoryUpdateRequest } from '@/types/categoryTypes'
 
 export const useCategory = () => {
   return useQuery({
@@ -33,7 +34,8 @@ export const useDeleteCategory = () => {
 export const useUpdateCategory = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: categoryService.updateCategory,
+    mutationFn: ({ categoryId, category }: { categoryId: number; category: CategoryUpdateRequest }) =>
+      categoryService.updateCategory(categoryId, category),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CATEGORY_LIST] })
     },

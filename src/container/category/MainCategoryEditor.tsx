@@ -3,7 +3,7 @@ import { Button, Input, Modal, message } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import styles from './mainCategoryEditor.module.scss'
 import { useFileUpload } from '@/hooks/useFileUpload'
-import { useCreateCategory } from '@/hooks/queries/useCategory'
+import { useCreateCategory, useUpdateCategory } from '@/hooks/queries/useCategory'
 
 interface MainCategoryEditorProps {
   title: string
@@ -11,6 +11,7 @@ interface MainCategoryEditorProps {
   onCancel: () => void
   onSubmit: (data: { name: string; onImage: File | null; offImage: File | null }) => void
   defaultValues?: {
+    id?: number  // 카테고리 ID 추가 (수정 시 필요)
     name?: string
     onImage?: string
     offImage?: string
@@ -24,9 +25,11 @@ const MainCategoryEditor: React.FC<MainCategoryEditorProps> = ({ title, open, on
   const [onImagePreview, setOnImagePreview] = useState<string>('')
   const [offImagePreview, setOffImagePreview] = useState<string>('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const isEditMode = title.includes('수정') || title.includes('edit')
   
   const { uploadFile } = useFileUpload()
   const createCategoryMutation = useCreateCategory()
+  const updateCategoryMutation = useUpdateCategory()
 
   React.useEffect(() => {
     if (open) {
@@ -44,36 +47,81 @@ const MainCategoryEditor: React.FC<MainCategoryEditorProps> = ({ title, open, on
       return
     }
 
-    if (!onImageFile || !offImageFile) {
+    // 수정 모드에서는 이미지가 없어도 기존 이미지 사용
+    if (!isEditMode && (!onImageFile || !offImageFile)) {
       message.warning('ON 이미지와 OFF 이미지를 모두 등록해주세요.')
+      return
+    }
+    
+    if (isEditMode && !defaultValues?.id) {
+      message.error('카테고리 ID가 없습니다.')
       return
     }
 
     try {
       setIsSubmitting(true)
       
-      // 이미지 파일들을 서버에 업로드하고 URL 받기
-      const [onImageResult, offImageResult] = await Promise.all([
-        uploadFile(onImageFile, {
-          folder: 'category/clicked',
-          allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-          maxSize: 5,
-        }),
-        uploadFile(offImageFile, {
-          folder: 'category/nonClicked',
-          allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-          maxSize: 5,
-        }),
-      ])
+      let onImageUrl = defaultValues?.onImage || ''
+      let offImageUrl = defaultValues?.offImage || ''
+      
+      // 새 이미지가 있으면 업로드
+      if (onImageFile || offImageFile) {
+        const uploadPromises = []
+        
+        if (onImageFile) {
+          uploadPromises.push(
+            uploadFile(onImageFile, {
+              folder: 'category-clicked',
+              allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+              maxSize: 5,
+            })
+          )
+        }
+        
+        if (offImageFile) {
+          uploadPromises.push(
+            uploadFile(offImageFile, {
+              folder: 'category-nonClicked',
+              allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+              maxSize: 5,
+            })
+          )
+        }
+        
+        const uploadResults = await Promise.all(uploadPromises)
+        
+        // 업로드 결과 처리
+        if (onImageFile && uploadResults[0]) {
+          onImageUrl = uploadResults[0].fileUrl
+        }
+        if (offImageFile) {
+          const resultIndex = onImageFile ? 1 : 0
+          if (uploadResults[resultIndex]) {
+            offImageUrl = uploadResults[resultIndex].fileUrl
+          }
+        }
+      }
 
-      // API 호출하여 카테고리 생성
-      await createCategoryMutation.mutateAsync({
-        categoryName: categoryName,
-        categoryImageUrl: offImageResult.fileUrl,        // OFF 이미지가 기본 이미지
-        categoryClickedImageUrl: onImageResult.fileUrl,  // ON 이미지가 클릭된 이미지
-      })
-
-      message.success('대분류가 성공적으로 등록되었습니다.')
+      if (isEditMode) {
+        // 수정 모드
+        await updateCategoryMutation.mutateAsync({
+          categoryId: defaultValues!.id!,
+          category: {
+            categoryName: categoryName,
+            categoryImageUrl: offImageUrl,        // OFF 이미지가 기본 이미지
+            categoryClickedImageUrl: onImageUrl,  // ON 이미지가 클릭된 이미지
+          },
+        })
+        message.success('대분류가 성공적으로 수정되었습니다.')
+      } else {
+        // 생성 모드
+        await createCategoryMutation.mutateAsync({
+          categoryName: categoryName,
+          categoryImageUrl: offImageUrl,        // OFF 이미지가 기본 이미지
+          categoryClickedImageUrl: onImageUrl,  // ON 이미지가 클릭된 이미지
+        })
+        message.success('대분류가 성공적으로 등록되었습니다.')
+      }
       
       // 성공 시 부모 컴포넌트의 onSubmit 호출
       onSubmit({
@@ -152,7 +200,7 @@ const MainCategoryEditor: React.FC<MainCategoryEditorProps> = ({ title, open, on
             type='primary'
             onClick={handleSubmit}
             loading={isSubmitting}
-            disabled={!categoryName.trim() || !onImageFile || !offImageFile || isSubmitting}
+            disabled={!categoryName.trim() || (!isEditMode && (!onImageFile || !offImageFile)) || isSubmitting}
             style={{ backgroundColor: '#20bf62', borderColor: '#20bf62' }}
           >
             저장
