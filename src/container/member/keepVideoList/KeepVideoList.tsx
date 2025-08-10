@@ -7,8 +7,8 @@ import { useInfiniteMemberKeepVideoList } from '@/hooks/queries/useMember'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { useNavigate } from 'react-router-dom'
 
-const KeepVideoList = ({ userId }: { userId: number }) => {
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteMemberKeepVideoList(userId)
+const KeepVideoList = ({ userId, sort }: { userId: number; sort: 'asc' | 'desc' }) => {
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteMemberKeepVideoList(userId, sort)
   const navigate = useNavigate()
 
   useInfiniteScroll({

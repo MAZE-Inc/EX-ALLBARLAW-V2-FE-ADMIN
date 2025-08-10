@@ -7,9 +7,9 @@ import EmptyState from '@/components/emptyState/EmptyState'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { useNavigate } from 'react-router-dom'
 
-const KeepBlogList = ({ userId }: { userId: number }) => {
+const KeepBlogList = ({ userId, sort }: { userId: number; sort: 'asc' | 'desc' }) => {
   const navigate = useNavigate()
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteMemberKeepBlogList(userId)
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteMemberKeepBlogList(userId, sort)
 
   useInfiniteScroll({
     hasNextPage,

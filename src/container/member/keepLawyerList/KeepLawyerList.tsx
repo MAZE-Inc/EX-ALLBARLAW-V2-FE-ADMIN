@@ -6,8 +6,8 @@ import { useInfiniteMemberKeepLawyerList } from '@/hooks/queries/useMember'
 import EmptyState from '@/components/emptyState/EmptyState'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 
-const KeepLawyerList = ({ userId }: { userId: number }) => {
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteMemberKeepLawyerList(userId)
+const KeepLawyerList = ({ userId, sort }: { userId: number; sort: 'asc' | 'desc' }) => {
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteMemberKeepLawyerList(userId, sort)
 
   useInfiniteScroll({
     hasNextPage,

@@ -18,7 +18,9 @@ const MemberKeepList = () => {
   const [activeButton, setActiveButton] = useState('법률정보의 글')
   const { memberId } = useParams()
   const { data: keepCount } = useMemberKeepCount(Number(memberId))
-  console.log(keepCount)
+
+  const [sort, setSort] = useState<'asc' | 'desc'>('asc')
+
   const buttonList: KeepButton[] = useMemo(
     () => [
       { name: '법률정보의 글', count: keepCount?.blogCaseCount || 0 },
@@ -33,29 +35,34 @@ const MemberKeepList = () => {
   const renderContent = () => {
     switch (activeButton) {
       case '법률정보의 글':
-        return <KeepBlogList userId={Number(memberId)} />
+        return <KeepBlogList userId={Number(memberId)} sort={sort} />
       case '변호사의 영상':
-        return <KeepVideoList userId={Number(memberId)} />
+        return <KeepVideoList userId={Number(memberId)} sort={sort} />
       case '법률 지식인':
-        return <KeepLegalKnowledgeList userId={Number(memberId)} />
+        return <KeepLegalKnowledgeList userId={Number(memberId)} sort={sort} />
       case '변호사':
-        return <KeepLawyerList userId={Number(memberId)} />
+        return <KeepLawyerList userId={Number(memberId)} sort={sort} />
       case '법률 사전':
-        return <KeepLegalDictionary userId={Number(memberId)} />
+        return <KeepLegalDictionary userId={Number(memberId)} sort={sort} />
       default:
-        return <KeepBlogList userId={Number(memberId)} />
+        return <KeepBlogList userId={Number(memberId)} sort={sort} />
     }
   }
 
   return (
     <main className={`${styles.keepList}`}>
-      <header>
+      <header className={styles.keepListHeader}>
         <h2 className={styles.sectionTitle}>
           <span className={styles.icon}>♦</span>
           Keep
         </h2>
-        <div>
-          <button></button>
+        <div className={styles.keepListHeaderRight}>
+          <button className={styles.keepListHeaderRightButton} onClick={() => setSort('asc')}>
+            최근등록순
+          </button>
+          <button className={styles.keepListHeaderRightButton} onClick={() => setSort('desc')}>
+            과거등록순
+          </button>
         </div>
       </header>
       <div className={styles.keepListContainer}>
