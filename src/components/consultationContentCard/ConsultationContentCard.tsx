@@ -11,7 +11,7 @@ interface ConsultationContentCardProps {
   onSave?: () => void
   isSaved?: boolean
   className?: string
-  tags?: string[]
+  tags?: { id: number; name: string }[]
 }
 
 const ConsultationContentCard = ({
@@ -40,7 +40,7 @@ const ConsultationContentCard = ({
       <div className={styles['tag-list']}>
         {tags?.map(tag => (
           <div className={styles['tag-item']}>
-            <span className={styles['tag-item-text']}>#{tag}</span>
+            <span className={styles['tag-item-text']}>#{tag.name}</span>
           </div>
         ))}
       </div>

@@ -10,3 +10,6 @@
 @use './base/typography';
 @use './base/base';
 @use './base/components';
+
+// Ant Design 오버라이드
+@use './overrides/antd-zindex';

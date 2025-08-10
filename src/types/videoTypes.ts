@@ -51,5 +51,5 @@ export type VideoDetailResponse = Omit<VideoCase, 'isKeep'> & {
   channelDescription: string
   subscriberCount: number
   lawyerProfileImage: string
-  tags: string[]
+  tags: { id: number; name: string }[]
 }

@@ -13,9 +13,10 @@ interface MemberListProps {
   onSort: (field: MemberListRequest['orderBy']) => void
   currentOrderBy: MemberListRequest['orderBy']
   currentSort: MemberListRequest['sort']
+  onSelectionChange?: (selectedRows: Member[]) => void
 }
 
-const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: MemberListProps) => {
+const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort, onSelectionChange }: MemberListProps) => {
   const [selectedRows, setSelectedRows] = useState<Member[]>([])
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedUser, setSelectedUser] = useState<Member | null>(null)
@@ -94,16 +95,18 @@ const MemberList = ({ data, loading, onSort, currentOrderBy, currentSort }: Memb
   const rowSelection = {
     selectedRowKeys: selectedRows.map(row => row.userId),
     onSelectAll: (selected: boolean, selectedRows: Member[]) => {
-      setSelectedRows(selected ? selectedRows : [])
+      const newSelectedRows = selected ? selectedRows : []
+      setSelectedRows(newSelectedRows)
+      onSelectionChange?.(newSelectedRows)
       console.log('전체 선택:', selected, selectedRows)
     },
     onSelect: (record: Member, selected: boolean) => {
       setSelectedRows(prev => {
-        if (selected) {
-          return [...prev, record]
-        } else {
-          return prev.filter(row => row.userId !== record.userId)
-        }
+        const newSelectedRows = selected
+          ? [...prev, record]
+          : prev.filter(row => row.userId !== record.userId)
+        onSelectionChange?.(newSelectedRows)
+        return newSelectedRows
       })
       console.log('개별 선택:', record, selected)
     },

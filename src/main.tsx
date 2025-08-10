@@ -1,10 +1,24 @@
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ConfigProvider } from 'antd'
+import { ConfigProvider, message, Modal } from 'antd'
 import { COLOR } from '@/styles/abstracts/color'
 import './styles/main.scss'
 import Router from '@/routes'
+
+// antd message와 Modal의 z-index 설정
+message.config({
+  top: 100,
+  duration: 3,
+  maxCount: 3,
+  prefixCls: 'ant-message',
+  getContainer: () => document.body,
+})
+
+Modal.config({
+  rootPrefixCls: 'ant',
+  getContainer: () => document.body,
+})
 
 // QueryClient 인스턴스 생성
 const queryClient = new QueryClient({

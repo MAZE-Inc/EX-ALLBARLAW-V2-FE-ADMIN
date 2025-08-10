@@ -52,16 +52,16 @@ const BlogDetail = () => {
             <section>
               <hr className={styles['line-driver']} style={{ margin: 0 }} />
               <div className={styles['tag-list']}>
-                {blogDetail?.tags.map((tag: string) => (
-                  <span>#{tag}</span>
+                {blogDetail?.tags.map(tag => (
+                  <span key={tag.id}>#{tag.name}</span>
                 ))}
               </div>
             </section>
             <section className={styles['blog-button-section']}>
-              <Button 
-                type='primary' 
-                icon={<LinkOutlined />} 
-                onClick={handleBlogOpen} 
+              <Button
+                type='primary'
+                icon={<LinkOutlined />}
+                onClick={handleBlogOpen}
                 disabled={!blogDetail?.source}
                 size='large'
               >

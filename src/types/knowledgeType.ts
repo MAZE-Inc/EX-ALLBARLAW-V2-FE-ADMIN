@@ -37,7 +37,7 @@ export type KnowledgeDetailResponse = {
   knowledgeTitle: string
   knowledgeDescription: string
   lastMessageAt: string
-  tags: string[]
+  tags: { id: number; name: string }[]
   lawyers: {
     lawyerId: number
     lawyerName: string
