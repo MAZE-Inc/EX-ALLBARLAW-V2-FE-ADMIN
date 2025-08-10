@@ -30,7 +30,8 @@
     "react-router-dom": "^7.5.0",
     "react-youtube": "^10.1.0",
     "sass": "^1.86.3",
-    "tui-image-editor": "^3.15.3"
+    "tui-image-editor": "^3.15.3",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",

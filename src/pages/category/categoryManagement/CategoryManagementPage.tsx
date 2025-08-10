@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { Button, Spin, Alert } from 'antd'
+import { DownloadOutlined } from '@ant-design/icons'
 import styles from '@/pages/category/categoryManagement/categoryManagement.module.scss'
 import MainCategoryTable, { MainCategoryData } from '@/container/category/mainCategoryTable/MainCategoryTable'
 import SubCategoryTable, { SubCategoryData } from '@/container/category/subCategoryTable/SubCategoryTable'
@@ -8,11 +9,13 @@ import MainCategoryEditor from '@/container/category/MainCategoryEditor'
 import { useCategoryManagement } from '@/hooks/useCategoryManagement'
 import { useModalHandlers } from '@/hooks/useModalHandlers'
 import { useCategory } from '@/hooks/queries/useCategory'
+import { useExcelExport } from '@/hooks/useExcelExport'
 
 const CategoryManagementPage: React.FC = () => {
   // React Query로 실제 데이터 가져오기
   const { data: categoryData, isLoading, error } = useCategory()
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
+  const { exportCategories } = useExcelExport()
 
   // 서버 데이터를 컴포넌트 형식으로 변환
   const mainData = useMemo<MainCategoryData[] | undefined>(() => {
@@ -110,7 +113,13 @@ const CategoryManagementPage: React.FC = () => {
   return (
     <main className={styles.categoryManagement}>
       <header>
-        <Button className={styles.categoryManagement__button}>전체분류 엑셀저장하기</Button>
+        <Button 
+          className={styles.categoryManagement__button}
+          icon={<DownloadOutlined />}
+          onClick={() => exportCategories(categoryData)}
+        >
+          전체분류 엑셀저장하기
+        </Button>
       </header>
       <section className={styles.categoryManagement__wrapper}>
         <article>
