@@ -11,6 +11,7 @@ export interface SubCategoryData {
   video: number
   knowledge: number
   lawyer: number
+  displayOrder?: number
 }
 
 interface SubCategoryTableProps {

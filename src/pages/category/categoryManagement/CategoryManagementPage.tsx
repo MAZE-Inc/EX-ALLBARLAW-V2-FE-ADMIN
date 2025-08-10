@@ -44,13 +44,21 @@ const CategoryManagementPage: React.FC = () => {
 
     if (!selectedCategory) return undefined
 
-    return selectedCategory.subcategories.map(sub => ({
+    // subcategoryDisplayOrder 기준으로 오름차순 정렬 (낮은 숫자가 위로)
+    const sortedSubcategories = [...selectedCategory.subcategories].sort((a, b) => {
+      const orderA = a.subcategoryDisplayOrder ?? Number.MAX_SAFE_INTEGER
+      const orderB = b.subcategoryDisplayOrder ?? Number.MAX_SAFE_INTEGER
+      return orderA - orderB
+    })
+
+    return sortedSubcategories.map(sub => ({
       key: sub.subcategoryId.toString(),
       subCategory: sub.subcategoryName,
       article: 0, // 실제 API에서 제공되지 않는 데이터는 0으로 초기화
       video: 0,
       knowledge: 0,
       lawyer: 0,
+      displayOrder: sub.subcategoryDisplayOrder, // displayOrder도 추가로 저장
     }))
   }, [categoryData, selectedCategoryId])
 
