@@ -27,11 +27,11 @@ export const categoryService = {
   updateCategory: async (categoryId: number, category: CategoryUpdateRequest) =>
     await instance.patch<CategoryUpdateResponse>(`/categories/${categoryId}`, category),
   updateCategoryOrder: async (request: CategoryOrderUpdateRequest) =>
-    await instance.patch<CategoryOrderUpdateResponse>(`/categories/${request.categoryId}`, {
+    await instance.patch<CategoryOrderUpdateResponse>(`/categories/${request.categoryId}/order`, {
       categoryDisplayOrder: request.categoryDisplayOrder,
     }),
   updateSubCategoryOrder: async (request: SubCategoryOrderUpdateRequest) =>
-    await instance.patch<SubCategoryOrderUpdateResponse>(`/subcategories/${request.subcategoryId}`, {
+    await instance.patch<SubCategoryOrderUpdateResponse>(`/subcategories/${request.subcategoryId}/order`, {
       subcategoryDisplayOrder: request.subcategoryDisplayOrder,
     }),
 }
