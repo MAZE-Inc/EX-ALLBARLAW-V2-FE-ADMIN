@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { message } from 'antd'
 import { MainCategoryData } from '@/container/category/mainCategoryTable/MainCategoryTable'
 import { SubCategoryData } from '@/container/category/subCategoryTable/SubCategoryTable'
-import { useCreateSubCategory } from '@/hooks/queries/useCategory'
+import { useCreateSubCategory, useUpdateSubCategory } from '@/hooks/queries/useCategory'
 
 interface UseModalHandlersProps {
   selectedCategoryId: number | null
@@ -21,6 +21,7 @@ export const useModalHandlers = ({ selectedCategoryId }: UseModalHandlersProps =
   
   // API 훅
   const createSubCategoryMutation = useCreateSubCategory()
+  const updateSubCategoryMutation = useUpdateSubCategory()
 
   // 대분류 관련 모달 핸들러
   const handleMainCategoryAdd = () => {
@@ -104,9 +105,24 @@ export const useModalHandlers = ({ selectedCategoryId }: UseModalHandlersProps =
         message.error('소분류 추가에 실패했습니다.')
       }
     } else {
-      console.log('소분류 수정:', selectedSubCategory, '새 이름:', inputValue)
-      // TODO: 서버 API 호출로 소분류 이름 수정
-      message.info('소분류 수정 기능은 준비 중입니다.')
+      if (!selectedSubCategory) {
+        message.warning('수정할 소분류가 선택되지 않았습니다.')
+        return
+      }
+
+      try {
+        const subCategoryId = parseInt(selectedSubCategory.key)
+        await updateSubCategoryMutation.mutateAsync({
+          subCategoryId,
+          subcategoryName: inputValue,
+        })
+        message.success(`소분류가 "${inputValue}"로 수정되었습니다.`)
+        setIsSubCategoryModalOpen(false)
+        setSelectedSubCategory(null)
+      } catch (error) {
+        console.error('소분류 수정 실패:', error)
+        message.error('소분류 수정에 실패했습니다.')
+      }
     }
   }
 

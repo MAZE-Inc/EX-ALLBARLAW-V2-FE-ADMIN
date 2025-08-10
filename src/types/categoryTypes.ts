@@ -32,6 +32,14 @@ export type CategoryCreateResponse = {
   categoryName: string
 }
 
+export type CategoryUpdateRequest = {
+  categoryName: string
+  categoryImageUrl: string
+  categoryClickedImageUrl: string
+}
+
+export type CategoryUpdateResponse = CategoryInfo
+
 export type SubCategoryCreateRequest = {
   subcategoryName: string
   subcategoryCategoryId: number

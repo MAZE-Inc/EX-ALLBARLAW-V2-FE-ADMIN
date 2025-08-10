@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Modal, message } from 'antd'
 import { MainCategoryData } from '@/container/category/mainCategoryTable/MainCategoryTable'
 import { SubCategoryData } from '@/container/category/subCategoryTable/SubCategoryTable'
-import { useDeleteCategory } from '@/hooks/queries/useCategory'
+import { useDeleteCategory, useDeleteSubCategory } from '@/hooks/queries/useCategory'
 
 interface UseCategoryManagementProps {
   initialMainData?: MainCategoryData[] // optional로 변경
@@ -18,6 +18,7 @@ export const useCategoryManagement = ({
   const [selectedMainCategory, setSelectedMainCategory] = useState<string>('')
   
   const deleteCategoryMutation = useDeleteCategory()
+  const deleteSubCategoryMutation = useDeleteSubCategory()
 
   // 초기 데이터가 변경될 때마다 상태 업데이트
   useEffect(() => {
@@ -87,10 +88,19 @@ export const useCategoryManagement = ({
       okText: '삭제',
       cancelText: '취소',
       okType: 'danger',
-      onOk() {
-        console.log('소분류 삭제:', record)
-        setSubData(prev => prev.filter(item => item.key !== record.key))
-        // TODO: 서버 API 호출로 삭제
+      async onOk() {
+        try {
+          const subCategoryId = parseInt(record.key)
+          await deleteSubCategoryMutation.mutateAsync(subCategoryId)
+          
+          // 로컬 상태에서도 제거 (옵티미스틱 업데이트)
+          setSubData(prev => prev.filter(item => item.key !== record.key))
+          
+          message.success(`"${record.subCategory}" 소분류가 삭제되었습니다.`)
+        } catch (error) {
+          console.error('소분류 삭제 실패:', error)
+          message.error('소분류 삭제에 실패했습니다.')
+        }
       },
     })
   }
