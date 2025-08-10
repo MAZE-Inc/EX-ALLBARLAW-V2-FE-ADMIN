@@ -81,7 +81,7 @@ const CategoryManagementPage: React.FC = () => {
     handleSubCategoryDoubleClick,
     handleSubCategoryModalCancel,
     handleSubCategoryModalSubmit,
-  } = useModalHandlers()
+  } = useModalHandlers({ selectedCategoryId })
 
   // 로딩 상태
   if (isLoading) {

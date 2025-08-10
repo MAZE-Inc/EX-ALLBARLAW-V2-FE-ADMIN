@@ -1,8 +1,14 @@
 import { useState } from 'react'
+import { message } from 'antd'
 import { MainCategoryData } from '@/container/category/mainCategoryTable/MainCategoryTable'
 import { SubCategoryData } from '@/container/category/subCategoryTable/SubCategoryTable'
+import { useCreateSubCategory } from '@/hooks/queries/useCategory'
 
-export const useModalHandlers = () => {
+interface UseModalHandlersProps {
+  selectedCategoryId: number | null
+}
+
+export const useModalHandlers = ({ selectedCategoryId }: UseModalHandlersProps = { selectedCategoryId: null }) => {
   // 소분류 모달 상태
   const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false)
   const [selectedSubCategory, setSelectedSubCategory] = useState<SubCategoryData | null>(null)
@@ -12,6 +18,9 @@ export const useModalHandlers = () => {
   const [isMainCategoryEditorOpen, setIsMainCategoryEditorOpen] = useState(false)
   const [mainCategoryEditorMode, setMainCategoryEditorMode] = useState<'add' | 'edit'>('add')
   const [selectedMainCategoryData, setSelectedMainCategoryData] = useState<MainCategoryData | null>(null)
+  
+  // API 훅
+  const createSubCategoryMutation = useCreateSubCategory()
 
   // 대분류 관련 모달 핸들러
   const handleMainCategoryAdd = () => {
@@ -70,16 +79,35 @@ export const useModalHandlers = () => {
     setSelectedSubCategory(null)
   }
 
-  const handleSubCategoryModalSubmit = (inputValue: string) => {
+  const handleSubCategoryModalSubmit = async (inputValue: string) => {
+    if (!inputValue.trim()) {
+      message.warning('소분류 이름을 입력해주세요.')
+      return
+    }
+
     if (modalMode === 'add') {
-      console.log('소분류 추가:', inputValue)
-      // TODO: 서버 API 호출로 소분류 추가
+      if (!selectedCategoryId) {
+        message.warning('먼저 대분류를 선택해주세요.')
+        return
+      }
+
+      try {
+        await createSubCategoryMutation.mutateAsync({
+          subcategoryName: inputValue,
+          subcategoryCategoryId: selectedCategoryId,
+        })
+        message.success(`"${inputValue}" 소분류가 등록되었습니다.`)
+        setIsSubCategoryModalOpen(false)
+        setSelectedSubCategory(null)
+      } catch (error) {
+        console.error('소분류 추가 실패:', error)
+        message.error('소분류 추가에 실패했습니다.')
+      }
     } else {
       console.log('소분류 수정:', selectedSubCategory, '새 이름:', inputValue)
       // TODO: 서버 API 호출로 소분류 이름 수정
+      message.info('소분류 수정 기능은 준비 중입니다.')
     }
-    setIsSubCategoryModalOpen(false)
-    setSelectedSubCategory(null)
   }
 
   return {

@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
-import { Button, Input, Modal } from 'antd'
+import { Button, Input, Modal, message } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import styles from './mainCategoryEditor.module.scss'
+import { useFileUpload } from '@/hooks/useFileUpload'
+import { useCreateCategory } from '@/hooks/queries/useCategory'
 
 interface MainCategoryEditorProps {
   title: string
@@ -21,6 +23,10 @@ const MainCategoryEditor: React.FC<MainCategoryEditorProps> = ({ title, open, on
   const [offImageFile, setOffImageFile] = useState<File | null>(null)
   const [onImagePreview, setOnImagePreview] = useState<string>('')
   const [offImagePreview, setOffImagePreview] = useState<string>('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  const { uploadFile } = useFileUpload()
+  const createCategoryMutation = useCreateCategory()
 
   React.useEffect(() => {
     if (open) {
@@ -32,19 +38,61 @@ const MainCategoryEditor: React.FC<MainCategoryEditorProps> = ({ title, open, on
     }
   }, [open, defaultValues])
 
-  const handleSubmit = () => {
-    if (categoryName.trim()) {
+  const handleSubmit = async () => {
+    if (!categoryName.trim()) {
+      message.warning('대분류 이름을 입력해주세요.')
+      return
+    }
+
+    if (!onImageFile || !offImageFile) {
+      message.warning('ON 이미지와 OFF 이미지를 모두 등록해주세요.')
+      return
+    }
+
+    try {
+      setIsSubmitting(true)
+      
+      // 이미지 파일들을 서버에 업로드하고 URL 받기
+      const [onImageResult, offImageResult] = await Promise.all([
+        uploadFile(onImageFile, {
+          folder: 'category/clicked',
+          allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+          maxSize: 5,
+        }),
+        uploadFile(offImageFile, {
+          folder: 'category/nonClicked',
+          allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+          maxSize: 5,
+        }),
+      ])
+
+      // API 호출하여 카테고리 생성
+      await createCategoryMutation.mutateAsync({
+        categoryName: categoryName,
+        categoryImageUrl: offImageResult.fileUrl,        // OFF 이미지가 기본 이미지
+        categoryClickedImageUrl: onImageResult.fileUrl,  // ON 이미지가 클릭된 이미지
+      })
+
+      message.success('대분류가 성공적으로 등록되었습니다.')
+      
+      // 성공 시 부모 컴포넌트의 onSubmit 호출
       onSubmit({
         name: categoryName,
         onImage: onImageFile,
         offImage: offImageFile,
       })
+      
       // 초기화
       setCategoryName('')
       setOnImageFile(null)
       setOffImageFile(null)
       setOnImagePreview('')
       setOffImagePreview('')
+    } catch (error) {
+      console.error('카테고리 등록 실패:', error)
+      message.error(error instanceof Error ? error.message : '카테고리 등록에 실패했습니다.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -103,7 +151,8 @@ const MainCategoryEditor: React.FC<MainCategoryEditorProps> = ({ title, open, on
           <Button
             type='primary'
             onClick={handleSubmit}
-            disabled={!categoryName.trim()}
+            loading={isSubmitting}
+            disabled={!categoryName.trim() || !onImageFile || !offImageFile || isSubmitting}
             style={{ backgroundColor: '#20bf62', borderColor: '#20bf62' }}
           >
             저장

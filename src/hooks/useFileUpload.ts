@@ -65,10 +65,8 @@ export const useFileUpload = (): UseFileUploadReturn => {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-          onUploadProgress: (progressEvent) => {
-            const progress = progressEvent.total
-              ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              : 0
+          onUploadProgress: progressEvent => {
+            const progress = progressEvent.total ? Math.round((progressEvent.loaded * 100) / progressEvent.total) : 0
             setUploadProgress(progress)
           },
         })
@@ -108,10 +106,8 @@ export const useFileUpload = (): UseFileUploadReturn => {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
-            onUploadProgress: (progressEvent) => {
-              const progress = progressEvent.total
-                ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                : 0
+            onUploadProgress: progressEvent => {
+              const progress = progressEvent.total ? Math.round((progressEvent.loaded * 100) / progressEvent.total) : 0
               // 전체 파일 중 현재 파일의 진행률 계산
               const totalProgress = Math.round(((index + progress / 100) / files.length) * 100)
               setUploadProgress(totalProgress)

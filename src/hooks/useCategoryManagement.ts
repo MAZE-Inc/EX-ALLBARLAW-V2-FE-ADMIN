@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Modal } from 'antd'
+import { Modal, message } from 'antd'
 import { MainCategoryData } from '@/container/category/mainCategoryTable/MainCategoryTable'
 import { SubCategoryData } from '@/container/category/subCategoryTable/SubCategoryTable'
+import { useDeleteCategory } from '@/hooks/queries/useCategory'
 
 interface UseCategoryManagementProps {
   initialMainData?: MainCategoryData[] // optional로 변경
@@ -15,6 +16,8 @@ export const useCategoryManagement = ({
   const [mainData, setMainData] = useState<MainCategoryData[]>([])
   const [subData, setSubData] = useState<SubCategoryData[]>([])
   const [selectedMainCategory, setSelectedMainCategory] = useState<string>('')
+  
+  const deleteCategoryMutation = useDeleteCategory()
 
   // 초기 데이터가 변경될 때마다 상태 업데이트
   useEffect(() => {
@@ -44,14 +47,29 @@ export const useCategoryManagement = ({
   const handleMainCategoryDelete = (record: MainCategoryData) => {
     Modal.confirm({
       title: '대분류 삭제',
-      content: `"${record.mainCategory}" 대분류를 삭제하시겠습니까?`,
+      content: `"${record.mainCategory}" 대분류를 삭제하시겠습니까? 이 대분류에 속한 모든 소분류도 함께 삭제됩니다.`,
       okText: '삭제',
       cancelText: '취소',
       okType: 'danger',
-      onOk() {
-        console.log('대분류 삭제:', record)
-        setMainData(prev => prev.filter(item => item.key !== record.key))
-        // TODO: 서버 API 호출로 삭제
+      async onOk() {
+        try {
+          const categoryId = parseInt(record.key)
+          await deleteCategoryMutation.mutateAsync(categoryId)
+          
+          // 로컬 상태에서도 제거 (옵티미스틱 업데이트)
+          setMainData(prev => prev.filter(item => item.key !== record.key))
+          
+          // 선택된 대분류가 삭제된 경우 선택 해제
+          if (selectedMainCategory === record.mainCategory) {
+            setSelectedMainCategory('')
+            setSubData([])
+          }
+          
+          message.success(`"${record.mainCategory}" 대분류가 삭제되었습니다.`)
+        } catch (error) {
+          console.error('대분류 삭제 실패:', error)
+          message.error('대분류 삭제에 실패했습니다.')
+        }
       },
     })
   }

@@ -31,3 +31,16 @@ export type CategoryCreateResponse = {
   categoryId: number
   categoryName: string
 }
+
+export type SubCategoryCreateRequest = {
+  subcategoryName: string
+  subcategoryCategoryId: number
+}
+
+export type SubCategoryCreateResponse = {
+  subcategoryId: number
+  subcategoryName: string
+  subcategoryCategoryId: number | null
+  subcategoryCategoryName: string
+  subcategoryCreatedAt: string
+}
