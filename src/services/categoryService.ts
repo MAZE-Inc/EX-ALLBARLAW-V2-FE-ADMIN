@@ -1,7 +1,9 @@
 // import instance from '@/lib/axios'
-import { CategoryList } from '@/types/categoryTypes'
-import axios from 'axios'
+import instance from '@/lib/axios'
+import { CategoryCreateRequest, CategoryCreateResponse, CategoryList } from '@/types/categoryTypes'
 
 export const categoryService = {
-  getCategoryList: async () => await axios.get<CategoryList>('https://v2.allbarlawbiz.com/category'),
+  getCategoryList: async () => await instance.get<CategoryList>('/categories'),
+  createCategory: async (category: CategoryCreateRequest) =>
+    await instance.post<CategoryCreateResponse>('/categories', category),
 }

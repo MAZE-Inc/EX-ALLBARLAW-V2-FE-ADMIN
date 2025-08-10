@@ -8,18 +8,26 @@ export interface Subcategory {
   subcategoryName: string
 }
 
-interface SubcategoryInfo extends Subcategory {
-  isUncategorized: boolean
-  categoryId: number
-}
-
 type CategoryInfo = {
   categoryId: number
   categoryName: string
-  imageUrl: string
-  clickedImageUrl: string
+  categoryImageUrl: string
+  categoryClickedImageUrl: string
+  categoryCreatedAt: string
+  categorySubcategoryCount: number
   isUncategorized: boolean
-  subcategories: SubcategoryInfo[]
+  subcategories: Subcategory[]
 }
 
 export type CategoryList = CategoryInfo[]
+
+export type CategoryCreateRequest = {
+  categoryName: string
+  categoryImageUrl: string
+  categoryClickedImageUrl: string
+}
+
+export type CategoryCreateResponse = {
+  categoryId: number
+  categoryName: string
+}

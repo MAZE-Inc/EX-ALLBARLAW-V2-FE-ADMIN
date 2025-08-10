@@ -11,15 +11,30 @@ export const renderIcons = (icons: string[]) => (
       alignItems: 'center',
     }}
   >
-    {icons.map((src, idx) => (
-      <img
-        key={idx}
-        src={src.startsWith('/') ? src : `/src/assets/imgs/${src}`}
-        alt={`icon${idx}`}
-        width={32}
-        height={32}
-      />
-    ))}
+    {icons.map((src, idx) => {
+      // URL이 비어있으면 기본 이미지 또는 빈 문자열 처리
+      if (!src) return null
+      
+      // 이미 완전한 URL인 경우 (http://, https://, data: 로 시작)
+      const isFullUrl = src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:')
+      
+      // 적절한 src 결정
+      const imageSrc = isFullUrl ? src : src.startsWith('/') ? src : `/assets/imgs/${src}`
+      
+      return (
+        <img
+          key={idx}
+          src={imageSrc}
+          alt={`icon${idx}`}
+          width={32}
+          height={32}
+          onError={(e) => {
+            console.error(`Failed to load image: ${imageSrc}`)
+            e.currentTarget.style.display = 'none'
+          }}
+        />
+      )
+    })}
   </div>
 )
 

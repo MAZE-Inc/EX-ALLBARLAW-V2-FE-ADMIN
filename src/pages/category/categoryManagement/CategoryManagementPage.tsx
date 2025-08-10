@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Button, Spin, Alert } from 'antd'
 import styles from '@/pages/category/categoryManagement/categoryManagement.module.scss'
 import MainCategoryTable, { MainCategoryData } from '@/container/category/mainCategoryTable/MainCategoryTable'
@@ -7,72 +7,41 @@ import InputModal from '@/components/inputModal'
 import MainCategoryEditor from '@/container/category/MainCategoryEditor'
 import { useCategoryManagement } from '@/hooks/useCategoryManagement'
 import { useModalHandlers } from '@/hooks/useModalHandlers'
-
-// 목업 데이터 (실제로는 서버에서 받아올 예정)
-const mockMainData: MainCategoryData[] = [
-  {
-    key: '1',
-    mainCategory: '민사',
-    icons: ['allbarlaw-logo.png', 'react.svg'],
-    subCategory: 5,
-  },
-  {
-    key: '2',
-    mainCategory: '형사',
-    icons: ['allbarlaw-logo.png', 'react.svg'],
-    subCategory: 3,
-  },
-]
-
-const mockSubData: SubCategoryData[] = [
-  {
-    key: '1',
-    subCategory: '손해배상',
-    article: 12,
-    video: 3,
-    knowledge: 5,
-    lawyer: 2,
-  },
-  {
-    key: '2',
-    subCategory: '사기',
-    article: 7,
-    video: 1,
-    knowledge: 2,
-    lawyer: 1,
-  },
-]
+import { useCategory } from '@/hooks/queries/useCategory'
 
 const CategoryManagementPage: React.FC = () => {
-  // 비동기 데이터 처리를 위한 상태
-  const [mainData, setMainData] = useState<MainCategoryData[] | undefined>(undefined)
-  const [subData, setSubData] = useState<SubCategoryData[] | undefined>(undefined)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  // React Query로 실제 데이터 가져오기
+  const { data: categoryData, isLoading, error } = useCategory()
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
 
-  // 데이터 로딩 시뮬레이션 (실제로는 쿼리 훅에서 처리)
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setIsLoading(true)
-        setError(null)
+  // 서버 데이터를 컴포넌트 형식으로 변환
+  const mainData = useMemo<MainCategoryData[] | undefined>(() => {
+    if (!categoryData) return undefined
 
-        // 비동기 처리 시뮬레이션
-        await new Promise(resolve => setTimeout(resolve, 1000))
+    return categoryData.map(category => ({
+      key: category.categoryId.toString(),
+      mainCategory: category.categoryName,
+      icons: [category.categoryImageUrl || '', category.categoryClickedImageUrl || ''],
+      subCategory: category.categorySubcategoryCount,
+    }))
+  }, [categoryData])
 
-        // 성공 시 데이터 설정
-        setMainData(mockMainData)
-        setSubData(mockSubData)
-      } catch (err) {
-        setError('데이터를 불러오는 중 오류가 발생했습니다.')
-        console.error('데이터 로딩 실패:', err)
-      } finally {
-        setIsLoading(false)
-      }
-    }
+  const subData = useMemo<SubCategoryData[] | undefined>(() => {
+    if (!categoryData || !selectedCategoryId) return undefined
 
-    loadData()
-  }, [])
+    const selectedCategory = categoryData.find(category => category.categoryId === selectedCategoryId)
+
+    if (!selectedCategory) return undefined
+
+    return selectedCategory.subcategories.map(sub => ({
+      key: sub.subcategoryId.toString(),
+      subCategory: sub.subcategoryName,
+      article: 0, // 실제 API에서 제공되지 않는 데이터는 0으로 초기화
+      video: 0,
+      knowledge: 0,
+      lawyer: 0,
+    }))
+  }, [categoryData, selectedCategoryId])
 
   // 커스텀 훅으로 상태와 핸들러 분리 - 데이터 주입 방식
   const {
@@ -80,7 +49,7 @@ const CategoryManagementPage: React.FC = () => {
     subData: processedSubData,
     selectedMainCategory,
     handleMainCategoryOrderChange,
-    handleMainCategoryClick,
+    handleMainCategoryClick: originalHandleMainCategoryClick,
     handleMainCategoryDelete,
     handleSubCategoryOrderChange,
     handleSubCategoryDelete,
@@ -88,6 +57,13 @@ const CategoryManagementPage: React.FC = () => {
     initialMainData: mainData,
     initialSubData: subData,
   })
+
+  // 대분류 클릭 시 선택된 카테고리 ID 업데이트
+  const handleMainCategoryClick = (record: MainCategoryData) => {
+    const categoryId = parseInt(record.key)
+    setSelectedCategoryId(categoryId)
+    originalHandleMainCategoryClick(record, categoryId)
+  }
 
   const {
     isSubCategoryModalOpen,
@@ -122,7 +98,7 @@ const CategoryManagementPage: React.FC = () => {
       <div style={{ padding: '20px' }}>
         <Alert
           message='오류 발생'
-          description={error}
+          description={error instanceof Error ? error.message : '데이터를 불러오는 중 오류가 발생했습니다.'}
           type='error'
           showIcon
           action={<Button onClick={() => window.location.reload()}>다시 시도</Button>}
