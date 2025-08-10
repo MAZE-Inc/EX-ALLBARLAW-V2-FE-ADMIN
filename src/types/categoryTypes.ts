@@ -7,6 +7,10 @@ export interface Subcategory {
   subcategoryId: number
   subcategoryName: string
   subcategoryDisplayOrder?: number
+  subcategoryBlogCaseCount: number
+  subcategoryVideoCaseCount: number
+  subcategoryKnowledgeCount: number
+  subcategoryLawyerCount: number
 }
 
 type CategoryInfo = {

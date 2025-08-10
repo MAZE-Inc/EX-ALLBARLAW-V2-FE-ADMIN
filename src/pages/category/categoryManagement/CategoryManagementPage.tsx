@@ -54,10 +54,10 @@ const CategoryManagementPage: React.FC = () => {
     return sortedSubcategories.map(sub => ({
       key: sub.subcategoryId.toString(),
       subCategory: sub.subcategoryName,
-      article: 0, // 실제 API에서 제공되지 않는 데이터는 0으로 초기화
-      video: 0,
-      knowledge: 0,
-      lawyer: 0,
+      article: sub.subcategoryBlogCaseCount || 0,
+      video: sub.subcategoryVideoCaseCount || 0,
+      knowledge: sub.subcategoryKnowledgeCount || 0,
+      lawyer: sub.subcategoryLawyerCount || 0,
       displayOrder: sub.subcategoryDisplayOrder, // displayOrder도 추가로 저장
     }))
   }, [categoryData, selectedCategoryId])
