@@ -4,10 +4,14 @@ import {
   CategoryCreateRequest,
   CategoryCreateResponse,
   CategoryList,
+  CategoryOrderUpdateRequest,
+  CategoryOrderUpdateResponse,
   CategoryUpdateRequest,
   CategoryUpdateResponse,
   SubCategoryCreateRequest,
   SubCategoryCreateResponse,
+  SubCategoryOrderUpdateRequest,
+  SubCategoryOrderUpdateResponse,
 } from '@/types/categoryTypes'
 
 export const categoryService = {
@@ -22,4 +26,12 @@ export const categoryService = {
   deleteSubCategory: async (subCategoryId: number) => await instance.delete(`/subcategories/${subCategoryId}`),
   updateCategory: async (categoryId: number, category: CategoryUpdateRequest) =>
     await instance.patch<CategoryUpdateResponse>(`/categories/${categoryId}`, category),
+  updateCategoryOrder: async (request: CategoryOrderUpdateRequest) =>
+    await instance.patch<CategoryOrderUpdateResponse>(`/categories/${request.categoryId}`, {
+      categoryDisplayOrder: request.categoryDisplayOrder,
+    }),
+  updateSubCategoryOrder: async (request: SubCategoryOrderUpdateRequest) =>
+    await instance.patch<SubCategoryOrderUpdateResponse>(`/subcategories/${request.subcategoryId}`, {
+      subcategoryDisplayOrder: request.subcategoryDisplayOrder,
+    }),
 }

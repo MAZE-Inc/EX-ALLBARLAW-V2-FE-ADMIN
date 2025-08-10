@@ -51,24 +51,39 @@ export const memberService = {
   },
   resetPassword: async (userId: number) => await instance.post(`/users/${userId}/reset-password`),
 
-  memberKeepBlogList: async (userId: number) => {
-    const response = await instance.get<ApiResponse<BlogCase[]>>(`/mypages/${userId}/blog-cases`)
+  memberKeepBlogList: async (userId: number, cursor?: number, cursorId?: number) => {
+    const params: any = {}
+    if (cursor !== undefined) params.cursor = cursor
+    if (cursorId !== undefined) params.cursorId = cursorId
+    const response = await instance.get<ApiResponse<BlogCase[]>>(`/mypages/${userId}/blog-cases`, { params })
     return response.data
   },
-  memberKeepVideoList: async (userId: number) => {
-    const response = await instance.get<ApiResponse<VideoCase[]>>(`/mypages/${userId}/video-cases`)
+  memberKeepVideoList: async (userId: number, cursor?: number, cursorId?: number) => {
+    const params: any = {}
+    if (cursor !== undefined) params.cursor = cursor
+    if (cursorId !== undefined) params.cursorId = cursorId
+    const response = await instance.get<ApiResponse<VideoCase[]>>(`/mypages/${userId}/video-cases`, { params })
     return response.data
   },
-  memberKeepLegalKnowledgeList: async (userId: number) => {
-    const response = await instance.get<ApiResponse<KnowledgeItem[]>>(`/mypages/${userId}/knowledge`)
+  memberKeepLegalKnowledgeList: async (userId: number, cursor?: number, cursorId?: number) => {
+    const params: any = {}
+    if (cursor !== undefined) params.cursor = cursor
+    if (cursorId !== undefined) params.cursorId = cursorId
+    const response = await instance.get<ApiResponse<KnowledgeItem[]>>(`/mypages/${userId}/knowledge`, { params })
     return response.data
   },
-  memberKeepLawyerList: async (userId: number) => {
-    const response = await instance.get<ApiResponse<Lawyer[]>>(`/mypages/${userId}/lawyers`)
+  memberKeepLawyerList: async (userId: number, cursor?: number, cursorId?: number) => {
+    const params: any = {}
+    if (cursor !== undefined) params.cursor = cursor
+    if (cursorId !== undefined) params.cursorId = cursorId
+    const response = await instance.get<ApiResponse<Lawyer[]>>(`/mypages/${userId}/lawyers`, { params })
     return response.data
   },
-  memberKeepLegalDictionaryList: async (userId: number) => {
-    const response = await instance.get<ApiResponse<LegalTermItem[]>>(`/mypages/${userId}/legal-terms`)
+  memberKeepLegalDictionaryList: async (userId: number, cursor?: number, cursorId?: number) => {
+    const params: any = {}
+    if (cursor !== undefined) params.cursor = cursor
+    if (cursorId !== undefined) params.cursorId = cursorId
+    const response = await instance.get<ApiResponse<LegalTermItem[]>>(`/mypages/${userId}/legal-terms`, { params })
     return response.data
   },
 }

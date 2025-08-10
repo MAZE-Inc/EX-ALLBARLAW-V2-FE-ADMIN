@@ -9,6 +9,7 @@ export interface MainCategoryData {
   mainCategory: string
   icons: string[]
   subCategory: number
+  displayOrder?: number
 }
 
 interface MainCategoryTableProps {

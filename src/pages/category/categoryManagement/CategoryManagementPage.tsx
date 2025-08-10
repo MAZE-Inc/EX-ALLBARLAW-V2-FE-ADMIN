@@ -17,15 +17,23 @@ const CategoryManagementPage: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
   const { exportCategories } = useExcelExport()
 
-  // 서버 데이터를 컴포넌트 형식으로 변환
+  // 서버 데이터를 컴포넌트 형식으로 변환 (categoryDisplayOrder 순서대로 정렬)
   const mainData = useMemo<MainCategoryData[] | undefined>(() => {
     if (!categoryData) return undefined
 
-    return categoryData.map(category => ({
+    // categoryDisplayOrder 기준으로 오름차순 정렬 (낮은 숫자가 위로)
+    const sortedData = [...categoryData].sort((a, b) => {
+      const orderA = a.categoryDisplayOrder ?? Number.MAX_SAFE_INTEGER
+      const orderB = b.categoryDisplayOrder ?? Number.MAX_SAFE_INTEGER
+      return orderA - orderB
+    })
+
+    return sortedData.map(category => ({
       key: category.categoryId.toString(),
       mainCategory: category.categoryName,
       icons: [category.categoryImageUrl || '', category.categoryClickedImageUrl || ''],
       subCategory: category.categorySubcategoryCount,
+      displayOrder: category.categoryDisplayOrder, // displayOrder도 추가로 저장
     }))
   }, [categoryData])
 

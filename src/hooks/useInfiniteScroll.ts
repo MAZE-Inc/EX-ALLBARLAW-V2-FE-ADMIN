@@ -28,20 +28,6 @@ export const useInfiniteScroll = ({
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage, containerSelector])
 
-  // 스크롤이 생길 때까지 자동으로 데이터 로드
-  const checkAndLoadMore = useCallback(() => {
-    const scrollContainer = document.querySelector(containerSelector) as HTMLElement
-    if (!scrollContainer) return
-
-    const hasScroll = scrollContainer.scrollHeight > scrollContainer.clientHeight
-
-    // 스크롤이 없고, 다음 페이지가 있고, 로딩중이 아니면 추가 로드
-    if (!hasScroll && hasNextPage && !isFetchingNextPage) {
-      console.log('📚 스크롤이 없어서 추가 데이터 로드')
-      fetchNextPage()
-    }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage, containerSelector])
-
   // 스크롤 이벤트 리스너 등록
   useEffect(() => {
     const scrollContainer = document.querySelector(containerSelector)
@@ -52,12 +38,26 @@ export const useInfiniteScroll = ({
     return undefined
   }, [handleScroll, containerSelector])
 
-  // 데이터 변경 시 스크롤 체크
+  // 초기 로드 및 데이터 변경 시 스크롤 체크
   useEffect(() => {
-    // DOM 업데이트를 기다린 후 체크
-    const timeoutId = setTimeout(checkAndLoadMore, 100)
-    return () => clearTimeout(timeoutId)
-  }, [checkAndLoadMore])
+    // hasNextPage가 true일 때만 체크
+    if (hasNextPage && !isFetchingNextPage) {
+      // DOM 업데이트를 기다린 후 체크
+      const timeoutId = setTimeout(() => {
+        const scrollContainer = document.querySelector(containerSelector) as HTMLElement
+        if (!scrollContainer) return
+
+        const hasScroll = scrollContainer.scrollHeight > scrollContainer.clientHeight
+
+        // 스크롤이 없고, 다음 페이지가 있고, 로딩중이 아니면 추가 로드
+        if (!hasScroll && hasNextPage && !isFetchingNextPage) {
+          console.log('📚 스크롤이 없어서 추가 데이터 로드')
+          fetchNextPage()
+        }
+      }, 100)
+      return () => clearTimeout(timeoutId)
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, containerSelector])
 
   return { handleScroll }
 }
