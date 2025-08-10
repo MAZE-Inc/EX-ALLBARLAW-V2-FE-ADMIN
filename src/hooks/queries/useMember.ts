@@ -74,3 +74,12 @@ export const useMemberKeppLegalDictionaryList = (userId: number) => {
     select: response => response?.data || [],
   })
 }
+
+export const useMemberKeppLawyerList = (userId: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.MEMBER_KEEP_LAWYER_LIST, userId],
+    queryFn: () => memberService.memberKeepLawyerList(userId),
+    enabled: userId !== undefined,
+    select: response => response?.data || [],
+  })
+}

@@ -64,7 +64,7 @@ export const memberService = {
     return response.data
   },
   memberKeepLawyerList: async (userId: number) => {
-    const response = await instance.get<ApiResponse<Lawyer[]>>(`/mypages/${userId}/lawyes`)
+    const response = await instance.get<ApiResponse<Lawyer[]>>(`/mypages/${userId}/lawyers`)
     return response.data
   },
   memberKeepLegalDictionaryList: async (userId: number) => {

@@ -1,0 +1,7 @@
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/abstracts/variables' as *;
+
+.keepLawyerList {
+  padding: 1rem;
+  min-height: 400px;
+}

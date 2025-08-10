@@ -6,6 +6,7 @@ import KeepVideoList from '../keepVideoList/KeepVideoList'
 import KeepLegalKnowledgeList from '../keepLegalKnowledgeList/KeepLegalKnowledgeList'
 import { useParams } from 'react-router-dom'
 import KeepLegalDictionary from '../keepLegalDictionary/KeepLegalDictionary'
+import KeepLawyerList from '../keepLawyerList/KeepLawyerList'
 
 const buttonList = ['법률정보의 글', '변호사의 영상', '법률 지식인', '변호사', '법률 사전']
 
@@ -21,8 +22,8 @@ const MemberKeepList = () => {
         return <KeepVideoList userId={Number(memberId)} />
       case buttonList[2]:
         return <KeepLegalKnowledgeList userId={Number(memberId)} />
-      // case buttonList[3]:
-      //   return <MyLawyer />
+      case buttonList[3]:
+        return <KeepLawyerList userId={Number(memberId)} />
       case buttonList[4]:
         return <KeepLegalDictionary userId={Number(memberId)} />
       default:
