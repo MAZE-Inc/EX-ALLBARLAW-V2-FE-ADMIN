@@ -106,7 +106,7 @@ const VideoEditor = () => {
       channelTitle: '@채널명',
     }))
     setIsChannelInfoFetched(true)
-    
+
     // Auto-populate mock data for demonstration
     setTimeout(() => {
       setFormData(prev => ({
@@ -117,7 +117,7 @@ const VideoEditor = () => {
 채널 설명: 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다.`,
       }))
     }, 500)
-    
+
     message.success('채널 정보를 불러왔습니다.')
   }
 
@@ -177,12 +177,14 @@ const VideoEditor = () => {
   // Check if all required fields are filled
   const isFormValid = () => {
     return !!(
-      formData.videoUrl &&
-      formData.title &&
-      formData.summaryContent &&
-      formData.lawyer &&
-      formData.subcategoryId &&
-      isChannelInfoFetched // YouTube channel info must be fetched
+      (
+        formData.videoUrl &&
+        formData.title &&
+        formData.summaryContent &&
+        formData.lawyer &&
+        formData.subcategoryId &&
+        isChannelInfoFetched
+      ) // YouTube channel info must be fetched
     )
   }
 
@@ -209,9 +211,9 @@ const VideoEditor = () => {
 
         {/* 유튜브 채널정보 불러오기 버튼 (별도 섹션) */}
         <div className={styles.fetchButtonSection}>
-          <Button 
-            type='primary' 
-            size='large' 
+          <Button
+            type='primary'
+            size='large'
             className={styles.fetchButton}
             onClick={handleFetchChannelInfo}
             disabled={!formData.videoUrl}
@@ -224,7 +226,10 @@ const VideoEditor = () => {
                 <li>채널 명: 유튜브 채널이름</li>
                 <li>구독자 수: 124,567명</li>
                 <li>핸들 명: @채널명</li>
-                <li>채널 설명: 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다.</li>
+                <li>
+                  채널 설명: 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널
+                  설명을 모두 보여줍니다.
+                </li>
               </ul>
             </div>
           )}
@@ -330,10 +335,10 @@ const VideoEditor = () => {
           <Button size='large' onClick={handleCancel}>
             취소
           </Button>
-          <Button 
-            type='primary' 
-            size='large' 
-            onClick={handleSave} 
+          <Button
+            type='primary'
+            size='large'
+            onClick={handleSave}
             loading={createVideoMutation.isPending}
             disabled={!isFormValid()}
           >
