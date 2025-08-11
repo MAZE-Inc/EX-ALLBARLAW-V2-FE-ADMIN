@@ -40,7 +40,7 @@ const MainLayout = () => {
 
   return (
     <div className={styles['main-layout']}>
-      <Sidebar collapsed={isTablet && collapsed} isTablet={isTablet} />
+      <Sidebar collapsed={isTablet && collapsed} isTablet={isTablet} subMenuIds={subMenuIds} />
       <div className={styles.content}>
         {isTablet && <Header onToggle={toggleSidebar} collapsed={collapsed} />}
         <Outlet />
