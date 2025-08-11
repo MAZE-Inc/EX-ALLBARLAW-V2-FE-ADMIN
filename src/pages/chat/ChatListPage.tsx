@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
-import { Table, TableProps, Button, Tabs, TabsProps, ConfigProvider } from 'antd'
+import { useState } from 'react'
+import { Table, TableProps, Tabs, TabsProps, ConfigProvider } from 'antd'
 import SearchHeader from '@/components/searchHeader/SearchHeader'
 import styles from './chat.module.scss'
-import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { useChatList } from '@/hooks/queries/useChat'
 import { ChatListRequest } from '@/types/chatTypes'
@@ -22,11 +21,10 @@ interface ChatTableData {
 }
 
 const ChatListPage = () => {
-  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'ended'>('all')
-  const [orderBy, setOrderBy] = useState<ChatListRequest['orderBy']>('lastMessageAt')
-  const [sort, setSort] = useState<ChatListRequest['sort']>('desc')
+  const [orderBy, _setOrderBy] = useState<ChatListRequest['orderBy']>('lastMessageAt')
+  const [sort, _setSort] = useState<ChatListRequest['sort']>('desc')
 
   const { data: chatListData, isLoading } = useChatList({
     chatRoomPage: currentPage,
