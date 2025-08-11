@@ -23,4 +23,14 @@ export const adminService = {
     const response = await instance.post('/admin', request)
     return response.data
   },
+
+  getAdminProfile: async () => {
+    const response = await instance.get('/admin/profile')
+    return response.data
+  },
+
+  patchAdmin: async (adminId: number, request: AdminCreateRequest) => {
+    const response = await instance.patch(`/admin/${adminId}`, request)
+    return response.data
+  },
 }

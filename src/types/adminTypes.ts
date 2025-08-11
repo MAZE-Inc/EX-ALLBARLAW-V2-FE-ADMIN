@@ -5,6 +5,16 @@ export type AdminListRequest = {
   adminAccountTypeId?: number
 }
 
+export type AdminSubMenu = {
+  subMenuId: number
+  subMenuName: string
+  subMenuMainMenuId: number
+  subMenuMainMenu: {
+    mainMenuId: number
+    mainMenuName: string
+  }
+}
+
 export type Admin = {
   adminId: number
   adminAccount: string
@@ -14,11 +24,13 @@ export type Admin = {
   adminIsActive: boolean
   adminCreatedAt: string
   adminUpdatedAt: string
+  adminSubMenus?: AdminSubMenu[]
 }
 
 export type AdminCreateRequest = Omit<Admin, 'adminId' | 'adminCreatedAt' | 'adminUpdatedAt'> & {
   adminPassword: string
   adminPasswordRepeat: string
+  subMenuIds: number[]
 }
 
 export type MemberListResponse = Admin[]

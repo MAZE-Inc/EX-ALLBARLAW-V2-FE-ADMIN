@@ -1,6 +1,5 @@
 import { BlogCase } from './blogTypes'
 import { KnowledgeItem } from './knowledgeType'
-import { SortType } from './sortType'
 
 import { VideoCase } from './videoTypes'
 
@@ -37,21 +36,23 @@ export type AIRecommenderLawyerItem = Pick<
 >
 
 export type LawyerListRequest = {
-  subcategoryId?: number | 'all'
-  take?: number
-  cursor?: number
-  cursorId?: number
-  orderBy?: SortType
-  gender?: number | 'all'
-  achievementId?: 'all'
+  lawyerPage?: number
+  orderBy?:
+    | 'name'
+    | 'createdAt'
+    | 'blogCaseCount'
+    | 'videoCaseCount'
+    | 'chatRoomCount'
+    | 'totalVisitCount'
+    | 'monthlyVisitCount'
   sort?: 'asc' | 'desc'
 }
 
 export type LawyerListResponse = {
-  data: Lawyer[]
-  nextCursor: number
-  nextCursorId: number
-  hasNextPage: boolean
+  lawyerList: Lawyer[]
+  totalCount: number
+  page: number
+  totalPages: number
 }
 
 export type LawyerAchievement = {

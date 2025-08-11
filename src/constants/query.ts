@@ -1,4 +1,7 @@
 export const QUERY_KEY = {
+  // 관리자
+  ADMIN_PROFILE: 'adminProfile',
+
   //멤버
   TOTAL_MEMBER_PAGE: 'totalMemberPage',
   MEMBER_LIST: 'memberList',
@@ -37,6 +40,7 @@ export const QUERY_KEY = {
 
   // 변호사
   LAWYER_SEARCH: 'lawyerSearch',
+  LAWYER_LIST: 'lawyerList',
 
   // 채팅
   CHAT_LIST: 'chatList',

@@ -1,5 +1,5 @@
 import React from 'react'
-import { menuItems } from '@/constants/menu'
+import { menuItemsWithPermissions } from '@/constants/menu'
 import { Menu, MenuProps } from 'antd'
 import styles from './sidebar.module.scss'
 import { useNavigate } from 'react-router-dom'
@@ -8,6 +8,7 @@ import { ROUTE_PATH } from '@/routes/routePath'
 interface SidebarProps {
   collapsed?: boolean
   isTablet?: boolean
+  subMenuIds?: number[]
 }
 
 const SidebarHeader = () => {
@@ -38,13 +39,37 @@ const SidebarHeader = () => {
   )
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ collapsed = false, isTablet = false }) => {
+const Sidebar: React.FC<SidebarProps> = ({ collapsed = false, isTablet = false, subMenuIds = [] }) => {
   const navigate = useNavigate()
 
   const onClick: MenuProps['onClick'] = e => {
     navigate(e.key)
   }
 
+  // 권한에 따라 메뉴 아이템 필터링
+  const filterMenuItems = (items: any[]): any[] => {
+    return items
+      .map(item => {
+        if (item.children) {
+          const filteredChildren = item.children.filter((child: any) => {
+            // 서브메뉴가 권한 ID를 가지고 있는지 확인
+            return subMenuIds.includes(child.permissionId)
+          })
+
+          if (filteredChildren.length > 0) {
+            return {
+              ...item,
+              children: filteredChildren,
+            }
+          }
+          return null
+        }
+        return item
+      })
+      .filter(Boolean)
+  }
+
+  const filteredMenuItems = filterMenuItems(menuItemsWithPermissions)
   const alwaysOpenKeys = ['admin', 'category', 'member', 'lawyer', 'content', 'chat', 'board', 'ad', 'statistics']
 
   return (
@@ -52,7 +77,13 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed = false, isTablet = false }
       className={`${styles.sidebar} ${collapsed && isTablet ? styles.collapsed : ''} ${isTablet ? styles.tablet : ''}`}
     >
       <SidebarHeader />
-      <Menu onClick={onClick} mode='inline' items={menuItems} openKeys={alwaysOpenKeys} onOpenChange={() => {}} />
+      <Menu
+        onClick={onClick}
+        mode='inline'
+        items={filteredMenuItems}
+        openKeys={alwaysOpenKeys}
+        onOpenChange={() => {}}
+      />
     </div>
   )
 }
