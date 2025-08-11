@@ -56,7 +56,7 @@ export const menuItems: MenuItem[] = [
     children: [
       { key: ROUTE_PATH.BOARD_NOTICE, label: '공지사항' },
       { key: 'board-faq', label: 'FAQ' },
-      { key: 'board-legalDictionary', label: '법률 백과사전전' },
+      { key: 'board-legalDictionary', label: '법률 백과사전' },
     ],
   },
   {

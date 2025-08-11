@@ -105,5 +105,152 @@ import { DownloadOutlined } from '@ant-design/icons'
 - TextArea 등 높이가 다른 요소는 별도 처리
 - 최소 높이 56px로 일관된 행 높이 유지
 
+## 리스트 페이지 테이블 규칙
+
+### 기본 테이블 구조
+모든 리스트 페이지의 테이블은 Ant Design의 Table 컴포넌트를 사용하며 다음과 같은 표준을 따릅니다:
+
+```tsx
+import { Table, TableProps } from 'antd'
+
+<Table<DataType>
+  columns={columns}
+  dataSource={data}
+  rowSelection={rowSelection}  // 선택 기능이 필요한 경우
+  rowKey='id'  // 고유 키 필드
+  pagination={false}  // 페이지네이션은 별도 컴포넌트로 관리
+  loading={loading}
+  onChange={() => {}}  // 정렬은 헤더 클릭으로 처리
+  onRow={record => ({
+    onClick: () => navigate(`/detail/${record.id}`)  // 행 클릭 시 상세 페이지 이동
+  })}
+/>
+```
+
+### 컬럼 정의 패턴
+```tsx
+const columns: TableProps<DataType>['columns'] = [
+  {
+    title: '컬럼명',
+    dataIndex: 'fieldName',
+    sorter: true,  // 정렬 가능한 컬럼
+    sortOrder: getSortOrder('fieldName'),
+    onHeaderCell: () => ({
+      onClick: () => onSort('fieldName'),
+    }),
+  },
+  // 날짜 형식 렌더링
+  {
+    title: '날짜',
+    dataIndex: 'createdAt',
+    render: (value: string) => value ? dayjs(value).format('YY-MM-DD HH:mm') : '',
+  },
+  // 액션 버튼이 있는 컬럼
+  {
+    title: '관리',
+    render: (_, record) => (
+      <Button size='small' onClick={e => handleAction(record, e)}>
+        액션
+      </Button>
+    ),
+  },
+]
+```
+
+### 행 선택 기능
+```tsx
+const rowSelection = {
+  selectedRowKeys: selectedRows.map(row => row.id),
+  onSelectAll: (selected: boolean, selectedRows: DataType[]) => {
+    const newSelectedRows = selected ? selectedRows : []
+    setSelectedRows(newSelectedRows)
+    onSelectionChange?.(newSelectedRows)
+  },
+  onSelect: (record: DataType, selected: boolean) => {
+    setSelectedRows(prev => {
+      const newSelectedRows = selected 
+        ? [...prev, record] 
+        : prev.filter(row => row.id !== record.id)
+      onSelectionChange?.(newSelectedRows)
+      return newSelectedRows
+    })
+  },
+}
+```
+
+### 테이블 스타일 (SCSS)
+```scss
+.list-container {
+  :global {
+    // 체크박스 스타일
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: $color-green-02;
+      border-color: $color-green-02;
+    }
+
+    .ant-checkbox:hover .ant-checkbox-inner {
+      border-color: $color-green-02;
+    }
+
+    // 테이블 행 호버
+    .ant-table-tbody > tr:hover > td {
+      background-color: rgba(82, 196, 26, 0.05) !important;
+    }
+
+    // 선택된 행
+    .ant-table-tbody > tr.ant-table-row-selected > td {
+      background-color: rgba(82, 196, 26, 0.1);
+    }
+
+    // 정렬 아이콘
+    .ant-table-column-sorter-up.active,
+    .ant-table-column-sorter-down.active {
+      color: $color-green-02;
+    }
+  }
+}
+```
+
+### 특징:
+- Ant Design Table 컴포넌트 사용
+- 행 클릭 시 상세 페이지 이동
+- 체크박스를 통한 다중 선택 지원
+- 컬럼별 정렬 기능
+- 녹색($color-green-02) 테마 색상 사용
+- 호버 및 선택 상태 시각적 피드백
+
+### 페이지네이션
+모든 리스트 페이지의 페이지네이션은 다음 규칙을 따릅니다:
+
+```tsx
+import { Pagination } from '@/components/pagination/Pagination'
+
+{totalPages && (
+  <div className={styles['pagination-wrapper']}>
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={handlePageChange}
+    />
+  </div>
+)}
+```
+
+#### 페이지네이션 스타일:
+```scss
+.pagination-wrapper {
+  display: flex;
+  justify-content: flex-end;  // 항상 우측 정렬
+  padding: 16px 0;  // 상하 패딩
+}
+```
+
+#### 특징:
+- 커스텀 Pagination 컴포넌트 사용 (`@/components/pagination/Pagination`)
+- 항상 우측 정렬 (`justify-content: flex-end`)
+- 상하 16px 패딩
+- 테이블 하단에 위치
+- 데이터가 있을 때만 표시 (조건부 렌더링)
+
 ## 기타 규칙
 (추후 추가)

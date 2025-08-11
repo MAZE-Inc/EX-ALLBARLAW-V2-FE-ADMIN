@@ -1,0 +1,53 @@
+.chat-list-page {
+  padding: 24px;
+}
+
+.chat-list-container {
+  margin-top: 24px;
+
+  .pagination-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 0;
+  }
+
+  :global {
+    // �l� ��|
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: $color-green-02;
+      border-color: $color-green-02;
+    }
+
+    .ant-checkbox:hover .ant-checkbox-inner {
+      border-color: $color-green-02;
+    }
+
+    // Lt � 8�
+    .ant-table-tbody > tr:hover > td {
+      background-color: rgba(82, 196, 26, 0.05) !important;
+      cursor: pointer;
+    }
+
+    //  � �
+    .ant-table-tbody > tr.ant-table-row-selected > td {
+      background-color: rgba(82, 196, 26, 0.1);
+    }
+
+    // , DtX
+    .ant-table-column-sorter-up.active,
+    .ant-table-column-sorter-down.active {
+      color: $color-green-02;
+    }
+
+    // Lt �T ��|
+    .ant-table-thead > tr > th {
+      background-color: #fafafa;
+      font-weight: 600;
+    }
+
+    // �i @ ��|
+    .ant-table-thead > tr:first-child > th {
+      background-color: #f0f0f0;
+    }
+  }
+}

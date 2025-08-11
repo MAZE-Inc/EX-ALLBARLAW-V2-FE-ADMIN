@@ -37,4 +37,7 @@ export const QUERY_KEY = {
 
   // 변호사
   LAWYER_SEARCH: 'lawyerSearch',
+
+  // 채팅
+  CHAT_LIST: 'chatList',
 } as const
