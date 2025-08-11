@@ -9,6 +9,7 @@ import KnowledgeList from './content/knowledge/knowledgeList/KnowledgeList'
 import VideoPage from './content/video/videoMain/VideoPage'
 import VideoList from './content/video/videoList/VideoList'
 import VideoDetail from './content/video/videoDetail/VideoDetail'
+import VideoEditor from './content/video/videoEditor/VideoEditor'
 import LawyerLayout from './lawyer/lawyerLayout/LawyerLayout'
 import AdLawfirmPage from './ad/adLawfirm/AdLawfirmPage'
 import AdLawyerPage from './ad/adLawyer/AdLawyerPage'
@@ -47,6 +48,7 @@ export {
   VideoPage,
   VideoList,
   VideoDetail,
+  VideoEditor,
   LawyerLayout,
   MemberPage,
   LawyerMemberLayout,

@@ -1,6 +1,5 @@
 import CategorySidebar from '@/components/categorySidebar/CategorySidebar'
 import { useCategory } from '@/hooks/queries/useCategory'
-import { Button } from 'antd'
 import { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import styles from './knowledgePage.module.scss'
@@ -21,9 +20,7 @@ const KnowledgePage = () => {
 
   return (
     <main className={styles['knowledge-page']}>
-      <header className={styles['knowledge-page__header']}>
-        <Button type='primary'>지식인 등록</Button>
-      </header>
+      <header className={styles['knowledge-page__header']}></header>
       <section className={styles['knowledge-page__content']}>
         <CategorySidebar
           categories={categoryList || []}

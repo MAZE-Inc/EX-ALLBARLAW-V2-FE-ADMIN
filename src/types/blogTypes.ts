@@ -52,3 +52,31 @@ export type BlogDetailResponse = Omit<BlogCase, 'isKeep'> & {
   source: string
   tags: { id: number; name: string }[]
 }
+
+export type CreateBlogRequest = {
+  blogCaseId: number
+  blogCaseTitle: string
+  blogCaseSummaryContent: string
+  blogCaseSource: string
+  blogCaseTags: string[]
+  blogCaseLawyerId: number
+  subcategoryId: number
+  blogCaseThumbnail: string
+}
+
+export type CreateBlogResponse = {
+  blogCaseId: number
+  blogCaseTitle: string
+  blogCaseOriginalContentLength: number
+  blogCaseSummaryContent: string
+  blogCaseThumbnail: string | null
+  blogCaseSource: string
+  blogCaseLikesCount: number
+  blogCaseViewCount: number
+  blogCasePublishedAt: string
+  blogCaseSubcategoryId: number
+  blogCaseLawyerId: number
+  blogCaseCreatedAt: string
+  blogCaseUpdatedAt: string
+  blogCaseTags: string[]
+}

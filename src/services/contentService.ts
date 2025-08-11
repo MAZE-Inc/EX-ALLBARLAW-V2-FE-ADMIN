@@ -1,11 +1,26 @@
-import { BlogDetailRequest, BlogDetailResponse, BlogListRequest, BlogListResponse } from '@/types/blogTypes'
+import instance from '@/lib/axios'
+import {
+  BlogDetailRequest,
+  BlogDetailResponse,
+  BlogListRequest,
+  BlogListResponse,
+  CreateBlogRequest,
+  CreateBlogResponse,
+} from '@/types/blogTypes'
 import {
   KnowledgeDetailRequest,
   KnowledgeDetailResponse,
   KnowledgeListRequest,
   KnowledgeListResponse,
 } from '@/types/knowledgeType'
-import { VideoDetailRequest, VideoDetailResponse, VideoListRequest, VideoListResponse } from '@/types/videoTypes'
+import {
+  CreateVideoRequest,
+  CreateVideoResponse,
+  VideoDetailRequest,
+  VideoDetailResponse,
+  VideoListRequest,
+  VideoListResponse,
+} from '@/types/videoTypes'
 import axios from 'axios'
 
 export const contentService = {
@@ -92,6 +107,64 @@ export const contentService = {
       `https://v2.allbarlawbiz.com/knowledge/detail/${request.knowledgeId}`
     )
 
+    return response.data
+  },
+
+  createBlog: async (request: CreateBlogRequest) => {
+    const {
+      subcategoryId,
+      blogCaseId,
+      blogCaseTitle,
+      blogCaseSummaryContent,
+      blogCaseSource,
+      blogCaseTags,
+      blogCaseLawyerId,
+      blogCaseThumbnail,
+    } = request
+
+    const payload = {
+      blogCaseId,
+      blogCaseTitle,
+      blogCaseSummaryContent,
+      blogCaseSource,
+      blogCaseTags,
+      blogCaseLawyerId,
+      blogCaseThumbnail: blogCaseThumbnail || '',
+    }
+
+    const response = await instance.post<CreateBlogResponse>(`/blog-cases/subcategory/${subcategoryId}`, payload)
+    return response.data
+  },
+
+  createVideo: async (request: CreateVideoRequest) => {
+    const {
+      subcategoryId,
+      videoCaseTitle,
+      videoCaseSummaryContent,
+      videoCaseSource,
+      videoCaseTags,
+      videoCaseLawyerId,
+      videoCaseThumbnail,
+      videoCaseChannelDescription,
+      videoCaseChannelThumbnail,
+      videoCaseHandleName,
+      videoCaseChannelName,
+    } = request
+
+    const payload = {
+      videoCaseTitle,
+      videoCaseSummaryContent,
+      videoCaseSource,
+      videoCaseThumbnail,
+      videoCaseChannelDescription,
+      videoCaseChannelThumbnail,
+      videoCaseHandleName,
+      videoCaseChannelName,
+      videoCaseTags,
+      videoCaseLawyerId,
+    }
+
+    const response = await instance.post<CreateVideoResponse>(`/video-cases/subcategory/${subcategoryId}`, payload)
     return response.data
   },
 }

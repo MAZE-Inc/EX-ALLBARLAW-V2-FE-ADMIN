@@ -53,3 +53,38 @@ export type VideoDetailResponse = Omit<VideoCase, 'isKeep'> & {
   lawyerProfileImage: string
   tags: { id: number; name: string }[]
 }
+
+export type CreateVideoRequest = {
+  subcategoryId: number
+  videoCaseTitle: string
+  videoCaseSummaryContent: string
+  videoCaseSource: string
+  videoCaseThumbnail: string
+  videoCaseChannelDescription: string
+  videoCaseChannelThumbnail: string
+  videoCaseHandleName: string
+  videoCaseChannelName: string
+  videoCaseTags: string[]
+  videoCaseLawyerId: number
+}
+
+export type CreateVideoResponse = {
+  videoCaseId: number
+  videoCaseTitle: string
+  videoCaseSource: string
+  videoCaseThumbnail: string
+  videoCaseSummaryContent?: string | null
+  videoCaseChannelName: string
+  videoCaseSubscriberCount: number
+  videoCaseHandleName: string
+  videoCaseChannelThumbnail: string
+  videoCaseChannelDescription?: string | null
+  videoCaseLikesCount: number
+  videoCaseViewCount: number
+  videoCasePublishedAt: string
+  videoCaseSubcategoryId?: number | null
+  videoCaseLawyerId?: number | null
+  videoCaseCreatedAt: string
+  videoCaseUpdatedAt: string
+  videoCaseTags: string[]
+}

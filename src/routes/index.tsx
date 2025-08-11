@@ -39,6 +39,7 @@ import {
   BlogList,
   LawyerListPage,
   BlogEditor,
+  VideoEditor,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
@@ -145,6 +146,10 @@ const router = createBrowserRouter([
               {
                 path: ':subCategoryId/:videoCaseId',
                 element: <VideoDetail />,
+              },
+              {
+                path: ':subCategoryId/edit',
+                element: <VideoEditor />,
               },
             ],
           },
