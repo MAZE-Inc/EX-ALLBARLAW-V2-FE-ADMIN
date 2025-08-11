@@ -179,6 +179,8 @@ export interface LawyerMemberListRequest {
   sort?: 'asc' | 'desc'
 }
 
+export type ApprovalStatus = 'pending' | 'approved' | 'rejected' | 'all'
+
 export interface LawyerInfoListRequest extends LawyerMemberListRequest {
   state?: 'all' | 'new' | 'pending' | 'approved'
 }
@@ -188,21 +190,6 @@ export type LawyerMemberListResponse = {
   totalCount: number
   page: number
   totalPages: number
-}
-
-export type LawyerRegisterModifyRequest = {
-  lawyerId: number
-  lawyerName: string
-  lawyerLawfirmName: string
-  lawyerBarExamNumber: string
-  lawyerEmail: string
-}
-
-export type LawyerRegisterModifyResponse = {
-  lawyerId: number
-  lawyerLawSchoolDiplomaUrl: string
-  lawyerCertificateUrl: string
-  lawyerApprovalStatus: number
 }
 
 export type LawyerInfoListResponse = {
@@ -225,4 +212,28 @@ export type LawyerInfoListResponse = {
   totalCount: 0
   page: 0
   totalPages: 0
+}
+
+export type LawyerRegisterModifyRequest = {
+  lawyerLawSchoolDiplomaUrl?: string
+  lawyerCertificateUrl?: string
+  lawyerApprovalStatus?: 1 | 2
+  barExamPassYear?: number
+  barExamPassMonth?: number
+  barExamPassDay?: number
+}
+
+export type LawyerRegisterModifyResponse = {
+  lawyerId: number
+  lawyerEmail: string
+  lawyerName: string
+  lawyerContact: string | null
+  lawyerLawfirmName: string | null
+  lawyerLawfirmContact: string
+  lawyerBarExamNumber: number
+  lawyerApprovalStatus: string
+  lawyerLawSchoolDiplomaUrl: string | null
+  lawyerCertificateUrl: string | null
+  lawyerBarExamPassDate: string | null
+  lawyerCreatedAt: string
 }

@@ -9,6 +9,7 @@ import {
   LawyerMemberListRequest,
   LawyerMemberListResponse,
   LawyerRegisterModifyRequest,
+  LawyerRegisterModifyResponse,
 } from '@/types/lawyerTypes'
 import { LegalTermItem } from '@/types/legalTermTypes'
 import { MemberKeepCountResponse, MemberListRequest, MemberListResponse } from '@/types/memberType'
@@ -138,7 +139,7 @@ export const lawyerMemberService = {
 
   getLawyerInfoList: async (request: LawyerInfoListRequest) => {
     const { lawyerPage, orderBy, sort, state } = request
-    
+
     console.log('getLawyerInfoList request:', request)
 
     const params = new URLSearchParams()
@@ -146,17 +147,15 @@ export const lawyerMemberService = {
     if (orderBy !== undefined) params.append('orderBy', orderBy)
     if (sort !== undefined) params.append('sort', sort)
     if (state !== undefined && state !== 'all') params.append('state', state) // 'all'일 때는 파라미터를 보내지 않음
-    
+
     console.log('API params:', params.toString())
 
     const response = await instance.get<LawyerInfoListResponse>(`/lawyers/info`, { params })
     return response.data
   },
 
-  getLawyerRegisterModify: async (request: LawyerRegisterModifyRequest) => {
-    const { lawyerId } = request
-
-    const response = await instance.get<LawyerInfoListResponse>(`/lawyers/${lawyerId}`, {})
+  updateLawyerRegister: async (lawyerId: number, request: LawyerRegisterModifyRequest) => {
+    const response = await instance.patch<LawyerRegisterModifyResponse>(`/lawyers/${lawyerId}`, request)
     return response.data
   },
 }

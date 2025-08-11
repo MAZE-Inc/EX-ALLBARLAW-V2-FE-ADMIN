@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from '@tansta
 import { message } from 'antd'
 import { lawyerMemberService, memberService } from '@/services/memberService'
 import { QUERY_KEY } from '@/constants/query'
-import { LawyerInfoListRequest, LawyerMemberListRequest } from '@/types/lawyerTypes'
+import { LawyerInfoListRequest, LawyerMemberListRequest, LawyerRegisterModifyRequest } from '@/types/lawyerTypes'
 
 interface UpdateMemberStatusParams {
   userId: number
@@ -216,5 +216,36 @@ export const useLawyerInfoList = (request: LawyerInfoListRequest) => {
     queryKey: [QUERY_KEY.LAWYER_INFO_LIST, request.lawyerPage, request.orderBy, request.sort, request.state],
     queryFn: () => lawyerMemberService.getLawyerInfoList(request),
     enabled: request.lawyerPage !== undefined,
+  })
+}
+
+interface UpdateLawyerRegisterParams {
+  lawyerId: number
+  request: LawyerRegisterModifyRequest
+}
+
+export const useUpdateLawyerRegister = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?: () => void
+  onError?: (error: Error) => void
+}) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ lawyerId, request }: UpdateLawyerRegisterParams) =>
+      lawyerMemberService.updateLawyerRegister(lawyerId, request),
+    onSuccess: _data => {
+      // 변호사 정보 리스트 쿼리 무효화
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LAWYER_INFO_LIST] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LAWYER_MEMBER_LIST] })
+      onSuccess?.()
+    },
+    onError: (error: Error) => {
+      console.error('변호사 승인 정보 업데이트 실패:', error)
+      message.error('변호사 승인 정보 업데이트에 실패했습니다.')
+      onError?.(error)
+    },
   })
 }
