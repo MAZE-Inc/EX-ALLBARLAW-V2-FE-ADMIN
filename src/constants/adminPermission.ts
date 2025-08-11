@@ -45,10 +45,7 @@ export const ADMIN_PERMISSION_GROUPS = {
   ADMIN_ACCOUNT: {
     name: '관리자 계정',
     key: 'admin',
-    permissions: [
-      ADMIN_PERMISSION_IDS.ADMIN_ACCOUNT_LIST,
-      ADMIN_PERMISSION_IDS.ACCOUNT_REGISTER,
-    ],
+    permissions: [ADMIN_PERMISSION_IDS.ADMIN_ACCOUNT_LIST, ADMIN_PERMISSION_IDS.ACCOUNT_REGISTER],
   },
   CATEGORY: {
     name: '분류 설정',
@@ -58,10 +55,7 @@ export const ADMIN_PERMISSION_GROUPS = {
   MEMBER: {
     name: '회원관리',
     key: 'member',
-    permissions: [
-      ADMIN_PERMISSION_IDS.MEMBER_GENERAL,
-      ADMIN_PERMISSION_IDS.MEMBER_LAWYER,
-    ],
+    permissions: [ADMIN_PERMISSION_IDS.MEMBER_GENERAL, ADMIN_PERMISSION_IDS.MEMBER_LAWYER],
   },
   LAWYER: {
     name: '변호사 관리',
@@ -94,11 +88,7 @@ export const ADMIN_PERMISSION_GROUPS = {
   AD: {
     name: '광고 관리',
     key: 'ad',
-    permissions: [
-      ADMIN_PERMISSION_IDS.AD_LAWFIRM,
-      ADMIN_PERMISSION_IDS.AD_BANNER,
-      ADMIN_PERMISSION_IDS.AD_LAWYER,
-    ],
+    permissions: [ADMIN_PERMISSION_IDS.AD_LAWFIRM, ADMIN_PERMISSION_IDS.AD_BANNER, ADMIN_PERMISSION_IDS.AD_LAWYER],
   },
   STATISTICS: {
     name: '통계',
@@ -110,7 +100,7 @@ export const ADMIN_PERMISSION_GROUPS = {
 // 권한 ID로 그룹 키 찾기
 export const getGroupKeyByPermissionId = (permissionId: number): string | null => {
   for (const group of Object.values(ADMIN_PERMISSION_GROUPS)) {
-    if (group.permissions.includes(permissionId)) {
+    if ((group.permissions as readonly number[]).includes(permissionId)) {
       return group.key
     }
   }
@@ -121,7 +111,7 @@ export const getGroupKeyByPermissionId = (permissionId: number): string | null =
 export const hasGroupAccess = (userPermissions: number[], groupKey: string): boolean => {
   const group = Object.values(ADMIN_PERMISSION_GROUPS).find(g => g.key === groupKey)
   if (!group) return false
-  
+
   return group.permissions.some(permissionId => userPermissions.includes(permissionId))
 }
 
