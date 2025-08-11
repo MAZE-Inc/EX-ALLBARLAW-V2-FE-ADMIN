@@ -5,17 +5,20 @@ import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
 import LawyerApprovalModal from '@/components/lawyerApprovalModal/LawyerApprovalModal'
 
-// 변호사 멤버 타입 정의
+// LawyerInfoListResponse의 lawyerList 항목 타입
 interface LawyerMember {
   lawyerId: number
-  lawyerAccount: string
+  lawyerAccount?: string  // 아이디 필드 추가 (API에 있다면)
   lawyerEmail: string
   lawyerName: string
-  lawyerPhone: string
-  lawyerOffice: string
-  lawyerOfficePhone: string
-  lawyerExam: string
-  lawyerApproved: boolean
+  lawyerContact: string | null
+  lawyerLawfirmName: string | null
+  lawyerLawfirmContact: string
+  lawyerBarExamNumber: number
+  lawyerApprovalStatus: string
+  lawyerLawSchoolDiplomaUrl: string | null
+  lawyerCertificateUrl: string | null
+  lawyerBarExamPassDate: string | null
   lawyerCreatedAt: string
 }
 
@@ -59,7 +62,8 @@ const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort }
   const columns: TableProps<LawyerMember>['columns'] = [
     {
       title: '아이디',
-      dataIndex: 'lawyerAccount',
+      dataIndex: 'lawyerId',  // lawyerAccount가 API에 없다면 lawyerId 사용
+      render: (id: number) => `lawyer${id}`,  // 또는 실제 아이디 필드가 있다면 그것을 사용
       sorter: true,
       sortOrder: getSortOrder('account'),
       onHeaderCell: () => ({
@@ -86,7 +90,8 @@ const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort }
     },
     {
       title: '연락처',
-      dataIndex: 'lawyerPhone',
+      dataIndex: 'lawyerContact',
+      render: (contact: string | null) => contact || '-',
       sorter: true,
       sortOrder: getSortOrder('phone'),
       onHeaderCell: () => ({
@@ -95,7 +100,8 @@ const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort }
     },
     {
       title: '소속',
-      dataIndex: 'lawyerOffice',
+      dataIndex: 'lawyerLawfirmName',
+      render: (lawfirm: string | null) => lawfirm || '-',
       sorter: true,
       sortOrder: getSortOrder('office'),
       onHeaderCell: () => ({
@@ -103,17 +109,10 @@ const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort }
       }),
     },
     {
-      title: '소속연락처',
-      dataIndex: 'lawyerOfficePhone',
-      sorter: true,
-      sortOrder: getSortOrder('officePhone'),
-      onHeaderCell: () => ({
-        onClick: () => onSort('officePhone'),
-      }),
-    },
-    {
       title: '출신 시험',
-      dataIndex: 'lawyerExam',
+      dataIndex: 'lawyerBarExamNumber',
+      render: (examNumber: number) => `${examNumber}회`,
+      align: 'center' as const,
       sorter: true,
       sortOrder: getSortOrder('exam'),
       onHeaderCell: () => ({
@@ -122,15 +121,31 @@ const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort }
     },
     {
       title: '승인여부',
-      dataIndex: 'lawyerApproved',
-      render: (isApproved: boolean, record: LawyerMember) => (
-        <div className={styles['approval-cell']}>
-          <span>{isApproved ? '승인' : '미승인'}</span>
-          <Button size='small' onClick={e => handleApprovalInfo(record, e)}>
-            승인정보
-          </Button>
-        </div>
-      ),
+      dataIndex: 'lawyerApprovalStatus',
+      render: (status: string, record: LawyerMember) => {
+        // 승인 상태를 한글로 변환
+        const getStatusText = (status: string) => {
+          switch (status?.toLowerCase()) {
+            case 'new':
+              return '신규 가입'
+            case 'approved':
+              return '승인 완료'
+            case 'pending':
+              return '승인 대기중'
+            default:
+              return status || '-'
+          }
+        }
+        
+        return (
+          <div className={styles['approval-cell']}>
+            <span>{getStatusText(status)}</span>
+            <Button size='small' onClick={e => handleApprovalInfo(record, e)}>
+              승인정보
+            </Button>
+          </div>
+        )
+      },
     },
   ]
 
@@ -174,7 +189,7 @@ const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort }
         onCancel={handleModalClose}
         onSubmit={handleModalSubmit}
         defaultValues={{
-          approvalStatus: selectedLawyer?.lawyerApproved ? 'approved' : 'pending',
+          approvalStatus: selectedLawyer?.lawyerApprovalStatus === 'approved' ? 'approved' : 'pending',
         }}
       />
     </div>

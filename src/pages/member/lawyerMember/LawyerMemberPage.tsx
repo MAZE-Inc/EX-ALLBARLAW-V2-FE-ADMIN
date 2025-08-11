@@ -3,39 +3,51 @@ import styles from './lawyerMember.module.scss'
 import { COLOR } from '@/styles/abstracts/color'
 import LawyerMemberList from '@/container/member/lawyerMemberList/LawyerMemberList'
 import { useState } from 'react'
+import { useLawyerInfoList } from '@/hooks/queries/useMember'
+import { Pagination } from '@/components/pagination'
 
 const LawyerMemberPage = () => {
-  const [orderBy, setOrderBy] = useState('account')
-  const [sort, setSort] = useState<'asc' | 'desc'>('asc')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [activeTab, setActiveTab] = useState<'all' | 'new' | 'approved' | 'pending'>('all')
+  const [orderBy, setOrderBy] = useState<
+    | 'name'
+    | 'createdAt'
+    | 'blogCaseCount'
+    | 'videoCaseCount'
+    | 'chatRoomCount'
+    | 'totalVisitCount'
+    | 'monthlyVisitCount'
+  >('createdAt')
+  const [sort, setSort] = useState<'asc' | 'desc'>('desc')
 
-  // 임시 데이터
-  const mockData = [
-    {
-      lawyerId: 1,
-      lawyerAccount: 'lawyer1',
-      lawyerEmail: 'lawyer1@example.com',
-      lawyerName: '김변호사',
-      lawyerPhone: '010-1234-5678',
-      lawyerOffice: '법무법인',
-      lawyerOfficePhone: '02-1234-5678',
-      lawyerExam: '사법시험',
-      lawyerApproved: true,
-      lawyerCreatedAt: '2024-01-01',
-    },
-  ]
+  // 실제 데이터 조회
+  const { data, isLoading } = useLawyerInfoList({
+    lawyerPage: currentPage,
+    orderBy: orderBy,
+    sort: sort,
+    state: activeTab,
+  })
+
+  // Tab 변경 시 데이터 로깅
+  console.log('Current state:', activeTab, 'Data:', data)
 
   const handleSort = (field: string) => {
-    if (orderBy === field) {
+    const validField = field as typeof orderBy
+    if (orderBy === validField) {
       setSort(sort === 'asc' ? 'desc' : 'asc')
     } else {
-      setOrderBy(field)
+      setOrderBy(validField)
       setSort('asc')
     }
   }
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
   const items: TabsProps['items'] = [
     {
-      key: 'total',
+      key: 'all',
       label: '전체',
     },
     {
@@ -53,7 +65,9 @@ const LawyerMemberPage = () => {
   ]
 
   const handleTabChange = (key: string) => {
-    console.log(key)
+    console.log('Tab changed to:', key)
+    setActiveTab(key as 'all' | 'new' | 'approved' | 'pending')
+    setCurrentPage(1) // 탭 변경 시 페이지 초기화
   }
 
   return (
@@ -68,15 +82,22 @@ const LawyerMemberPage = () => {
           },
         }}
       >
-        <Tabs defaultActiveKey='total' items={items} onChange={handleTabChange} />
+        <Tabs activeKey={activeTab} items={items} onChange={handleTabChange} />
       </ConfigProvider>
       <LawyerMemberList
-        data={mockData}
-        loading={false}
+        data={data?.lawyerList || []}
+        loading={isLoading}
         onSort={handleSort}
         currentOrderBy={orderBy}
         currentSort={sort}
       />
+
+      {/* 페이지네이션 */}
+      {data && data.totalPages > 0 && (
+        <div className={styles['pagination-wrapper']}>
+          <Pagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePageChange} />
+        </div>
+      )}
     </div>
   )
 }

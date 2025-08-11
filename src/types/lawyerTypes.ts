@@ -24,6 +24,11 @@ export type Lawyer = {
   lawyerBlogUrl?: string
   lawyerYoutubeUrl?: string
   lawyerInstagramUrl?: string
+  lawyerBlogCaseCount: number
+  lawyerVideoCaseCount: number
+  lawyerChatRoomCount: number
+  lawyerTotalSiteVisitCount: number
+  lawyerLast30DaysSiteVisitCount: number
 }
 
 export type AIRecommenderLawyerItem = Pick<
@@ -159,4 +164,65 @@ export type LawyerSignUpResponse = {
   lawyerId: number
   lawyerAccount: string
   message: string
+}
+
+export interface LawyerMemberListRequest {
+  lawyerPage?: number
+  orderBy?:
+    | 'name'
+    | 'createdAt'
+    | 'blogCaseCount'
+    | 'videoCaseCount'
+    | 'chatRoomCount'
+    | 'totalVisitCount'
+    | 'monthlyVisitCount'
+  sort?: 'asc' | 'desc'
+}
+
+export interface LawyerInfoListRequest extends LawyerMemberListRequest {
+  state?: 'all' | 'new' | 'pending' | 'approved'
+}
+
+export type LawyerMemberListResponse = {
+  lawyerList: Lawyer[]
+  totalCount: number
+  page: number
+  totalPages: number
+}
+
+export type LawyerRegisterModifyRequest = {
+  lawyerId: number
+  lawyerName: string
+  lawyerLawfirmName: string
+  lawyerBarExamNumber: string
+  lawyerEmail: string
+}
+
+export type LawyerRegisterModifyResponse = {
+  lawyerId: number
+  lawyerLawSchoolDiplomaUrl: string
+  lawyerCertificateUrl: string
+  lawyerApprovalStatus: number
+}
+
+export type LawyerInfoListResponse = {
+  lawyerList: [
+    {
+      lawyerId: number
+      lawyerEmail: string
+      lawyerName: string
+      lawyerContact: string | null
+      lawyerLawfirmName: string | null
+      lawyerLawfirmContact: string
+      lawyerBarExamNumber: number
+      lawyerApprovalStatus: string
+      lawyerLawSchoolDiplomaUrl: string | null
+      lawyerCertificateUrl: string | null
+      lawyerBarExamPassDate: string | null
+      lawyerCreatedAt: string
+    }
+  ]
+  totalCount: 0
+  page: 0
+  totalPages: 0
 }
