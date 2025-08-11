@@ -36,6 +36,11 @@ const LegalDictionaryLayoutContent = () => {
     return /^\d+$/.test(lastSegment)
   }
 
+  // 편집 페이지인지 확인
+  const isEditPage = () => {
+    return location.pathname.includes('/edit')
+  }
+
   const [activeTab, setActiveTab] = useState<'dictionary' | 'error-report'>(getActiveTab())
 
   const handleExcelDownload = () => {
@@ -109,11 +114,16 @@ const LegalDictionaryLayoutContent = () => {
         title={`전체 : ${noticeCount?.total}개가 등록되어 있습니다.`}
         className={styles.noticeListPage__searchHeader}
       />
-      {!isDetailPage() && (
+      {!isDetailPage() && !isEditPage() && (
         <div style={{ padding: '0 24px' }}>
           <div className={styles['button-wrapper']}>
             <Button icon={<DownloadOutlined />} onClick={handleExcelDownload} disabled={getSelectedCount() === 0}>
               선택 항목 엑셀 다운로드 ({getSelectedCount()}건)
+            </Button>
+            <Button
+              onClick={() => navigate(`${ROUTE_PATH.BOARD_LEGAL_DICTIONARY}/${ROUTE_PATH.BOARD_LEGAL_DICTIONARY_EDIT}`)}
+            >
+              법률용어 추가
             </Button>
           </div>
           <ConfigProvider

@@ -81,3 +81,44 @@ export interface LegalTermDetailResponse {
   createdAt: string
   updatedAt: string
 }
+
+export type CreateLegalTermRequest = {
+  koreanName: string
+  englishName: string
+  chineseName: string
+  source: string
+  content: string
+}
+
+export type CreateLegalTermResponse = {
+  id: number
+  koreanName: string
+  englishName: string
+  chineseName: string
+  source: string
+  content: string
+  viewCount: number
+  createdAt: string
+  updatedAt: string
+}
+
+export type UpdateLegalTermRequest = {
+  id: number
+  koreanName: string
+  englishName: string
+  chineseName: string
+  source: string
+  content: string
+}
+
+export type UpdateLegalTermResponse = {
+  id: number
+  koreanName: string
+  englishName: string
+  chineseName: string
+  source: string
+  content: string
+  viewCount: number
+  createdAt: string
+  updatedAt: string
+}

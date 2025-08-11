@@ -42,6 +42,7 @@ import KnowledgeDetail from './content/knowledge/knowledgeDetail/LegalKnowledgeD
 import LegalTermListPage from './board/legalDictionary/legalTermList/LegalTermListgPage'
 import LegalTermErrorReportList from './board/legalDictionary/legalTermErrorReportList/LegalTermErrorReportList'
 import LegalTermDetail from './board/legalDictionary/legalTermDetail/LegalTermDetail'
+import LegalTermEdit from './board/legalDictionary/legalTermEdit/LegalTermEdit'
 
 export {
   LegalDictionary,
@@ -84,4 +85,5 @@ export {
   LegalTermListPage,
   LegalTermErrorReportList,
   LegalTermDetail,
+  LegalTermEdit,
 }

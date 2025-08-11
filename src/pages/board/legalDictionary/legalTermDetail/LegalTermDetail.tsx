@@ -1,7 +1,8 @@
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Button, Spin } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 import { useLegalTermDetail } from '@/hooks/queries/useLegalTerm'
+import { ROUTE_PATH } from '@/routes/routePath'
 import styles from './legalTermDetail.module.scss'
 
 interface LegalTermInfo {
@@ -12,13 +13,16 @@ interface LegalTermInfo {
 
 const LegalTermDetail = () => {
   const { termId } = useParams()
+  const navigate = useNavigate()
 
   // API 호출
   const { data: termData, isLoading } = useLegalTermDetail(Number(termId))
 
   const handleEdit = () => {
-    // TODO: 수정 페이지로 이동
-    console.log('Edit legal term:', termId)
+    // 수정 페이지로 이동 (데이터를 state로 전달)
+    navigate(`${ROUTE_PATH.BOARD_LEGAL_DICTIONARY}/${ROUTE_PATH.BOARD_LEGAL_DICTIONARY_EDIT}/${termId}`, {
+      state: { termDetail: termData }
+    })
   }
 
   const basicInfo: LegalTermInfo[] = [

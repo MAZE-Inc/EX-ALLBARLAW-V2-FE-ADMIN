@@ -1,10 +1,14 @@
 import instance from '@/lib/axios'
 import {
+  CreateLegalTermRequest,
+  CreateLegalTermResponse,
   LegalTermDetailResponse,
   LegalTermListRequest,
   LegalTermListResponse,
   LegalTermReportRequest,
   LegalTermReportResponse,
+  UpdateLegalTermRequest,
+  UpdateLegalTermResponse,
 } from '@/types/legalTermTypes'
 
 export const legalTermService = {
@@ -42,6 +46,17 @@ export const legalTermService = {
 
   getLegalTermDetail: async (id: number) => {
     const response = await instance.get<LegalTermDetailResponse>(`/legal-terms/${id}`)
+    return response.data
+  },
+
+  createLegalTerm: async (request: CreateLegalTermRequest) => {
+    const response = await instance.post<CreateLegalTermResponse>('/legal-terms', request)
+    return response.data
+  },
+
+  updateLegalTerm: async (request: UpdateLegalTermRequest) => {
+    const { id, ...rest } = request
+    const response = await instance.put<UpdateLegalTermResponse>(`/legal-terms/${id}`, rest)
     return response.data
   },
 }
