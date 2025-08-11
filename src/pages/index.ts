@@ -9,6 +9,7 @@ import KnowledgeList from './content/knowledge/knowledgeList/KnowledgeList'
 import VideoPage from './content/video/videoMain/VideoPage'
 import VideoList from './content/video/videoList/VideoList'
 import VideoDetail from './content/video/videoDetail/VideoDetail'
+import VideoEditor from './content/video/videoEditor/VideoEditor'
 import LawyerLayout from './lawyer/lawyerLayout/LawyerLayout'
 import AdLawfirmPage from './ad/adLawfirm/AdLawfirmPage'
 import AdLawyerPage from './ad/adLawyer/AdLawyerPage'
@@ -29,9 +30,12 @@ import CategoryManagementPage from './category/categoryManagement/CategoryManage
 import MemberDetailPage from './member/memberDetail/MemberDetailPage'
 import LawyerMemberPage from './member/lawyerMember/LawyerMemberPage'
 import LawyerListPage from './lawyer/lawyerList/LawyerListPage'
+
+// content
 import ContentLayout from './content/contentLayout/ContentLayout'
 import BlogDetail from './content/blog/blogDetail/BlogDetail'
 import BlogList from './content/blog/blogList/BlogList'
+import BlogEditor from './content/blog/blogEditor/BlogEditor'
 import KnowledgeDetail from './content/knowledge/knowledgeDetail/LegalKnowledgeDetail'
 
 export {
@@ -44,6 +48,7 @@ export {
   VideoPage,
   VideoList,
   VideoDetail,
+  VideoEditor,
   LawyerLayout,
   MemberPage,
   LawyerMemberLayout,
@@ -69,5 +74,6 @@ export {
   ContentLayout,
   BlogDetail,
   BlogList,
+  BlogEditor,
   KnowledgeDetail,
 }

@@ -1,8 +1,8 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { contentService } from '@/services/contentService'
 import { QUERY_KEY } from '@/constants/query'
-import { BlogDetailRequest, BlogListRequest } from '@/types/blogTypes'
-import { VideoDetailRequest, VideoListRequest } from '@/types/videoTypes'
+import { BlogDetailRequest, BlogListRequest, CreateBlogRequest } from '@/types/blogTypes'
+import { CreateVideoRequest, VideoDetailRequest, VideoListRequest } from '@/types/videoTypes'
 import { KnowledgeListRequest, KnowledgeDetailRequest } from '@/types/knowledgeType'
 
 export const useBlogList = (request: BlogListRequest) => {
@@ -134,5 +134,29 @@ export const useGetKnowledgeDetail = (request: KnowledgeDetailRequest) => {
     queryKey: [QUERY_KEY.KNOWLEDGE_DETAIL, request.knowledgeId],
     queryFn: () => contentService.getKnowledgeDetail(request),
     enabled: request.knowledgeId !== undefined,
+  })
+}
+
+export const useCreateBlog = ({ onSuccess, onError }: { onSuccess: () => void; onError: () => void }) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (request: CreateBlogRequest) => contentService.createBlog(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.BLOG_LIST] })
+      onSuccess()
+    },
+    onError,
+  })
+}
+
+export const useCreateVideo = ({ onSuccess, onError }: { onSuccess: () => void; onError: () => void }) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (request: CreateVideoRequest) => contentService.createVideo(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.VIDEO_LIST] })
+      onSuccess()
+    },
+    onError,
   })
 }

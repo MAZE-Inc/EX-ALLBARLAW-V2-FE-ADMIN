@@ -1,32 +1,28 @@
-import { Button, Input, Modal, Space, Table, Upload, message } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { Button, Input, Modal, Space, Table, message } from 'antd'
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useLawyerSearch } from '@/hooks/queries/useLawyer'
-import { useCreateBlog } from '@/hooks/queries/useContent'
-import { useFileUpload } from '@/hooks/useFileUpload'
-import styles from './BlogEditor.module.scss'
+import { useCreateVideo } from '@/hooks/queries/useContent'
+import styles from './VideoEditor.module.scss'
 
-const { TextArea } = Input
-
-const BlogEditor = () => {
+const VideoEditor = () => {
   const navigate = useNavigate()
   const { subCategoryId } = useParams()
   const [formData, setFormData] = useState({
-    blogUrl: '',
+    videoUrl: '',
     subcategoryId: subCategoryId || '',
     title: '',
-    content: '',
+    channelTitle: '',
+    summaryContent: '',
     keywords: '',
     lawyer: null as any,
-    thumbnail: '',
   })
   const [lawyerSearchName, setLawyerSearchName] = useState('')
   const [isLawyerModalOpen, setIsLawyerModalOpen] = useState(false)
   const [_selectedLawyerId, setSelectedLawyerId] = useState<number | null>(null)
   const [modalSearchQuery, setModalSearchQuery] = useState('')
   const [searchTrigger, setSearchTrigger] = useState({ query: '', trigger: 0 })
-  const [thumbnailFileList, setThumbnailFileList] = useState<any[]>([])
+  const [isChannelInfoFetched, setIsChannelInfoFetched] = useState(false)
 
   // React Query hook for lawyer search
   const { data: searchData, isLoading } = useLawyerSearch({
@@ -34,17 +30,14 @@ const BlogEditor = () => {
     searchType: 'lawyerName',
   })
 
-  // File upload hook for thumbnail
-  const { uploadFile } = useFileUpload()
-
-  // Create blog mutation
-  const createBlogMutation = useCreateBlog({
+  // Create video mutation
+  const createVideoMutation = useCreateVideo({
     onSuccess: () => {
-      message.success('블로그가 성공적으로 등록되었습니다.')
+      message.success('영상정보가 성공적으로 등록되었습니다.')
       navigate(-1)
     },
     onError: () => {
-      message.error('블로그 등록에 실패했습니다. 다시 시도해주세요.')
+      message.error('영상정보 등록에 실패했습니다. 다시 시도해주세요.')
     },
   })
 
@@ -56,20 +49,6 @@ const BlogEditor = () => {
       }))
     }
   }, [subCategoryId])
-
-  useEffect(() => {
-    // If there's an existing thumbnail URL, set up the file list for display
-    if (formData.thumbnail) {
-      setThumbnailFileList([
-        {
-          uid: '-1',
-          name: 'thumbnail.png',
-          status: 'done',
-          url: formData.thumbnail,
-        },
-      ])
-    }
-  }, [formData.thumbnail])
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({
@@ -113,93 +92,47 @@ const BlogEditor = () => {
     setModalSearchQuery('')
   }
 
-  const handleAISummary = () => {
-    if (!formData.blogUrl) {
-      message.warning('블로그 주소를 입력해주세요.')
+  const handleFetchChannelInfo = () => {
+    if (!formData.videoUrl) {
+      message.warning('유튜브 채널 정보를 입력해주세요.')
       return
     }
 
-    // Mock AI summary
-    message.loading('AI 요약 중...', 1.5)
+    // Mock channel info fetch
+    // In real implementation, this would fetch data from YouTube API
+    setFormData(prev => ({
+      ...prev,
+      title: '유튜브 채널이름',
+      channelTitle: '@채널명',
+    }))
+    setIsChannelInfoFetched(true)
     
+    // Auto-populate mock data for demonstration
     setTimeout(() => {
       setFormData(prev => ({
         ...prev,
-        title: '부동산 매매계약 시 꼭 확인해야 할 법적 체크리스트',
-        content: `이 글은 부동산 매매계약을 체결할 때 반드시 확인해야 할 법적 사항들을 체계적으로 정리한 내용입니다.
-
-1. 소유권 확인
-- 등기부등본 상 소유자 확인
-- 공유지분 관계 파악
-- 신탁등기 여부 확인
-
-2. 권리관계 확인
-- 근저당, 전세권, 가압류 등 제한물권 확인
-- 임차인 현황 및 대항력 확인
-- 유치권 존재 여부 파악
-
-3. 공법상 제한 확인
-- 토지이용계획확인서 검토
-- 건축물대장 확인
-- 개발행위허가 제한 여부
-
-4. 계약서 작성 시 주의사항
-- 특약사항 명확히 기재
-- 하자담보책임 기간 설정
-- 위약금 및 손해배상 조항 검토
-
-5. 잔금 지급 시 확인사항
-- 등기 이전 절차 확인
-- 세금 정산 내역 검토
-- 명도 시기 및 방법 확정`,
-        keywords: '부동산매매, 등기부등본, 근저당권, 전세권, 가압류, 계약서작성, 특약사항, 하자담보책임',
+        summaryContent: `채널 명: 유튜브 채널이름
+구독자 수: 124,567명
+핸들 명: @채널명
+채널 설명: 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다.`,
       }))
-      message.success('AI 요약이 완료되었습니다.')
-    }, 1500)
-  }
-
-  const handleThumbnailUpload = async (options: any) => {
-    const { file, onSuccess, onError } = options
-    try {
-      const result = await uploadFile(file, { folder: 'thumbnail/blog' })
-      if (result?.fileUrl) {
-        setFormData(prev => ({
-          ...prev,
-          thumbnail: result.fileUrl,
-        }))
-        onSuccess(result.fileUrl)
-        message.success('썸네일 이미지가 업로드되었습니다.')
-      }
-    } catch (error) {
-      onError(error)
-      message.error('썸네일 업로드에 실패했습니다.')
-    }
-  }
-
-  const handleThumbnailChange = (info: any) => {
-    setThumbnailFileList(info.fileList)
-  }
-
-  const handleThumbnailRemove = () => {
-    setFormData(prev => ({
-      ...prev,
-      thumbnail: '',
-    }))
-    setThumbnailFileList([])
+    }, 500)
+    
+    message.success('채널 정보를 불러왔습니다.')
   }
 
   const handleSave = () => {
     // Validation
-    if (!formData.blogUrl) {
-      message.warning('블로그 주소를 입력해주세요.')
+    if (!formData.videoUrl) {
+      message.warning('유튜브 채널 정보를 입력해주세요.')
       return
     }
     if (!formData.title) {
-      message.warning('제목을 입력해주세요.')
+      message.warning('영상 제목을 입력해주세요.')
       return
     }
-    if (!formData.content) {
-      message.warning('AI요약 내용을 입력해주세요.')
+    if (!formData.summaryContent) {
+      message.warning('유튜브 영상정보를 입력해주세요.')
       return
     }
     if (!formData.lawyer) {
@@ -219,19 +152,22 @@ const BlogEditor = () => {
           .filter(tag => tag.length > 0)
       : []
 
-    // Create blog request
-    const createBlogRequest = {
-      blogCaseId: Date.now(), // Temporary ID, should be generated by backend
-      blogCaseTitle: formData.title,
-      blogCaseSummaryContent: formData.content,
-      blogCaseSource: formData.blogUrl,
-      blogCaseTags: tagsArray,
-      blogCaseLawyerId: formData.lawyer.lawyerId,
+    // Create video request
+    const createVideoRequest = {
       subcategoryId: Number(formData.subcategoryId),
-      blogCaseThumbnail: formData.thumbnail || '',
+      videoCaseTitle: formData.title,
+      videoCaseSummaryContent: formData.summaryContent,
+      videoCaseSource: formData.videoUrl,
+      videoCaseThumbnail: '', // Would be extracted from YouTube
+      videoCaseChannelDescription: formData.summaryContent,
+      videoCaseChannelThumbnail: '', // Would be extracted from YouTube
+      videoCaseHandleName: formData.channelTitle || '',
+      videoCaseChannelName: formData.title,
+      videoCaseTags: tagsArray,
+      videoCaseLawyerId: formData.lawyer.lawyerId,
     }
 
-    createBlogMutation.mutate(createBlogRequest)
+    createVideoMutation.mutate(createVideoRequest)
   }
 
   const handleCancel = () => {
@@ -241,81 +177,63 @@ const BlogEditor = () => {
   // Check if all required fields are filled
   const isFormValid = () => {
     return !!(
-      formData.blogUrl &&
+      formData.videoUrl &&
       formData.title &&
-      formData.content &&
-      formData.thumbnail &&
+      formData.summaryContent &&
       formData.lawyer &&
-      formData.subcategoryId
+      formData.subcategoryId &&
+      isChannelInfoFetched // YouTube channel info must be fetched
     )
   }
 
   return (
-    <div className={styles.blogEditor}>
-      <h1 className={styles.blogEditor__title}>
-        <span>♦</span> 법률정보 글 입력
+    <div className={styles.videoEditor}>
+      <h1 className={styles.videoEditor__title}>
+        <span>♦</span> 영상정보입력
       </h1>
-      <section className={styles.blogEditor__form}>
-        {/* 블로그 주소 */}
+      <section className={styles.videoEditor__form}>
+        {/* 유튜브 채널 정보 */}
         <div className={styles.formRow}>
           <div className={styles.labelCol}>
-            <label className={styles.label}>블로그 주소</label>
+            <label className={styles.label}>유튜브 채널 정보</label>
           </div>
           <div className={styles.inputCol}>
             <Input
-              placeholder='네이버 블로그 주소를 입력해주세요.'
+              placeholder='유튜브 채널 홈화면의 경로를 입력해주세요.'
               size='large'
-              value={formData.blogUrl}
-              onChange={e => handleInputChange('blogUrl', e.target.value)}
+              value={formData.videoUrl}
+              onChange={e => handleInputChange('videoUrl', e.target.value)}
             />
           </div>
         </div>
 
-        {/* AI요약하기 버튼 (별도 섹션) */}
-        <div className={styles.aiSummarySection}>
+        {/* 유튜브 채널정보 불러오기 버튼 (별도 섹션) */}
+        <div className={styles.fetchButtonSection}>
           <Button 
             type='primary' 
             size='large' 
-            className={styles.aiButton} 
-            onClick={handleAISummary}
-            disabled={!formData.blogUrl}
+            className={styles.fetchButton}
+            onClick={handleFetchChannelInfo}
+            disabled={!formData.videoUrl}
           >
-            AI요약하기
+            유튜브채널정보불러오기
           </Button>
-        </div>
-
-        {/* 썸네일 이미지 */}
-        <div className={styles.formRow}>
-          <div className={styles.labelCol}>
-            <label className={styles.label}>썸네일 이미지</label>
-          </div>
-          <div className={styles.inputCol}>
-            <Upload
-              listType='picture-card'
-              fileList={thumbnailFileList}
-              customRequest={handleThumbnailUpload}
-              onChange={handleThumbnailChange}
-              onRemove={handleThumbnailRemove}
-              maxCount={1}
-              accept='image/*'
-            >
-              {thumbnailFileList.length === 0 && (
-                <div>
-                  <PlusOutlined />
-                  <div style={{ marginTop: 8 }}>이미지 업로드</div>
-                </div>
-              )}
-            </Upload>
-            <div style={{ marginTop: 8, marginLeft: 10, color: '#8c8c8c', fontSize: 12 }}>
-              * 권장 사이즈: 800 x 450px (16:9 비율)
+          {isChannelInfoFetched && (
+            <div className={styles.channelInfoList}>
+              <ul>
+                <li>채널 명: 유튜브 채널이름</li>
+                <li>구독자 수: 124,567명</li>
+                <li>핸들 명: @채널명</li>
+                <li>채널 설명: 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다.</li>
+              </ul>
             </div>
-          </div>
+          )}
         </div>
 
-        {/* 제목 */}
+        {/* 영상 제목 */}
         <div className={styles.formRow}>
           <div className={styles.labelCol}>
-            <label className={styles.label}>제목</label>
+            <label className={styles.label}>영상 제목</label>
           </div>
           <div className={styles.inputCol}>
             <Input
@@ -327,18 +245,17 @@ const BlogEditor = () => {
           </div>
         </div>
 
-        {/* AI요약 내용 */}
+        {/* 유튜브 영상정보 */}
         <div className={styles.formRow}>
           <div className={styles.labelCol}>
-            <label className={styles.label}>AI요약 내용</label>
+            <label className={styles.label}>유튜브 영상정보</label>
           </div>
           <div className={styles.inputCol}>
-            <TextArea
-              placeholder='블로그 주소를 입력후, AI요약이 완료되면 내용이 입력되이 됩니다.&#10;변경할 사항이 있다면 직접 변경해 주세요.'
-              rows={10}
-              value={formData.content}
-              onChange={e => handleInputChange('content', e.target.value)}
-              style={{ resize: 'none' }}
+            <Input
+              placeholder='유튜브 영상정보를 입력해주세요.'
+              size='large'
+              value={formData.summaryContent}
+              onChange={e => handleInputChange('summaryContent', e.target.value)}
             />
           </div>
         </div>
@@ -350,7 +267,7 @@ const BlogEditor = () => {
           </div>
           <div className={styles.inputCol}>
             <Input
-              placeholder='AI요약과 동시에 키워드/태그가 입력되어 집니다. 최대 10개까지 등록 가능합니다.'
+              placeholder='키워드/태그를 입력해주세요. 최대 10개까지 등록 가능합니다.'
               size='large'
               value={formData.keywords}
               onChange={e => handleInputChange('keywords', e.target.value)}
@@ -389,13 +306,11 @@ const BlogEditor = () => {
                     />
                     <div className={styles.lawyerDetails}>
                       <ul>
-                        <li>로펌 사무실 : {formData.lawyer.lawyerLawfirmName || '-'}</li>
-                        <li>변호사 이름 : {formData.lawyer.lawyerName}</li>
-                        <li>
-                          생년월일/성별 : {formData.lawyer.birthDate || '-'} / {formData.lawyer.gender || '-'}
-                        </li>
-                        <li>휴대폰 번호 : {formData.lawyer.phone || '-'}</li>
-                        <li>주요분야 : {formData.lawyer.specialties || '-'}</li>
+                        <li>로펌 사무실: {formData.lawyer.lawyerLawfirmName || '법무법인 일신 강남분사무소'}</li>
+                        <li>변호사 이름: {formData.lawyer.lawyerName || '박성현 변호사'}</li>
+                        <li>생년월일/성별: {formData.lawyer.birthDate || '1970년 3월 30일'}</li>
+                        <li>휴대폰 번호: {formData.lawyer.phone || '010-1234-5678'}</li>
+                        <li>주요분야: {formData.lawyer.specialties || '대분류 > 소분류'}</li>
                       </ul>
                       <Button type='primary' size='large' className={styles.confirmButton}>
                         변호사정보 바로가기
@@ -410,7 +325,7 @@ const BlogEditor = () => {
       </section>
 
       {/* 액션 버튼 */}
-      <div className={styles.blogEditor__actions}>
+      <div className={styles.videoEditor__actions}>
         <Space>
           <Button size='large' onClick={handleCancel}>
             취소
@@ -419,7 +334,7 @@ const BlogEditor = () => {
             type='primary' 
             size='large' 
             onClick={handleSave} 
-            loading={createBlogMutation.isPending}
+            loading={createVideoMutation.isPending}
             disabled={!isFormValid()}
           >
             저장
@@ -529,4 +444,4 @@ const BlogEditor = () => {
   )
 }
 
-export default BlogEditor
+export default VideoEditor

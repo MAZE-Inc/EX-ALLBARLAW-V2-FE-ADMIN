@@ -1,35 +1,52 @@
 import CategorySidebar from '@/components/categorySidebar/CategorySidebar'
 import { useCategory } from '@/hooks/queries/useCategory'
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import { useState } from 'react'
 import styles from './blogPage.module.scss'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate, useParams } from 'react-router-dom'
 
 const BlogPage = () => {
   const navigate = useNavigate()
+  const { subCategoryId } = useParams()
   const { data: categoryList } = useCategory()
 
   const [selectedMainCategory, setSelectedMainCategory] = useState<number | null>(null)
+  const [selectedSubcategory, setSelectedSubcategory] = useState<number | null>(
+    subCategoryId ? Number(subCategoryId) : null
+  )
 
   const handleMainCategoryClick = (categoryId: number) => {
     setSelectedMainCategory(categoryId)
   }
   const handleSubcategoryClick = (subcategoryId: number) => {
+    setSelectedSubcategory(subcategoryId)
     navigate(`${subcategoryId}`)
+  }
+
+  const handleRegisterBlog = () => {
+    if (!selectedSubcategory) {
+      message.warning('서브카테고리를 선택해주세요.')
+      return
+    }
+    navigate(`${selectedSubcategory}/edit`)
   }
 
   return (
     <main className={styles['blog-page']}>
       <header className={styles['blog-page__header']}>
-        <Button type='primary'>법률정보 글 등록(Execl)</Button>
-        <Button type='primary'>법률정보 글 등록</Button>
+        <Button type='primary' disabled>
+          법률정보 글 등록(Execl)
+        </Button>
+        <Button type='primary' onClick={handleRegisterBlog}>
+          법률정보 글 등록
+        </Button>
       </header>
       <section className={styles['blog-page__content']}>
         <aside className={styles['blog-page__sidebar']}>
           <CategorySidebar
             categories={categoryList || []}
             selectedMainCategory={selectedMainCategory}
-            selectedSubcategory={null}
+            selectedSubcategory={selectedSubcategory}
             onMainCategoryClick={handleMainCategoryClick}
             onSubcategoryClick={handleSubcategoryClick}
           />

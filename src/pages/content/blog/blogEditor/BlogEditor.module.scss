@@ -1,0 +1,193 @@
+.blogEditor {
+  background-color: #fff;
+  width: 100%;
+
+  &__title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    padding: 24px 0;
+    color: #262626;
+    span {
+      font-size: 1.25rem;
+      color: $color-green-02;
+    }
+  }
+
+  &__form {
+    width: 100%;
+    border-top: 1px solid #d9d9d9;
+
+    .formRow {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 0;
+      border-bottom: 1px solid #d9d9d9;
+
+      // AI요약 내용 영역 (TextArea가 있는 row)
+      &:nth-child(4) {
+        .labelCol {
+          align-items: flex-start;
+          padding-top: 20px;
+        }
+
+        .inputCol {
+          align-items: flex-start;
+        }
+      }
+
+      // 변호사 선택 영역
+      &:last-child {
+        .labelCol {
+          align-items: flex-start;
+          padding-top: 20px;
+        }
+
+        .inputCol {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 16px;
+        }
+      }
+    }
+
+    .labelCol {
+      width: 200px;
+      flex-shrink: 0;
+      padding: 16px;
+      background-color: #fafafa;
+      border-right: 1px solid #d9d9d9;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+    }
+
+    .inputCol {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+    }
+
+    .label {
+      display: block;
+      margin: 0;
+      font-weight: 500;
+      text-align: left;
+      color: #262626;
+      font-size: 14px;
+    }
+
+    // AI 요약하기 버튼 섹션
+    .aiSummarySection {
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      border-bottom: 1px solid #d9d9d9;
+      background-color: #f0f8ff;
+
+      .aiButton {
+        width: 200px;
+        height: 40px;
+        background-color: #1890ff;
+        border-color: #1890ff;
+        font-size: 16px;
+        font-weight: 500;
+
+        &:hover {
+          background-color: #40a9ff;
+          border-color: #40a9ff;
+        }
+      }
+    }
+
+    // 변호사 선택 섹션
+    .lawyerSection {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      .lawyerSearchRow {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+
+        .lawyerInput {
+          max-width: 300px;
+        }
+      }
+
+      .lawyerInfo {
+        margin-top: 16px;
+
+        .lawyerCard {
+          display: flex;
+          gap: 20px;
+          padding: 20px;
+          border: 1px solid #d9d9d9;
+          border-radius: 4px;
+          background-color: #fafafa;
+
+          .lawyerImage {
+            width: 120px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+          }
+
+          .lawyerDetails {
+            flex: 1;
+
+            ul {
+              list-style: disc;
+              padding-left: 20px;
+              margin: 0 0 16px 0;
+
+              li {
+                margin-bottom: 8px;
+                font-size: 14px;
+                color: #595959;
+              }
+            }
+
+            .confirmButton {
+              background-color: #52c41a;
+              border-color: #52c41a;
+
+              &:hover {
+                background-color: #73d13d;
+                border-color: #73d13d;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &__actions {
+    text-align: right;
+    padding: 24px;
+
+    button {
+      min-width: 100px;
+      height: 40px;
+      font-size: 14px;
+
+      &:first-child {
+        margin-right: 12px;
+      }
+
+      &[type='primary'] {
+        background-color: #52c41a;
+        border-color: #52c41a;
+
+        &:hover {
+          background-color: #73d13d;
+          border-color: #73d13d;
+        }
+      }
+    }
+  }
+}
