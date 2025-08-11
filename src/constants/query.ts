@@ -1,4 +1,7 @@
 export const QUERY_KEY = {
+  // 관리자
+  ADMIN_PROFILE: 'adminProfile',
+
   //멤버
   TOTAL_MEMBER_PAGE: 'totalMemberPage',
   MEMBER_LIST: 'memberList',
