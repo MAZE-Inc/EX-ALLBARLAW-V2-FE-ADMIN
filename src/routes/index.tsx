@@ -73,6 +73,10 @@ const router = createBrowserRouter([
             path: ROUTE_PATH.ADMIN_REGISTER,
             element: <AdminRegisterPage />,
           },
+          {
+            path: `${ROUTE_PATH.ADMIN_REGISTER}/:adminId`,
+            element: <AdminRegisterPage />,
+          },
         ],
       },
       {

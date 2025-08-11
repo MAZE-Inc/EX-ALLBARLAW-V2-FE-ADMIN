@@ -30,6 +30,7 @@ export type Admin = {
 export type AdminCreateRequest = Omit<Admin, 'adminId' | 'adminCreatedAt' | 'adminUpdatedAt'> & {
   adminPassword: string
   adminPasswordRepeat: string
+  subMenuIds: number[]
 }
 
 export type MemberListResponse = Admin[]

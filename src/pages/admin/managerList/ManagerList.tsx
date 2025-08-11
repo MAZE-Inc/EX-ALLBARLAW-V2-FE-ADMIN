@@ -1,7 +1,9 @@
-import { Table, TableProps } from 'antd'
+import { Table, TableProps, Button } from 'antd'
 import styles from './managerList.module.scss'
 import { Admin } from '@/types/adminTypes'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ROUTE_PATH } from '@/routes/routePath'
 
 interface ManagerListProps {
   type: 'total' | 'admin-manager' | 'cs-manager'
@@ -13,12 +15,19 @@ interface ManagerListProps {
 }
 
 const ManagerList = ({ data, loading, onSort, currentOrderBy, currentSort }: ManagerListProps) => {
+  const navigate = useNavigate()
   const [selectedRows, setSelectedRows] = useState<Admin[]>([])
 
   const getSortOrder = (field: keyof Admin) => {
     if (!currentOrderBy || !onSort) return undefined
     if (field !== currentOrderBy) return undefined
     return currentSort === 'asc' ? 'ascend' : 'descend'
+  }
+
+  const handleEdit = (record: Admin) => {
+    navigate(`${ROUTE_PATH.ADMIN_MANAGEMENT}/${ROUTE_PATH.ADMIN_REGISTER}/${record.adminId}`, {
+      state: { adminData: record },
+    })
   }
 
   const columns: TableProps<Admin>['columns'] = [
@@ -74,6 +83,15 @@ const ManagerList = ({ data, loading, onSort, currentOrderBy, currentSort }: Man
         onClick: () => onSort?.('adminIsActive'),
       }),
     },
+    {
+      title: '관리',
+      key: 'action',
+      render: (_, record) => (
+        <Button size='small' onClick={() => handleEdit(record)}>
+          수정
+        </Button>
+      ),
+    },
   ]
 
   const rowSelection = {
@@ -109,6 +127,22 @@ const ManagerList = ({ data, loading, onSort, currentOrderBy, currentSort }: Man
         }}
         loading={loading}
         onChange={() => {}} // 정렬은 헤더 클릭으로 처리
+        onRow={record => ({
+          onClick: event => {
+            // 체크박스나 버튼 클릭 시에는 행 클릭 이벤트 무시
+            const target = event.target as HTMLElement
+            if (
+              target.tagName === 'INPUT' ||
+              target.tagName === 'BUTTON' ||
+              target.closest('button') ||
+              target.closest('.ant-checkbox-wrapper')
+            ) {
+              return
+            }
+            handleEdit(record)
+          },
+          style: { cursor: 'pointer' },
+        })}
       />
     </div>
   )

@@ -1,100 +1,158 @@
-.admin-form {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 24px;
+.adminFormPage {
+  width: 100%;
+  padding: 36px;
   background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-  :global {
-    .ant-form-item {
-      margin-bottom: 24px;
+  .permissionTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 24px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f0f0f0;
+
+    .icon {
+      color: #52c41a;
+      font-size: 16px;
+    }
+  }
+
+  &__form {
+    border-top: 1px solid #d9d9d9;
+
+    .formRow {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 0;
+      border-bottom: 1px solid #d9d9d9;
+
+      &:last-child {
+        margin-bottom: 24px;
+      }
     }
 
-    .ant-radio-group {
+    .labelCol {
+      width: 150px;
+      flex-shrink: 0;
+      padding: 16px;
+      background-color: #fafafa;
+      border-right: 1px solid #d9d9d9;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+    }
+
+    .inputCol {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+    }
+
+    .label {
+      display: block;
+      margin: 0;
+      font-weight: 500;
+      text-align: left;
+      color: #262626;
+      font-size: 14px;
+    }
+
+    .input {
       width: 100%;
     }
 
-    .ant-radio-wrapper {
-      margin-right: 32px;
+    .radioGroup {
+      display: flex;
+      align-items: center;
+    }
+
+    .radioContainer {
+      margin-left: 8px;
     }
   }
-}
 
-.button-group {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 32px;
-}
+  &__permissionForm {
+    padding-top: 1.5rem;
 
-.contentForm {
-  background-color: #fff;
-  border-radius: 4px;
-  padding: 24px;
-}
+    .permissionTitle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 24px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #f0f0f0;
 
-.formContainer {
-  width: 100%;
-}
+      .icon {
+        color: #52c41a;
+        font-size: 16px;
+      }
+    }
 
-.formRow {
-  width: 100%;
-  margin-bottom: 16px !important;
-  align-items: flex-start;
-  display: flex;
-  justify-content: space-between;
-}
+    .permissionGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
 
-.labelCol {
-  flex: 0 0 120px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  height: 40px;
-}
+    .permissionColumn {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
 
-.label {
-  color: #000;
-  font-weight: 500;
-  white-space: nowrap;
-}
+    .permissionSection {
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+      background-color: #fff;
 
-.inputCol {
-  flex: 1;
-  margin-left: 48px;
-  display: flex;
-  flex-direction: column;
-}
+      .sectionHeader {
+        background-color: #f5f5f5;
+        padding: 12px 16px;
+        font-weight: 500;
+        color: #333;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 14px;
+      }
 
-.input {
-  width: 100%;
-}
+      .permissionItem {
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s;
 
-.radioGroup {
-  display: flex;
-  align-items: center;
-  height: 40px;
-}
+        &:last-child {
+          border-bottom: none;
+        }
 
-.radioContainer {
-  margin-left: 8px;
-}
+        &:hover {
+          background-color: #fafafa;
+        }
 
-.buttonContainer {
-  display: flex;
-  justify-content: center;
-  margin-top: 32px;
-}
+        .checkbox {
+          width: 16px;
+          height: 16px;
+          margin-right: 12px;
+          accent-color: #52c41a;
+          cursor: pointer;
+        }
 
-.buttonSpace {
-  :global {
-    .ant-btn {
-      min-width: 120px;
-      height: 40px;
+        label {
+          cursor: pointer;
+          color: #333;
+          font-size: 14px;
+          user-select: none;
+        }
+      }
     }
   }
-}
-
-.saveButton {
-  margin-left: 8px;
 }
