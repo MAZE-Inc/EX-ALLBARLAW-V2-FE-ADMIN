@@ -31,7 +31,8 @@ const LegalTermEdit = () => {
   const { mutate: createLegalTerm, isPending: isCreating } = useCreateLegalTerm({
     onSuccess: () => {
       message.success('법률 용어가 등록되었습니다.')
-      navigate(ROUTE_PATH.BOARD_LEGAL_DICTIONARY)
+      // 목록 페이지로 이동하면서 현재 페이지를 히스토리에서 교체
+      navigate(ROUTE_PATH.BOARD_LEGAL_DICTIONARY, { replace: true })
     },
     onError: () => {
       message.error('등록에 실패했습니다.')
@@ -41,7 +42,15 @@ const LegalTermEdit = () => {
   const { mutate: updateLegalTerm, isPending: isUpdating } = useUpdateLegalTerm({
     onSuccess: () => {
       message.success('법률 용어가 수정되었습니다.')
-      navigate(ROUTE_PATH.BOARD_LEGAL_DICTIONARY)
+      // 히스토리를 조작하여 상세 페이지와 수정 페이지를 제거
+      // 목록 -> 상세 -> 수정 상태에서 목록으로 바로 이동
+      if (window.history.length > 2) {
+        // 두 단계 뒤로 이동 (상세 페이지와 수정 페이지를 건너뛰기)
+        window.history.go(-2)
+      } else {
+        // 히스토리가 충분하지 않으면 목록으로 이동
+        navigate(ROUTE_PATH.BOARD_LEGAL_DICTIONARY, { replace: true })
+      }
     },
     onError: () => {
       message.error('수정에 실패했습니다.')

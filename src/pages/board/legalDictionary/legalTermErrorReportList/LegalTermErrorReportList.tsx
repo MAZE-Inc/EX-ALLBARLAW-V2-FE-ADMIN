@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Table, TableProps, Button, Tag } from 'antd'
+import { Table, TableProps, Button, Tag, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { useLegalTermReportList } from '@/hooks/queries/useLegalTerm'
+import { useLegalTermReportList, useChangeLegalTermStatus } from '@/hooks/queries/useLegalTerm'
 import { LegalTermReportRequest } from '@/types/legalTermTypes'
 import { Pagination } from '@/components/pagination/Pagination'
 import { useLegalDictionary } from '@/contexts/LegalDictionaryContext'
@@ -27,11 +27,21 @@ const LegalTermErrorReportList = () => {
   const [selectedRows, setSelectedRows] = useState<ErrorReportTableData[]>([])
   const [request, setRequest] = useState<LegalTermReportRequest>({
     page: 1,
-    status: 'PENDING',
   })
 
   const { setSelectedReports } = useLegalDictionary()
-  const { data: reportData, isLoading } = useLegalTermReportList(request)
+  const { data: reportData, isLoading, refetch } = useLegalTermReportList(request)
+
+  // 상태 변경 훅
+  const { mutate: changeStatus, isPending: isChangingStatus } = useChangeLegalTermStatus({
+    onSuccess: () => {
+      message.success('처리가 완료되었습니다.')
+      refetch() // 리스트 새로고침
+    },
+    onError: () => {
+      message.error('처리에 실패했습니다.')
+    },
+  })
 
   // 선택된 항목이 변경될 때마다 Context 업데이트
   useEffect(() => {
@@ -65,8 +75,12 @@ const LegalTermErrorReportList = () => {
   // 처리완료 버튼 클릭 핸들러
   const handleResolve = (record: ErrorReportTableData, e: React.MouseEvent) => {
     e.stopPropagation() // 이벤트 버블링 방지
-    // TODO: API 호출하여 상태 업데이트
-    console.log('처리완료:', record.id)
+
+    // API 호출하여 상태를 RESOLVED로 변경
+    changeStatus({
+      id: record.id,
+      status: 'RESOLVED',
+    })
   }
 
   const columns: TableProps<ErrorReportTableData>['columns'] = [
@@ -96,7 +110,12 @@ const LegalTermErrorReportList = () => {
               <Tag color='warning' className={styles['status-tag']}>
                 오류신고
               </Tag>
-              <Button size='small' onClick={e => handleResolve(record, e)} className={styles['resolve-btn']}>
+              <Button
+                size='small'
+                onClick={e => handleResolve(record, e)}
+                className={styles['resolve-btn']}
+                loading={isChangingStatus}
+              >
                 처리완료
               </Button>
             </>

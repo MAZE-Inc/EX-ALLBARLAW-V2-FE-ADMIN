@@ -41,7 +41,8 @@ const LegalDictionaryLayoutContent = () => {
     return location.pathname.includes('/edit')
   }
 
-  const [activeTab, setActiveTab] = useState<'dictionary' | 'error-report'>(getActiveTab())
+  // URL 경로 기반으로 activeTab 결정 (state 대신 직접 계산)
+  const activeTab = getActiveTab()
 
   const handleExcelDownload = () => {
     if (activeTab === 'dictionary') {
@@ -82,7 +83,6 @@ const LegalDictionaryLayoutContent = () => {
   }
 
   const handleTabChange = (key: string) => {
-    setActiveTab(key as 'dictionary' | 'error-report')
     if (key === 'dictionary') {
       navigate(ROUTE_PATH.BOARD_LEGAL_DICTIONARY)
     } else {

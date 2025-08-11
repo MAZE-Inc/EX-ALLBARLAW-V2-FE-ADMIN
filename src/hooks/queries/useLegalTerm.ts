@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { legalTermService } from '@/services/legalTermService'
 import {
   CreateLegalTermRequest,
+  LegalTermChangeStatusRequest,
   LegalTermListRequest,
   LegalTermReportRequest,
   UpdateLegalTermRequest,
@@ -47,6 +48,18 @@ export const useUpdateLegalTerm = ({ onSuccess, onError }: { onSuccess: () => vo
     mutationFn: (request: UpdateLegalTermRequest) => legalTermService.updateLegalTerm(request),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LEGAL_TERM_LIST] })
+      onSuccess()
+    },
+    onError,
+  })
+}
+
+export const useChangeLegalTermStatus = ({ onSuccess, onError }: { onSuccess: () => void; onError: () => void }) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (request: LegalTermChangeStatusRequest) => legalTermService.changeLegalTermStatus(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LEGAL_TERM_REPORT_LIST] })
       onSuccess()
     },
     onError,

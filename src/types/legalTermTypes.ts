@@ -50,7 +50,7 @@ export type LegalTermListResponse = {
 }
 
 export interface LegalTermReportRequest extends LegalTermListRequest {
-  status: 'PENDING' | 'PROCESSING' | 'RESOLVED' | 'REJECTED'
+  status?: 'PENDING' | 'PROCESSING' | 'RESOLVED' | 'REJECTED'
 }
 
 export interface LegalTermReportResponse {
@@ -121,4 +121,13 @@ export type UpdateLegalTermResponse = {
   viewCount: number
   createdAt: string
   updatedAt: string
+}
+
+export type LegalTermChangeStatusRequest = {
+  id: number
+  status: 'RESOLVED'
+}
+
+export type LegalTermChangeStatusResponse = {
+  success: boolean
 }
