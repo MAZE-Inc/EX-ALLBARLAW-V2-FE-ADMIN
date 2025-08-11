@@ -2,9 +2,17 @@ import instance from '@/lib/axios'
 import { ApiResponse } from '@/types/axiosType'
 import { BlogCase } from '@/types/blogTypes'
 import { KnowledgeItem } from '@/types/knowledgeType'
-import { Lawyer } from '@/types/lawyerTypes'
+import {
+  Lawyer,
+  LawyerInfoListRequest,
+  LawyerInfoListResponse,
+  LawyerMemberListRequest,
+  LawyerMemberListResponse,
+  LawyerRegisterModifyRequest,
+  LawyerRegisterModifyResponse,
+} from '@/types/lawyerTypes'
 import { LegalTermItem } from '@/types/legalTermTypes'
-import { MemberListRequest, MemberListResponse } from '@/types/memberType'
+import { MemberKeepCountResponse, MemberListRequest, MemberListResponse } from '@/types/memberType'
 import { VideoCase } from '@/types/videoTypes'
 
 export const memberService = {
@@ -51,39 +59,103 @@ export const memberService = {
   },
   resetPassword: async (userId: number) => await instance.post(`/users/${userId}/reset-password`),
 
-  memberKeepBlogList: async (userId: number, cursor?: number, cursorId?: number) => {
-    const params: any = {}
-    if (cursor !== undefined) params.cursor = cursor
-    if (cursorId !== undefined) params.cursorId = cursorId
+  memberKeepCount: async (userId: number) => {
+    const response = await instance.get<MemberKeepCountResponse>(`/mypages/${userId}/counts`)
+    return response.data
+  },
+
+  memberKeepBlogList: async (userId: number, cursor?: number, cursorId?: number, sort: 'asc' | 'desc' = 'asc') => {
+    const params: any = {
+      sort: sort,
+    }
+    if (cursor !== undefined && cursor !== null) params.cursor = cursor
+    if (cursorId !== undefined && cursorId !== null) params.cursorId = cursorId
+
+    console.log('memberKeepBlogList params:', { userId, cursor, cursorId, sort, params })
+
     const response = await instance.get<ApiResponse<BlogCase[]>>(`/mypages/${userId}/blog-cases`, { params })
     return response.data
   },
-  memberKeepVideoList: async (userId: number, cursor?: number, cursorId?: number) => {
-    const params: any = {}
-    if (cursor !== undefined) params.cursor = cursor
-    if (cursorId !== undefined) params.cursorId = cursorId
+  memberKeepVideoList: async (userId: number, cursor?: number, cursorId?: number, sort: 'asc' | 'desc' = 'asc') => {
+    const params: any = {
+      sort: sort,
+    }
+    if (cursor !== undefined && cursor !== null) params.cursor = cursor
+    if (cursorId !== undefined && cursorId !== null) params.cursorId = cursorId
     const response = await instance.get<ApiResponse<VideoCase[]>>(`/mypages/${userId}/video-cases`, { params })
     return response.data
   },
-  memberKeepLegalKnowledgeList: async (userId: number, cursor?: number, cursorId?: number) => {
-    const params: any = {}
-    if (cursor !== undefined) params.cursor = cursor
-    if (cursorId !== undefined) params.cursorId = cursorId
+  memberKeepLegalKnowledgeList: async (
+    userId: number,
+    cursor?: number,
+    cursorId?: number,
+    sort: 'asc' | 'desc' = 'asc'
+  ) => {
+    const params: any = {
+      sort: sort,
+    }
+    if (cursor !== undefined && cursor !== null) params.cursor = cursor
+    if (cursorId !== undefined && cursorId !== null) params.cursorId = cursorId
     const response = await instance.get<ApiResponse<KnowledgeItem[]>>(`/mypages/${userId}/knowledge`, { params })
     return response.data
   },
-  memberKeepLawyerList: async (userId: number, cursor?: number, cursorId?: number) => {
-    const params: any = {}
-    if (cursor !== undefined) params.cursor = cursor
-    if (cursorId !== undefined) params.cursorId = cursorId
+  memberKeepLawyerList: async (userId: number, cursor?: number, cursorId?: number, sort: 'asc' | 'desc' = 'asc') => {
+    const params: any = {
+      sort: sort,
+    }
+    if (cursor !== undefined && cursor !== null) params.cursor = cursor
+    if (cursorId !== undefined && cursorId !== null) params.cursorId = cursorId
     const response = await instance.get<ApiResponse<Lawyer[]>>(`/mypages/${userId}/lawyers`, { params })
     return response.data
   },
-  memberKeepLegalDictionaryList: async (userId: number, cursor?: number, cursorId?: number) => {
-    const params: any = {}
-    if (cursor !== undefined) params.cursor = cursor
-    if (cursorId !== undefined) params.cursorId = cursorId
+  memberKeepLegalDictionaryList: async (
+    userId: number,
+    cursor?: number,
+    cursorId?: number,
+    sort: 'asc' | 'desc' = 'asc'
+  ) => {
+    const params: any = {
+      sort: sort,
+    }
+    if (cursor !== undefined && cursor !== null) params.cursor = cursor
+    if (cursorId !== undefined && cursorId !== null) params.cursorId = cursorId
     const response = await instance.get<ApiResponse<LegalTermItem[]>>(`/mypages/${userId}/legal-terms`, { params })
+    return response.data
+  },
+}
+
+export const lawyerMemberService = {
+  getLawyerdMemberList: async (request: LawyerMemberListRequest) => {
+    const { lawyerPage, orderBy, sort } = request
+
+    const params = new URLSearchParams()
+    if (lawyerPage !== undefined) params.append('lawyerPage', lawyerPage.toString())
+    if (orderBy !== undefined) params.append('orderBy', orderBy)
+    if (sort !== undefined) params.append('sort', sort)
+
+    const response = await instance.get<LawyerMemberListResponse>(`/lawyers`, { params })
+    return response.data
+  },
+
+  getLawyerInfoList: async (request: LawyerInfoListRequest) => {
+    const { lawyerPage, orderBy, sort, state } = request
+
+    console.log('getLawyerInfoList request:', request)
+
+    const params = new URLSearchParams()
+    if (lawyerPage !== undefined) params.append('lawyerPage', lawyerPage.toString())
+    if (orderBy !== undefined) params.append('orderBy', orderBy)
+    if (sort !== undefined) params.append('sort', sort)
+    if (state !== undefined && state !== 'all') params.append('state', state) // 'all'일 때는 파라미터를 보내지 않음
+
+    console.log('API params:', params.toString())
+
+    const response = await instance.get<LawyerInfoListResponse>(`/lawyers/info`, { params })
+    return response.data
+  },
+
+  updateLawyerRegister: async (lawyerId: number, request: LawyerRegisterModifyRequest) => {
+    const response = await instance.patch<LawyerRegisterModifyResponse>(`/lawyers/${lawyerId}`, request)
     return response.data
   },
 }

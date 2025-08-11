@@ -26,3 +26,11 @@ export interface MemberInfoItem {
   key: keyof Member | 'formattedCreatedAt' | 'accountStatus'
   formatter?: (value: any) => string
 }
+
+export type MemberKeepCountResponse = {
+  blogCaseCount: number
+  knowledgeCount: number
+  lawyerCount: number
+  legalTermCount: number
+  videoCaseCount: number
+}

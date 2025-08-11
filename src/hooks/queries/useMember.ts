@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import { message } from 'antd'
-import { memberService } from '@/services/memberService'
+import { lawyerMemberService, memberService } from '@/services/memberService'
 import { QUERY_KEY } from '@/constants/query'
+import { LawyerInfoListRequest, LawyerMemberListRequest, LawyerRegisterModifyRequest } from '@/types/lawyerTypes'
 
 interface UpdateMemberStatusParams {
   userId: number
@@ -85,92 +86,166 @@ export const useMemberKeppLawyerList = (userId: number) => {
 }
 
 // 무한 스크롤용 훅들
-export const useInfiniteMemberKeepBlogList = (userId: number) => {
-  return useInfiniteQuery({
-    queryKey: [QUERY_KEY.MEMBER_KEEP_BLOG_LIST, 'infinite', userId],
-    queryFn: ({ pageParam }) => memberService.memberKeepBlogList(userId, pageParam?.cursor, pageParam?.cursorId),
-    getNextPageParam: lastPage => {
-      if (lastPage?.hasNextPage) {
-        return {
-          cursor: lastPage.nextCursor,
-          cursorId: lastPage.nextCursorId,
-        }
-      }
-      return undefined
-    },
+export const useInfiniteMemberKeepBlogList = (userId: number, sort: 'asc' | 'desc' = 'asc') => {
+  const query = useInfiniteQuery({
+    queryKey: [QUERY_KEY.MEMBER_KEEP_BLOG_LIST, 'infinite', userId, sort],
+    queryFn: ({ pageParam }) => memberService.memberKeepBlogList(userId, pageParam?.cursor, pageParam?.cursorId, sort),
     enabled: userId !== undefined,
     initialPageParam: undefined as { cursor?: number; cursorId?: number } | undefined,
+    getNextPageParam: lastPage => {
+      if (!lastPage?.hasNextPage) return undefined
+      return {
+        cursor: lastPage.nextCursor,
+        cursorId: lastPage.nextCursorId,
+      }
+    },
+  })
+
+  return {
+    ...query,
+    hasNextPage: query.data?.pages[query.data.pages.length - 1]?.hasNextPage ?? false,
+  }
+}
+
+export const useInfiniteMemberKeepVideoList = (userId: number, sort: 'asc' | 'desc' = 'asc') => {
+  const query = useInfiniteQuery({
+    queryKey: [QUERY_KEY.MEMBER_KEEP_VIDEO_LIST, 'infinite', userId, sort],
+    queryFn: ({ pageParam }) => memberService.memberKeepVideoList(userId, pageParam?.cursor, pageParam?.cursorId, sort),
+    enabled: userId !== undefined,
+    initialPageParam: undefined as { cursor?: number; cursorId?: number } | undefined,
+    getNextPageParam: lastPage => {
+      if (!lastPage?.hasNextPage) return undefined
+      return {
+        cursor: lastPage.nextCursor,
+        cursorId: lastPage.nextCursorId,
+      }
+    },
+  })
+
+  return {
+    ...query,
+    hasNextPage: query.data?.pages[query.data.pages.length - 1]?.hasNextPage ?? false,
+  }
+}
+
+export const useInfiniteMemberKeepLegalKnowledgeList = (userId: number, sort: 'asc' | 'desc' = 'asc') => {
+  const query = useInfiniteQuery({
+    queryKey: [QUERY_KEY.MEMBER_KEEP_LEGAL_KNOWLEDGE_LIST, 'infinite', userId, sort],
+    queryFn: ({ pageParam }) =>
+      memberService.memberKeepLegalKnowledgeList(userId, pageParam?.cursor, pageParam?.cursorId, sort),
+    enabled: userId !== undefined,
+    initialPageParam: undefined as { cursor?: number; cursorId?: number } | undefined,
+    getNextPageParam: lastPage => {
+      if (!lastPage?.hasNextPage) return undefined
+      return {
+        cursor: lastPage.nextCursor,
+        cursorId: lastPage.nextCursorId,
+      }
+    },
+  })
+
+  return {
+    ...query,
+    hasNextPage: query.data?.pages[query.data.pages.length - 1]?.hasNextPage ?? false,
+  }
+}
+
+export const useInfiniteMemberKeepLawyerList = (userId: number, sort: 'asc' | 'desc' = 'asc') => {
+  const query = useInfiniteQuery({
+    queryKey: [QUERY_KEY.MEMBER_KEEP_LAWYER_LIST, 'infinite', userId, sort],
+    queryFn: ({ pageParam }) =>
+      memberService.memberKeepLawyerList(userId, pageParam?.cursor, pageParam?.cursorId, sort),
+    enabled: userId !== undefined,
+    initialPageParam: undefined as { cursor?: number; cursorId?: number } | undefined,
+    getNextPageParam: lastPage => {
+      if (!lastPage?.hasNextPage) return undefined
+      return {
+        cursor: lastPage.nextCursor,
+        cursorId: lastPage.nextCursorId,
+      }
+    },
+  })
+
+  return {
+    ...query,
+    hasNextPage: query.data?.pages[query.data.pages.length - 1]?.hasNextPage ?? false,
+  }
+}
+
+export const useInfiniteMemberKeepLegalDictionaryList = (userId: number, sort: 'asc' | 'desc' = 'asc') => {
+  const query = useInfiniteQuery({
+    queryKey: [QUERY_KEY.MEMBER_KEEP_LEGAL_DICTIONARY_LIST, 'infinite', userId, sort],
+    queryFn: ({ pageParam }) =>
+      memberService.memberKeepLegalDictionaryList(userId, pageParam?.cursor, pageParam?.cursorId, sort),
+    enabled: userId !== undefined,
+    initialPageParam: undefined as { cursor?: number; cursorId?: number } | undefined,
+    getNextPageParam: lastPage => {
+      if (!lastPage?.hasNextPage) return undefined
+      return {
+        cursor: lastPage.nextCursor,
+        cursorId: lastPage.nextCursorId,
+      }
+    },
+  })
+
+  return {
+    ...query,
+    hasNextPage: query.data?.pages[query.data.pages.length - 1]?.hasNextPage ?? false,
+  }
+}
+
+export const useMemberKeepCount = (userId: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.MEMBER_KEEP_COUNT, userId],
+    queryFn: () => memberService.memberKeepCount(userId),
+    enabled: userId !== undefined,
+    // select: response,
   })
 }
 
-export const useInfiniteMemberKeepVideoList = (userId: number) => {
-  return useInfiniteQuery({
-    queryKey: [QUERY_KEY.MEMBER_KEEP_VIDEO_LIST, 'infinite', userId],
-    queryFn: ({ pageParam }) => memberService.memberKeepVideoList(userId, pageParam?.cursor, pageParam?.cursorId),
-    getNextPageParam: lastPage => {
-      if (lastPage?.hasNextPage) {
-        return {
-          cursor: lastPage.nextCursor,
-          cursorId: lastPage.nextCursorId,
-        }
-      }
-      return undefined
-    },
-    enabled: userId !== undefined,
-    initialPageParam: undefined as { cursor?: number; cursorId?: number } | undefined,
+export const useLawyerMemberList = (request: LawyerMemberListRequest) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.LAWYER_MEMBER_LIST, request.lawyerPage, request.orderBy, request.sort],
+    queryFn: () => lawyerMemberService.getLawyerdMemberList(request),
+    enabled: request.lawyerPage !== undefined,
   })
 }
 
-export const useInfiniteMemberKeepLegalKnowledgeList = (userId: number) => {
-  return useInfiniteQuery({
-    queryKey: [QUERY_KEY.MEMBER_KEEP_LEGAL_KNOWLEDGE_LIST, 'infinite', userId],
-    queryFn: ({ pageParam }) => memberService.memberKeepLegalKnowledgeList(userId, pageParam?.cursor, pageParam?.cursorId),
-    getNextPageParam: lastPage => {
-      if (lastPage?.hasNextPage) {
-        return {
-          cursor: lastPage.nextCursor,
-          cursorId: lastPage.nextCursorId,
-        }
-      }
-      return undefined
-    },
-    enabled: userId !== undefined,
-    initialPageParam: undefined as { cursor?: number; cursorId?: number } | undefined,
+export const useLawyerInfoList = (request: LawyerInfoListRequest) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.LAWYER_INFO_LIST, request.lawyerPage, request.orderBy, request.sort, request.state],
+    queryFn: () => lawyerMemberService.getLawyerInfoList(request),
+    enabled: request.lawyerPage !== undefined,
   })
 }
 
-export const useInfiniteMemberKeepLawyerList = (userId: number) => {
-  return useInfiniteQuery({
-    queryKey: [QUERY_KEY.MEMBER_KEEP_LAWYER_LIST, 'infinite', userId],
-    queryFn: ({ pageParam }) => memberService.memberKeepLawyerList(userId, pageParam?.cursor, pageParam?.cursorId),
-    getNextPageParam: lastPage => {
-      if (lastPage?.hasNextPage) {
-        return {
-          cursor: lastPage.nextCursor,
-          cursorId: lastPage.nextCursorId,
-        }
-      }
-      return undefined
-    },
-    enabled: userId !== undefined,
-    initialPageParam: undefined as { cursor?: number; cursorId?: number } | undefined,
-  })
+interface UpdateLawyerRegisterParams {
+  lawyerId: number
+  request: LawyerRegisterModifyRequest
 }
 
-export const useInfiniteMemberKeepLegalDictionaryList = (userId: number) => {
-  return useInfiniteQuery({
-    queryKey: [QUERY_KEY.MEMBER_KEEP_LEGAL_DICTIONARY_LIST, 'infinite', userId],
-    queryFn: ({ pageParam }) => memberService.memberKeepLegalDictionaryList(userId, pageParam?.cursor, pageParam?.cursorId),
-    getNextPageParam: lastPage => {
-      if (lastPage?.hasNextPage) {
-        return {
-          cursor: lastPage.nextCursor,
-          cursorId: lastPage.nextCursorId,
-        }
-      }
-      return undefined
+export const useUpdateLawyerRegister = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?: () => void
+  onError?: (error: Error) => void
+}) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ lawyerId, request }: UpdateLawyerRegisterParams) =>
+      lawyerMemberService.updateLawyerRegister(lawyerId, request),
+    onSuccess: _data => {
+      // 변호사 정보 리스트 쿼리 무효화
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LAWYER_INFO_LIST] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LAWYER_MEMBER_LIST] })
+      onSuccess?.()
     },
-    enabled: userId !== undefined,
-    initialPageParam: undefined as { cursor?: number; cursorId?: number } | undefined,
+    onError: (error: Error) => {
+      console.error('변호사 승인 정보 업데이트 실패:', error)
+      message.error('변호사 승인 정보 업데이트에 실패했습니다.')
+      onError?.(error)
+    },
   })
 }

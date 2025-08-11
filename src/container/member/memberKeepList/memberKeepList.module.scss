@@ -3,6 +3,14 @@
   background-color: #fff;
 }
 
+.keepListHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #f0f0f0;
+  margin-bottom: 16px;
+}
+
 .sectionTitle {
   display: flex;
   align-items: center;
@@ -10,9 +18,6 @@
   font-size: 18px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 16px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #f0f0f0;
 
   .icon {
     color: $color-green-02; // 갈색 다이아몬드
@@ -32,6 +37,17 @@
     font-weight: bold;
     margin-left: 8px;
   }
+}
+
+.keepListHeaderRight {
+  display: flex;
+  gap: 16px;
+}
+
+.keepListHeaderRightButton {
+  padding: 8px 0;
+  border-radius: 4px;
+  color: $color-text-index;
 }
 
 .keepListContainer {

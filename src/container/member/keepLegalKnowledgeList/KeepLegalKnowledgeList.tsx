@@ -7,8 +7,8 @@ import EmptyState from '@/components/emptyState/EmptyState'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { useNavigate } from 'react-router-dom'
 
-const KeepLegalKnowledgeList = ({ userId }: { userId: number }) => {
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteMemberKeepLegalKnowledgeList(userId)
+const KeepLegalKnowledgeList = ({ userId, sort }: { userId: number; sort: 'asc' | 'desc' }) => {
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteMemberKeepLegalKnowledgeList(userId, sort)
   const navigate = useNavigate()
 
   useInfiniteScroll({

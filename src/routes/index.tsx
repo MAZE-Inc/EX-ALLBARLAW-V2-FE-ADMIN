@@ -37,6 +37,7 @@ import {
   BlogDetail,
   BlogPage,
   BlogList,
+  LawyerListPage,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
@@ -84,7 +85,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: '',
-            element: <LawyerMemberPage />,
+            element: <LawyerListPage />,
           },
         ],
       },

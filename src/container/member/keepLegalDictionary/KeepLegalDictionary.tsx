@@ -6,8 +6,11 @@ import { useInfiniteMemberKeepLegalDictionaryList } from '@/hooks/queries/useMem
 import EmptyState from '@/components/emptyState/EmptyState'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 
-const KeepLegalDictionary = ({ userId }: { userId: number }) => {
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteMemberKeepLegalDictionaryList(userId)
+const KeepLegalDictionary = ({ userId, sort }: { userId: number; sort: 'asc' | 'desc' }) => {
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteMemberKeepLegalDictionaryList(
+    userId,
+    sort
+  )
 
   useInfiniteScroll({
     hasNextPage,
@@ -17,7 +20,7 @@ const KeepLegalDictionary = ({ userId }: { userId: number }) => {
   })
 
   // 빈 상태 체크
-  const isEmpty = !data?.pages || data.pages.every(page => (!page?.data || page.data.length === 0))
+  const isEmpty = !data?.pages || data.pages.every(page => !page?.data || page.data.length === 0)
 
   if (isEmpty && !isFetchingNextPage) {
     return (
