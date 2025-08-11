@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Table, TableProps } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import { useLegalTermList } from '@/hooks/queries/useLegalTerm'
 import { LegalTermListRequest } from '@/types/legalTermTypes'
 import { Pagination } from '@/components/pagination/Pagination'
 import { useLegalDictionary } from '@/contexts/LegalDictionaryContext'
+import { ROUTE_PATH } from '@/routes/routePath'
 import styles from './legalTermList.module.scss'
 
 interface LegalTermTableData {
@@ -15,6 +17,7 @@ interface LegalTermTableData {
 }
 
 const LegalTermListPage = () => {
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedRows, setSelectedRows] = useState<LegalTermTableData[]>([])
   const [request, setRequest] = useState<LegalTermListRequest>({
@@ -93,8 +96,7 @@ const LegalTermListPage = () => {
         loading={isLoading}
         onRow={record => ({
           onClick: () => {
-            // 상세 페이지로 이동
-            console.log('Legal term detail:', record.id)
+            navigate(`${ROUTE_PATH.BOARD_LEGAL_DICTIONARY}/${record.id}`)
           },
         })}
       />

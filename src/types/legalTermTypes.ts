@@ -1,9 +1,3 @@
-import { BlogCase } from './blogTypes'
-import { KnowledgeItem } from './knowledgeType'
-import { SortType } from './sortType'
-
-import { VideoCase } from './videoTypes'
-
 export type LegalTermItem = {
   legalTermChineseName: string
   legalTermEnglishName: string
@@ -29,31 +23,12 @@ export type RecentRegisteredLegalTermListResponse = {
   data: LegalTermItem[]
 }
 
-export type SearchLegalTermRequest = {
-  legalTermPage: number
-  orderBy: SortType
-  sort: 'asc' | 'desc'
-  search: string
-}
-
-export type LegalTermDetailResponse = {
-  legalTermId: number
-  koreanName: string
-  chineseName: string
-  englishName: string
-  content: string
-  source: string
-  viewCount: number
-  createdAt: string
-  updatedAt: string
-  isKeep: boolean
-  relatedContent: {
-    blogCases: BlogCase[]
-    videoCases: VideoCase[]
-    knowledgeAnswers: KnowledgeItem[]
-  }
-  similarTerms: LegalTermItem[]
-}
+// export type SearchLegalTermRequest = {
+//   legalTermPage: number
+//   orderBy: SortType
+//   sort: 'asc' | 'desc'
+//   search: string
+// }
 
 export type LegalTermListRequest = {
   page?: number
@@ -93,4 +68,16 @@ export interface LegalTermReportResponse {
   total: number
   page: number
   totalPages: number
+}
+
+export interface LegalTermDetailResponse {
+  id: number
+  koreanName: string
+  englishName: string
+  chineseName: string
+  source: string
+  content: string
+  viewCount: number
+  createdAt: string
+  updatedAt: string
 }

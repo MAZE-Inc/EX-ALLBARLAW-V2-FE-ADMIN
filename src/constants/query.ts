@@ -44,4 +44,5 @@ export const QUERY_KEY = {
   // 법률백과
   LEGAL_TERM_LIST: 'legalTermList',
   LEGAL_TERM_REPORT_LIST: 'legalTermReportList',
+  LEGAL_TERM_DETAIL: 'legalTermDetail',
 } as const

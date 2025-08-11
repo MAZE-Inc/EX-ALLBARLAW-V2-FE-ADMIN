@@ -28,6 +28,14 @@ const LegalDictionaryLayoutContent = () => {
     return 'dictionary'
   }
 
+  // 디테일 페이지인지 확인
+  const isDetailPage = () => {
+    const pathSegments = location.pathname.split('/')
+    const lastSegment = pathSegments[pathSegments.length - 1]
+    // 숫자로만 이루어진 경우 디테일 페이지로 판단
+    return /^\d+$/.test(lastSegment)
+  }
+
   const [activeTab, setActiveTab] = useState<'dictionary' | 'error-report'>(getActiveTab())
 
   const handleExcelDownload = () => {
@@ -101,21 +109,25 @@ const LegalDictionaryLayoutContent = () => {
         title={`전체 : ${noticeCount?.total}개가 등록되어 있습니다.`}
         className={styles.noticeListPage__searchHeader}
       />
-      <div className={styles['button-wrapper']}>
-        <Button icon={<DownloadOutlined />} onClick={handleExcelDownload} disabled={getSelectedCount() === 0}>
-          선택 항목 엑셀 다운로드 ({getSelectedCount()}건)
-        </Button>
-      </div>
+      {!isDetailPage() && (
+        <div style={{ padding: '0 24px' }}>
+          <div className={styles['button-wrapper']}>
+            <Button icon={<DownloadOutlined />} onClick={handleExcelDownload} disabled={getSelectedCount() === 0}>
+              선택 항목 엑셀 다운로드 ({getSelectedCount()}건)
+            </Button>
+          </div>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: COLOR.GREEN_01,
+              },
+            }}
+          >
+            <Tabs activeKey={activeTab} items={items} onChange={handleTabChange} />
+          </ConfigProvider>
+        </div>
+      )}
       <div className={styles.legalDictionaryLayout__container}>
-        <ConfigProvider
-          theme={{
-            token: {
-              colorPrimary: COLOR.GREEN_01,
-            },
-          }}
-        >
-          <Tabs activeKey={activeTab} items={items} onChange={handleTabChange} />
-        </ConfigProvider>
         <Outlet />
       </div>
     </div>

@@ -1,5 +1,6 @@
 import instance from '@/lib/axios'
 import {
+  LegalTermDetailResponse,
   LegalTermListRequest,
   LegalTermListResponse,
   LegalTermReportRequest,
@@ -36,6 +37,11 @@ export const legalTermService = {
     const url = `/legal-terms/reports${queryString ? `?${queryString}` : ''}`
 
     const response = await instance.get<LegalTermReportResponse>(url)
+    return response.data
+  },
+
+  getLegalTermDetail: async (id: number) => {
+    const response = await instance.get<LegalTermDetailResponse>(`/legal-terms/${id}`)
     return response.data
   },
 }

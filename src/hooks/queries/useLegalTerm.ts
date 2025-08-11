@@ -16,3 +16,10 @@ export const useLegalTermReportList = (request: LegalTermReportRequest) => {
     queryFn: () => legalTermService.getLegalTermReportList(request),
   })
 }
+
+export const useLegalTermDetail = (id: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.LEGAL_TERM_DETAIL, id],
+    queryFn: () => legalTermService.getLegalTermDetail(id),
+  })
+}

@@ -326,5 +326,129 @@ const handleTabChange = (key: string) => {
 - 필요시 라우팅과 연동
 - activeKey 대신 defaultActiveKey 사용 (제어 컴포넌트)
 
+## 상세 페이지 정보 출력 규칙
+
+### 기본 디테일 데이터 출력 방식
+상세 페이지에서 정보를 표시할 때는 MemberInfo 컴포넌트 패턴을 따릅니다:
+
+#### TypeScript 구조:
+```tsx
+import { DataType, InfoItem } from '@/types/dataType'
+import styles from './dataInfo.module.scss'
+
+interface InfoTableProps {
+  title: string
+  items: InfoItem[]
+  data: DataType
+}
+
+const DataInfo = ({ title, items, data }: InfoTableProps) => {
+  const getValue = (item: InfoItem) => {
+    const value = data[item.key as keyof DataType]
+    return item.formatter ? item.formatter(value) : String(value || '')
+  }
+
+  return (
+    <section className={styles.section}>
+      <h2 className={styles.sectionTitle}>
+        <span className={styles.icon}>♦</span>
+        {title}
+      </h2>
+
+      <div className={styles.infoTable}>
+        {items.map(item => (
+          <div key={item.key} className={styles.row}>
+            <div className={styles.label}>{item.label}</div>
+            <div className={styles.value}>{getValue(item)}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+```
+
+#### SCSS 스타일:
+```scss
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f0f0f0;
+
+  .icon {
+    color: $color-green-02;
+    font-size: 16px;
+  }
+}
+
+.infoTable {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.row {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .label {
+    flex: 0 0 140px;
+    padding: 12px 16px;
+    background-color: #f8f9fa;
+    border-right: 1px solid #e0e0e0;
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    align-items: center;
+  }
+
+  .value {
+    flex: 1;
+    padding: 12px 16px;
+    background-color: #fff;
+    color: #666;
+    display: flex;
+    align-items: center;
+  }
+}
+```
+
+#### 사용 예시:
+```tsx
+<DataInfo
+  title="기본 정보"
+  items={[
+    { key: 'name', label: '이름' },
+    { key: 'email', label: '이메일' },
+    { key: 'phone', label: '전화번호', formatter: (value) => formatPhone(value) },
+    { key: 'createdAt', label: '등록일', formatter: (value) => dayjs(value).format('YYYY-MM-DD') }
+  ]}
+  data={userData}
+/>
+```
+
+### 특징:
+- 섹션별로 구분된 정보 표시
+- 아이콘(♦)과 제목으로 섹션 구분
+- 2열 테이블 구조 (라벨 | 값)
+- 라벨 영역은 회색 배경(#f8f9fa)으로 구분
+- 각 항목별 포매터 함수 지원
+- 재사용 가능한 컴포넌트 구조
+
 ## 기타 규칙
 (추후 추가)

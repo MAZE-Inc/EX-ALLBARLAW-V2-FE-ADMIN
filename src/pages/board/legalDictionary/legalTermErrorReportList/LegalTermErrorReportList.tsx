@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { Table, TableProps, Button, Tag } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import { useLegalTermReportList } from '@/hooks/queries/useLegalTerm'
 import { LegalTermReportRequest } from '@/types/legalTermTypes'
 import { Pagination } from '@/components/pagination/Pagination'
 import { useLegalDictionary } from '@/contexts/LegalDictionaryContext'
+import { ROUTE_PATH } from '@/routes/routePath'
 import styles from './legalTermErrorReportList.module.scss'
 
 interface ErrorReportTableData {
   key: number
   id: number
+  legalTermId?: number
   koreanName: string
   englishName: string
   chineseName: string
@@ -19,6 +22,7 @@ interface ErrorReportTableData {
 }
 
 const LegalTermErrorReportList = () => {
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedRows, setSelectedRows] = useState<ErrorReportTableData[]>([])
   const [request, setRequest] = useState<LegalTermReportRequest>({
@@ -39,6 +43,7 @@ const LegalTermErrorReportList = () => {
     reportData?.reports?.map(report => ({
       key: report.id,
       id: report.id,
+      legalTermId: report.legalTermId,
       koreanName: report.koreanName,
       englishName: report.englishName,
       chineseName: report.chineseName,
@@ -135,8 +140,10 @@ const LegalTermErrorReportList = () => {
         loading={isLoading}
         onRow={record => ({
           onClick: () => {
-            // 상세 페이지로 이동
-            console.log('Error report detail:', record.id)
+            // legalTermId가 있으면 해당 법률 용어 상세로 이동
+            if (record.legalTermId) {
+              navigate(`${ROUTE_PATH.BOARD_LEGAL_DICTIONARY}/${record.legalTermId}`)
+            }
           },
         })}
       />

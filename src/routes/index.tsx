@@ -42,6 +42,7 @@ import {
   VideoEditor,
   LegalTermListPage,
   LegalTermErrorReportList,
+  LegalTermDetail,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
@@ -244,6 +245,10 @@ const router = createBrowserRouter([
           {
             path: 'error-report',
             element: <LegalTermErrorReportList />,
+          },
+          {
+            path: ':termId',
+            element: <LegalTermDetail />,
           },
         ],
       },
