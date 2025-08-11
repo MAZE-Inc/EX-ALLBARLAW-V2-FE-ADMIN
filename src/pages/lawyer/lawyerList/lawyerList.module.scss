@@ -1,0 +1,83 @@
+.lawyer-list-container {
+  background-color: #fff;
+  padding: 24px;
+
+  :global {
+    // 체크박스 스타일
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: $color-green-02;
+      border-color: $color-green-02;
+    }
+
+    .ant-checkbox:hover .ant-checkbox-inner {
+      border-color: $color-green-02;
+    }
+
+    // 테이블 행 호버
+    .ant-table-tbody > tr:hover > td {
+      background-color: rgba(82, 196, 26, 0.05) !important;
+    }
+
+    // 선택된 행
+    .ant-table-tbody > tr.ant-table-row-selected > td {
+      background-color: rgba(82, 196, 26, 0.1);
+    }
+
+    // 정렬 아이콘
+    .ant-table-column-sorter-up.active,
+    .ant-table-column-sorter-down.active {
+      color: $color-green-02;
+    }
+
+    // 테이블 셀 패딩 조정
+    .ant-table-cell {
+      vertical-align: middle;
+    }
+  }
+
+  // 변호사 이미지 스타일
+  .lawyerImage {
+    border-radius: 4px;
+    object-fit: cover;
+  }
+
+  // SNS 아이콘 컨테이너
+  .snsIcons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  // SNS 아이콘 스타일
+  .snsIcon {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+
+    &:hover:not(.disabled) {
+      transform: scale(1.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    // 비활성화 상태
+    &.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      filter: grayscale(100%);
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  // 페이지네이션 래퍼
+  .pagination-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 0;
+  }
+}

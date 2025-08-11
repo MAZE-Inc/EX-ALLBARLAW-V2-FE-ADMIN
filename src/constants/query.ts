@@ -40,6 +40,7 @@ export const QUERY_KEY = {
 
   // 변호사
   LAWYER_SEARCH: 'lawyerSearch',
+  LAWYER_LIST: 'lawyerList',
 
   // 채팅
   CHAT_LIST: 'chatList',
