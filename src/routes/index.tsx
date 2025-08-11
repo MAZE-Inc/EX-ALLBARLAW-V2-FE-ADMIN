@@ -40,6 +40,8 @@ import {
   LawyerListPage,
   BlogEditor,
   VideoEditor,
+  LegalTermListPage,
+  LegalTermErrorReportList,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
@@ -234,6 +236,16 @@ const router = createBrowserRouter([
       {
         path: ROUTE_PATH.BOARD_LEGAL_DICTIONARY,
         element: <LegalDictionaryPage />,
+        children: [
+          {
+            path: '',
+            element: <LegalTermListPage />,
+          },
+          {
+            path: 'error-report',
+            element: <LegalTermErrorReportList />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.AD_LAWFIRM,

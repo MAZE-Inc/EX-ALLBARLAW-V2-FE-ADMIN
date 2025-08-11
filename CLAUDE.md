@@ -252,5 +252,79 @@ import { Pagination } from '@/components/pagination/Pagination'
 - 테이블 하단에 위치
 - 데이터가 있을 때만 표시 (조건부 렌더링)
 
+## 탭 컴포넌트 규칙
+
+### 기본 탭 구조
+모든 페이지의 탭은 Ant Design의 Tabs 컴포넌트를 사용하며 다음과 같은 표준을 따릅니다:
+
+```tsx
+import { ConfigProvider, Tabs, TabsProps } from 'antd'
+import { COLOR } from '@/styles/abstracts/color'
+
+const [activeTab, setActiveTab] = useState<'tab1' | 'tab2'>('tab1')
+
+const handleTabChange = (key: string) => {
+  setActiveTab(key as 'tab1' | 'tab2')
+  setCurrentPage(1) // 탭 변경 시 페이지 초기화
+  // 필요시 다른 상태들도 초기화
+}
+
+const items: TabsProps['items'] = [
+  {
+    key: 'tab1',
+    label: '탭1',
+  },
+  {
+    key: 'tab2',
+    label: '탭2',
+  },
+]
+
+// JSX
+<ConfigProvider
+  theme={{
+    token: {
+      colorPrimary: COLOR.GREEN_01,
+    },
+  }}
+>
+  <Tabs defaultActiveKey='tab1' items={items} onChange={handleTabChange} />
+</ConfigProvider>
+```
+
+### 탭과 라우팅
+탭이 다른 페이지로 이동해야 하는 경우:
+
+```tsx
+import { useNavigate, useLocation } from 'react-router-dom'
+
+const navigate = useNavigate()
+const location = useLocation()
+
+// 현재 경로에 따라 탭 선택 상태 결정
+const getActiveTab = () => {
+  if (location.pathname.includes('specific-path')) {
+    return 'tab2'
+  }
+  return 'tab1'
+}
+
+const handleTabChange = (key: string) => {
+  setActiveTab(key as TabType)
+  if (key === 'tab1') {
+    navigate(ROUTE_PATH.TAB1)
+  } else {
+    navigate(ROUTE_PATH.TAB2)
+  }
+}
+```
+
+### 특징:
+- Ant Design Tabs 컴포넌트 사용
+- ConfigProvider로 녹색($color-green-01) 테마 적용
+- 탭 변경 시 페이지 초기화 (currentPage = 1)
+- 필요시 라우팅과 연동
+- activeKey 대신 defaultActiveKey 사용 (제어 컴포넌트)
+
 ## 기타 규칙
 (추후 추가)

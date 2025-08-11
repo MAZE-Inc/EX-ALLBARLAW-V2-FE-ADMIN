@@ -40,4 +40,8 @@ export const QUERY_KEY = {
 
   // 채팅
   CHAT_LIST: 'chatList',
+
+  // 법률백과
+  LEGAL_TERM_LIST: 'legalTermList',
+  LEGAL_TERM_REPORT_LIST: 'legalTermReportList',
 } as const

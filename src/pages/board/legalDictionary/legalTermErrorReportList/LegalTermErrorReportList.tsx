@@ -1,0 +1,152 @@
+import React, { useState, useEffect } from 'react'
+import { Table, TableProps, Button, Tag } from 'antd'
+import { useLegalTermReportList } from '@/hooks/queries/useLegalTerm'
+import { LegalTermReportRequest } from '@/types/legalTermTypes'
+import { Pagination } from '@/components/pagination/Pagination'
+import { useLegalDictionary } from '@/contexts/LegalDictionaryContext'
+import styles from './legalTermErrorReportList.module.scss'
+
+interface ErrorReportTableData {
+  key: number
+  id: number
+  koreanName: string
+  englishName: string
+  chineseName: string
+  status: 'PENDING' | 'PROCESSING' | 'RESOLVED' | 'REJECTED'
+  reportType: string
+  createdAt: string
+  description: string
+}
+
+const LegalTermErrorReportList = () => {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [selectedRows, setSelectedRows] = useState<ErrorReportTableData[]>([])
+  const [request, setRequest] = useState<LegalTermReportRequest>({
+    page: 1,
+    status: 'PENDING',
+  })
+
+  const { setSelectedReports } = useLegalDictionary()
+  const { data: reportData, isLoading } = useLegalTermReportList(request)
+
+  // 선택된 항목이 변경될 때마다 Context 업데이트
+  useEffect(() => {
+    setSelectedReports(selectedRows)
+  }, [selectedRows, setSelectedReports])
+
+  // API 응답 데이터를 테이블 형식으로 변환
+  const tableData: ErrorReportTableData[] =
+    reportData?.reports?.map(report => ({
+      key: report.id,
+      id: report.id,
+      koreanName: report.koreanName,
+      englishName: report.englishName,
+      chineseName: report.chineseName,
+      status: report.status,
+      reportType: report.reportType,
+      createdAt: report.createdAt,
+      description: report.description,
+    })) || []
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    setRequest(prev => ({
+      ...prev,
+      page,
+    }))
+  }
+
+  // 처리완료 버튼 클릭 핸들러
+  const handleResolve = (record: ErrorReportTableData, e: React.MouseEvent) => {
+    e.stopPropagation() // 이벤트 버블링 방지
+    // TODO: API 호출하여 상태 업데이트
+    console.log('처리완료:', record.id)
+  }
+
+  const columns: TableProps<ErrorReportTableData>['columns'] = [
+    {
+      title: '한글 용어명',
+      dataIndex: 'koreanName',
+      key: 'koreanName',
+    },
+    {
+      title: '영문 용어명',
+      dataIndex: 'englishName',
+      key: 'englishName',
+    },
+    {
+      title: '한문 용어명',
+      dataIndex: 'chineseName',
+      key: 'chineseName',
+    },
+    {
+      title: '오류처리',
+      key: 'status',
+      width: 200,
+      render: (_, record) => (
+        <div className={styles['status-cell']}>
+          {record.status === 'PENDING' || record.status === 'PROCESSING' ? (
+            <>
+              <Tag color='warning' className={styles['status-tag']}>
+                오류신고
+              </Tag>
+              <Button size='small' onClick={e => handleResolve(record, e)} className={styles['resolve-btn']}>
+                처리완료
+              </Button>
+            </>
+          ) : (
+            <>
+              <Tag color='default' className={styles['status-tag-disabled']}>
+                오류신고
+              </Tag>
+              <Tag color='processing' className={styles['status-tag-completed']}>
+                처리완료
+              </Tag>
+            </>
+          )}
+        </div>
+      ),
+    },
+  ]
+
+  const rowSelection = {
+    selectedRowKeys: selectedRows.map(row => row.id),
+    onSelectAll: (selected: boolean, selectedRows: ErrorReportTableData[]) => {
+      const newSelectedRows = selected ? selectedRows : []
+      setSelectedRows(newSelectedRows)
+    },
+    onSelect: (record: ErrorReportTableData, selected: boolean) => {
+      setSelectedRows(prev => {
+        const newSelectedRows = selected ? [...prev, record] : prev.filter(row => row.id !== record.id)
+        return newSelectedRows
+      })
+    },
+  }
+
+  return (
+    <div className={styles['error-report-list-container']}>
+      <Table<ErrorReportTableData>
+        columns={columns}
+        dataSource={tableData}
+        rowSelection={rowSelection}
+        rowKey='id'
+        pagination={false}
+        loading={isLoading}
+        onRow={record => ({
+          onClick: () => {
+            // 상세 페이지로 이동
+            console.log('Error report detail:', record.id)
+          },
+        })}
+      />
+      {reportData?.totalPages && (
+        <div className={styles['pagination-wrapper']}>
+          <Pagination currentPage={currentPage} totalPages={reportData.totalPages} onPageChange={handlePageChange} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default LegalTermErrorReportList

@@ -36,25 +36,6 @@ export type SearchLegalTermRequest = {
   search: string
 }
 
-export type LegalTermListRequest = {
-  legalTermPage?: number
-  orderBy?: SortType
-  sort?: 'asc' | 'desc'
-  search?: string
-  consonant?: string
-  take?: number
-  cursor?: number
-  cursorId?: number
-}
-
-export type LegalTermListResponse = {
-  data: LegalTermItem[]
-  hasNextPage: boolean
-  total?: number
-  legalTermPage?: number
-  totalPages?: number
-}
-
 export type LegalTermDetailResponse = {
   legalTermId: number
   koreanName: string
@@ -74,7 +55,42 @@ export type LegalTermDetailResponse = {
   similarTerms: LegalTermItem[]
 }
 
-export type LegalTermReportRequest = {
-  reportType: 'CONTENT_ERROR' | 'CONTENT_INACCURACY' | 'CONTENT_INCOMPLETE' | 'CONTENT_OTHER'
-  description: string
+export type LegalTermListRequest = {
+  page?: number
+  searchQuery?: string
+  searchType?: 'korean' | 'english' | 'chinese' | 'all'
+}
+
+export type LegalTermListResponse = {
+  legalTerms: {
+    id: number
+    koreanName: string
+    englishName: string
+    chineseName: string
+  }[]
+
+  total: number
+  page: number
+  totalPages: number
+}
+
+export interface LegalTermReportRequest extends LegalTermListRequest {
+  status: 'PENDING' | 'PROCESSING' | 'RESOLVED' | 'REJECTED'
+}
+
+export interface LegalTermReportResponse {
+  reports: {
+    id: number
+    legalTermId: number
+    koreanName: string
+    englishName: string
+    chineseName: string
+    status: 'PENDING' | 'PROCESSING' | 'RESOLVED' | 'REJECTED'
+    createdAt: string
+    reportType: 'CONTENT_ERROR' | 'CONTENT_INACCURACY' | 'CONTENT_INCOMPLETE' | 'CONTENT_OTHER'
+    description: string
+  }[]
+  total: number
+  page: number
+  totalPages: number
 }
