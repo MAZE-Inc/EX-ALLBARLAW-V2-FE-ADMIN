@@ -1,9 +1,3 @@
-import { BlogCase } from './blogTypes'
-import { KnowledgeItem } from './knowledgeType'
-import { SortType } from './sortType'
-
-import { VideoCase } from './videoTypes'
-
 export type LegalTermItem = {
   legalTermChineseName: string
   legalTermEnglishName: string
@@ -29,52 +23,111 @@ export type RecentRegisteredLegalTermListResponse = {
   data: LegalTermItem[]
 }
 
-export type SearchLegalTermRequest = {
-  legalTermPage: number
-  orderBy: SortType
-  sort: 'asc' | 'desc'
-  search: string
-}
+// export type SearchLegalTermRequest = {
+//   legalTermPage: number
+//   orderBy: SortType
+//   sort: 'asc' | 'desc'
+//   search: string
+// }
 
 export type LegalTermListRequest = {
-  legalTermPage?: number
-  orderBy?: SortType
-  sort?: 'asc' | 'desc'
-  search?: string
-  consonant?: string
-  take?: number
-  cursor?: number
-  cursorId?: number
+  page?: number
+  searchQuery?: string
+  searchType?: 'korean' | 'english' | 'chinese' | 'all'
 }
 
 export type LegalTermListResponse = {
-  data: LegalTermItem[]
-  hasNextPage: boolean
-  total?: number
-  legalTermPage?: number
-  totalPages?: number
+  legalTerms: {
+    id: number
+    koreanName: string
+    englishName: string
+    chineseName: string
+  }[]
+
+  total: number
+  page: number
+  totalPages: number
 }
 
-export type LegalTermDetailResponse = {
-  legalTermId: number
+export interface LegalTermReportRequest extends LegalTermListRequest {
+  status?: 'PENDING' | 'PROCESSING' | 'RESOLVED' | 'REJECTED'
+}
+
+export interface LegalTermReportResponse {
+  reports: {
+    id: number
+    legalTermId: number
+    koreanName: string
+    englishName: string
+    chineseName: string
+    status: 'PENDING' | 'PROCESSING' | 'RESOLVED' | 'REJECTED'
+    createdAt: string
+    reportType: 'CONTENT_ERROR' | 'CONTENT_INACCURACY' | 'CONTENT_INCOMPLETE' | 'CONTENT_OTHER'
+    description: string
+  }[]
+  total: number
+  page: number
+  totalPages: number
+}
+
+export interface LegalTermDetailResponse {
+  id: number
   koreanName: string
-  chineseName: string
   englishName: string
-  content: string
+  chineseName: string
   source: string
+  content: string
   viewCount: number
   createdAt: string
   updatedAt: string
-  isKeep: boolean
-  relatedContent: {
-    blogCases: BlogCase[]
-    videoCases: VideoCase[]
-    knowledgeAnswers: KnowledgeItem[]
-  }
-  similarTerms: LegalTermItem[]
 }
 
-export type LegalTermReportRequest = {
-  reportType: 'CONTENT_ERROR' | 'CONTENT_INACCURACY' | 'CONTENT_INCOMPLETE' | 'CONTENT_OTHER'
-  description: string
+export type CreateLegalTermRequest = {
+  koreanName: string
+  englishName: string
+  chineseName: string
+  source: string
+  content: string
+}
+
+export type CreateLegalTermResponse = {
+  id: number
+  koreanName: string
+  englishName: string
+  chineseName: string
+  source: string
+  content: string
+  viewCount: number
+  createdAt: string
+  updatedAt: string
+}
+
+export type UpdateLegalTermRequest = {
+  id: number
+  koreanName: string
+  englishName: string
+  chineseName: string
+  source: string
+  content: string
+}
+
+export type UpdateLegalTermResponse = {
+  id: number
+  koreanName: string
+  englishName: string
+  chineseName: string
+  source: string
+  content: string
+  viewCount: number
+  createdAt: string
+  updatedAt: string
+}
+
+export type LegalTermChangeStatusRequest = {
+  id: number
+  status: 'RESOLVED'
+}
+
+export type LegalTermChangeStatusResponse = {
+  success: boolean
 }

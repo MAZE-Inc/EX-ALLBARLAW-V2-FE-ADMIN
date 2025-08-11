@@ -38,6 +38,12 @@ import BlogList from './content/blog/blogList/BlogList'
 import BlogEditor from './content/blog/blogEditor/BlogEditor'
 import KnowledgeDetail from './content/knowledge/knowledgeDetail/LegalKnowledgeDetail'
 
+//legalDictionary
+import LegalTermListPage from './board/legalDictionary/legalTermList/LegalTermListgPage'
+import LegalTermErrorReportList from './board/legalDictionary/legalTermErrorReportList/LegalTermErrorReportList'
+import LegalTermDetail from './board/legalDictionary/legalTermDetail/LegalTermDetail'
+import LegalTermEdit from './board/legalDictionary/legalTermEdit/LegalTermEdit'
+
 export {
   LegalDictionary,
   AdminManagementPage,
@@ -76,4 +82,8 @@ export {
   BlogList,
   BlogEditor,
   KnowledgeDetail,
+  LegalTermListPage,
+  LegalTermErrorReportList,
+  LegalTermDetail,
+  LegalTermEdit,
 }

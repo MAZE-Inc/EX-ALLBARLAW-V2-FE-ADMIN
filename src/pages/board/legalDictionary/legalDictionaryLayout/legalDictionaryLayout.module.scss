@@ -1,0 +1,18 @@
+.noticeListPage {
+  &__searchHeader {
+    // 필요한 스타일
+  }
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 0 24px 16px;
+}
+
+.legalDictionaryLayout__container {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.5rem;
+}
