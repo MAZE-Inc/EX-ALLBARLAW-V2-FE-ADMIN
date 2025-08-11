@@ -4,6 +4,7 @@ import { Button } from 'antd'
 import { useState } from 'react'
 import styles from './blogPage.module.scss'
 import { Outlet, useNavigate } from 'react-router-dom'
+import { ROUTE_PATH } from '@/routes/routePath'
 
 const BlogPage = () => {
   const navigate = useNavigate()
@@ -18,11 +19,19 @@ const BlogPage = () => {
     navigate(`${subcategoryId}`)
   }
 
+  const handleRegisterBlog = () => {
+    navigate(`${ROUTE_PATH.CONTENT_BLOG}/edit`)
+  }
+
   return (
     <main className={styles['blog-page']}>
       <header className={styles['blog-page__header']}>
-        <Button type='primary'>법률정보 글 등록(Execl)</Button>
-        <Button type='primary'>법률정보 글 등록</Button>
+        <Button type='primary' disabled>
+          법률정보 글 등록(Execl)
+        </Button>
+        <Button type='primary' onClick={handleRegisterBlog}>
+          법률정보 글 등록
+        </Button>
       </header>
       <section className={styles['blog-page__content']}>
         <aside className={styles['blog-page__sidebar']}>

@@ -38,6 +38,7 @@ import {
   BlogPage,
   BlogList,
   LawyerListPage,
+  BlogEditor,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
@@ -122,6 +123,10 @@ const router = createBrowserRouter([
               {
                 path: ':subCategoryId/:blogCaseId',
                 element: <BlogDetail />,
+              },
+              {
+                path: ':subCategoryId/edit',
+                element: <BlogEditor />,
               },
             ],
           },

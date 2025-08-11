@@ -34,4 +34,7 @@ export const QUERY_KEY = {
   VIDEO_DETAIL: 'videoDetail',
   KNOWLEDGE_LIST: 'knowledgeList',
   KNOWLEDGE_DETAIL: 'knowledgeDetail',
+
+  // 변호사
+  LAWYER_SEARCH: 'lawyerSearch',
 } as const

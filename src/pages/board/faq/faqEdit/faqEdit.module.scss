@@ -14,28 +14,57 @@
   }
 
   &__form {
+    border-top: 1px solid #d9d9d9;
+    
     .formRow {
       display: flex;
-      align-items: flex-start;
-      margin-bottom: 24px;
+      align-items: stretch;
+      margin-bottom: 0;
+      border-bottom: 1px solid #d9d9d9;
+      
+      &:last-child {
+        margin-bottom: 24px;
+      }
+      
+      // 답변 영역(TextArea가 있는 row)에 대한 특별 처리
+      &:nth-child(3) {
+        .labelCol {
+          align-items: flex-start;
+          padding-top: 20px;
+        }
+        
+        .inputCol {
+          align-items: flex-start;
+        }
+      }
     }
 
     .labelCol {
-      width: 120px;
+      width: 150px;
       flex-shrink: 0;
-      margin-right: 16px;
+      padding: 16px;
+      background-color: #fafafa;
+      border-right: 1px solid #d9d9d9;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
     }
 
     .inputCol {
       flex: 1;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
     }
 
     .label {
       display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
+      margin: 0;
+      font-weight: 500;
       text-align: left;
       color: #262626;
+      font-size: 14px;
     }
 
     .selectInput {

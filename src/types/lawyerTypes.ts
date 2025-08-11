@@ -237,3 +237,18 @@ export type LawyerRegisterModifyResponse = {
   lawyerBarExamPassDate: string | null
   lawyerCreatedAt: string
 }
+
+export type LawyerSearchRequest = {
+  searchQuery: string
+  searchType?: 'lawyerName' | 'lawfirmName'
+}
+
+export type LawyerSearchResponse = {
+  lawyerSearchResults: {
+    lawyerId: number
+    lawyerName: string
+    lawyerProfileImage: string | null
+    lawyerLawfirmName: string | null
+    lawyerCreatedAt: string
+  }[]
+}
