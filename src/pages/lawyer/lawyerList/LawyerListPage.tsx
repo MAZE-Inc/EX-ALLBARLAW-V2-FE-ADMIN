@@ -8,8 +8,10 @@ import { blog, instagram, youtube } from '@/assets/imgs'
 import styles from './lawyerList.module.scss'
 import { DownloadOutlined } from '@ant-design/icons'
 import { useExcelExport } from '@/hooks/useExcelExport'
+import { useNavigate } from 'react-router-dom'
 
 const LawyerListPage = () => {
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedRows, setSelectedRows] = useState<Lawyer[]>([])
   const [request, setRequest] = useState<LawyerListRequest>({
@@ -167,6 +169,10 @@ const LawyerListPage = () => {
         rowKey='lawyerId'
         pagination={false}
         loading={isLoading}
+        onRow={record => ({
+          onClick: () => navigate(`/lawyer-management/lawyer/${record.lawyerId}`),
+          style: { cursor: 'pointer' }
+        })}
       />
       {lawyerData?.totalPages && (
         <div className={styles['pagination-wrapper']}>

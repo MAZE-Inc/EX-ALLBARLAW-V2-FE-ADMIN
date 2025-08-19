@@ -38,6 +38,7 @@ import {
   BlogPage,
   BlogList,
   LawyerListPage,
+  LawyerDetailPage,
   BlogEditor,
   VideoEditor,
   LegalTermListPage,
@@ -91,11 +92,20 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.LAWYER_MANAGEMENT,
-        element: <LawyerLayout />,
         children: [
           {
             path: '',
-            element: <LawyerListPage />,
+            element: <LawyerLayout />,
+            children: [
+              {
+                path: '',
+                element: <LawyerListPage />,
+              },
+            ],
+          },
+          {
+            path: ROUTE_PATH.LAWYER_DETAIL,
+            element: <LawyerDetailPage />,
           },
         ],
       },

@@ -30,6 +30,7 @@ import CategoryManagementPage from './category/categoryManagement/CategoryManage
 import MemberDetailPage from './member/memberDetail/MemberDetailPage'
 import LawyerMemberPage from './member/lawyerMember/LawyerMemberPage'
 import LawyerListPage from './lawyer/lawyerList/LawyerListPage'
+import LawyerDetailPage from './lawyer/lawyerDetail/LawyerDetailPage'
 
 // content
 import ContentLayout from './content/contentLayout/ContentLayout'
@@ -77,6 +78,7 @@ export {
   MemberDetailPage,
   LawyerMemberPage,
   LawyerListPage,
+  LawyerDetailPage,
   ContentLayout,
   BlogDetail,
   BlogList,

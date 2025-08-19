@@ -1,0 +1,101 @@
+.lawyer-activity {
+  background-color: $color-white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-title {
+  font-size: 1rem;
+  font-weight: $font-weight-semibold;
+  color: $color-text-black;
+}
+
+.horizontal-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background-color: #20bf621a;
+
+    th {
+      text-align: center;
+      padding: 0.75rem 2rem;
+
+      font-size: 0.875rem;
+      color: $color-text-index;
+      font-weight: $font-weight-semibold;
+
+      border-bottom: 1px solid $color-white;
+
+      &:not(:last-child) {
+        border-right: 1px solid $color-white;
+      }
+    }
+  }
+
+  tbody {
+    background-color: $color-bg-gray-02;
+    td {
+      text-align: center;
+      padding: 0.75rem 1rem;
+
+      font-size: 0.875rem;
+      color: $color-text-black;
+      font-weight: $font-weight-semibold;
+
+      &:not(:last-child) {
+        border-right: 1px solid $color-white;
+      }
+    }
+  }
+}
+
+.vertical-table {
+  display: none;
+}
+
+@media (max-width: $breakpoint-desktop) {
+  .horizontal-table {
+    display: none;
+  }
+
+  .vertical-table {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+
+    tbody {
+      background-color: $color-bg-gray-02;
+      tr {
+        &:not(:last-child) {
+          th,
+          td {
+            border-bottom: 1px solid $color-white;
+          }
+        }
+
+        th {
+          text-align: left;
+          padding: 0.75rem 1rem;
+          background-color: #20bf621a; // 민트색 배경
+          font-weight: $font-weight-regular;
+          font-size: 0.875rem;
+          color: $color-text-black;
+          width: 50%;
+          border-right: 1px solid $color-white;
+        }
+
+        td {
+          text-align: right;
+          padding: 0.75rem 1rem;
+          font-size: 0.875rem;
+          color: $color-text-black;
+          font-weight: $font-weight-semibold;
+        }
+      }
+    }
+  }
+}
