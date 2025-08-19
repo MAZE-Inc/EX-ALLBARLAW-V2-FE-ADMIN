@@ -1,0 +1,94 @@
+.wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.container {
+  width: 100%;
+  border: 1px solid rgba(32, 191, 98, 0.3);
+  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 20px;
+  position: relative;
+
+  @media (max-width: $breakpoint-desktop) {
+    padding: 16px;
+  }
+}
+
+.contentWrapper {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: $font-weight-extra-bold;
+  color: $color-icon-darkgreen;
+  margin-bottom: 16px;
+
+  @media (max-width: $breakpoint-desktop) {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+}
+
+.sliderWrapper {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.sliderTrack {
+  display: flex;
+  width: 100%;
+}
+
+.slideGroup {
+  flex: 0 0 100%;
+  display: flex;
+  gap: 16px;
+  width: 100%;
+
+  @media (max-width: $breakpoint-desktop) {
+    gap: 0;
+  }
+}
+
+.slideItem {
+  min-width: 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+
+  @media (max-width: $breakpoint-desktop) {
+    margin-top: 8px;
+  }
+}
+
+.paginationDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: none;
+  background-color: #d9d9d9;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+
+  &:hover {
+    background-color: #b0b0b0;
+  }
+
+  &.active {
+    background-color: #59c47c;
+  }
+}

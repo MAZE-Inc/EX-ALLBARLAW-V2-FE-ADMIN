@@ -1,14 +1,10 @@
-import Divider from '@/components/divider/Divider'
 import styles from './lawyerProfile.module.scss'
 import Tag from '@/components/tag/Tag'
 import LawyerHorizon from '@/components/lawyer/LawyerHorizon'
 import Modal from '@/components/modal'
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { Divider } from 'antd'
 import { formatPhoneNumber } from '@/utils/numberFormatter'
-import { setTemporaryItem } from '@/utils/temporaryStorage'
-import { LOCAL } from '@/constants/local'
-import { useNavigate } from 'react-router-dom'
-import { ROUTER } from '@/routes/routerConstant'
 
 type LawyerProfileProps = {
   discription: string
@@ -31,15 +27,7 @@ const LawyerProfile = ({
 }: LawyerProfileProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [modalMessage, setModalMessage] = useState('')
-  const navigate = useNavigate()
-
-  const handleBaroTalk = (e: React.MouseEvent) => {
-    e.stopPropagation() // 이벤트 버블링 방지
-    if (lawyerId) {
-      setTemporaryItem(LOCAL.CHAT_SELECTED_LAWYER_ID, lawyerId.toString(), 30) // 30분 유효
-      navigate(ROUTER.REQUEST_BARO_TALK)
-    }
-  }
+  // const navigate = useNavigate()
 
   const handleOpenContactModal = () => {
     setModalMessage(formatPhoneNumber(lawfirmContact))
@@ -57,16 +45,6 @@ const LawyerProfile = ({
             lawfirm={lawyerLawfirm}
             profileImage='https://picsum.photos/200/300'
             socialLink={[{ type: 'naver', link: 'https://www.naver.com' }]}
-            buttonComponent={
-              <button
-                type='button'
-                aria-label='바로톡 채팅상담요청'
-                className={styles['barotalk-button']}
-                onClick={handleBaroTalk}
-              >
-                바로톡
-              </button>
-            }
             className={styles['lawyer-banner-item']}
           />
         </div>
@@ -85,7 +63,7 @@ const LawyerProfile = ({
               </nav>
             </div>
           </article>
-          <Divider padding={14} />
+          <Divider style={{ margin: '14px 0' }} />
           <nav className={styles['tags']} aria-label='전문 분야'>
             {tags.map(tag => (
               <Tag key={tag.id} tag={tag.name} className={styles['tags__item']} />

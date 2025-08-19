@@ -1,11 +1,9 @@
-import Divider from '@/components/divider/Divider'
 import styles from './lawyerBlog.module.scss'
 import BlogItem from '@/components/blogItem/BlogItem'
-import SvgIcon from '@/components/SvgIcon'
 import { forwardRef } from 'react'
 import { LawyerDetailResponse } from '@/types/lawyerTypes'
-import { useNavigate } from 'react-router-dom'
-import { useSearchStore } from '@/stores/searchStore'
+import { Divider } from 'antd'
+import { RightOutlined } from '@ant-design/icons'
 
 type LawyerBlogProps = {
   blogList: LawyerDetailResponse['blogCases'] | []
@@ -14,16 +12,10 @@ type LawyerBlogProps = {
 }
 
 const LawyerBlog = forwardRef<HTMLElement, LawyerBlogProps>(({ blogList = [], lawyerId, lawyerName }, ref) => {
-  const navigate = useNavigate()
-  const { setSearchLawyerId, setSearchQuery } = useSearchStore()
   const hasBlogPosts = blogList && blogList.length > 0
 
   const handleMoreBlog = () => {
-    // 검색어는 지우고 변호사 ID만 설정하여 해당 변호사의 모든 글 표시
-    setSearchQuery(lawyerName)
-    setSearchLawyerId(lawyerId)
-
-    navigate(`/search/blog`)
+    window.open(`${import.meta.env.VITE_USER_URL}/search/blog?q=${lawyerName}&lawyerId=${lawyerId}`, '_blank')
   }
 
   return (
@@ -38,17 +30,17 @@ const LawyerBlog = forwardRef<HTMLElement, LawyerBlogProps>(({ blogList = [], la
             onClick={handleMoreBlog}
           >
             더보기
-            <SvgIcon name='arrowSmall' className={styles['lawyer-blog__button-icon']} size={14} />
+            <RightOutlined />
           </button>
         )}
       </header>
-      <Divider padding={14} />
+      <Divider style={{ margin: '14px 0' }} />
       {hasBlogPosts ? (
         <ul className={styles['lawyer-blog__list']} role='list'>
           {blogList.map((blog, index) => (
             <li key={blog.blogCaseId + index}>
-              <BlogItem item={blog} type='small' />
-              {index !== blogList.length - 1 && <Divider padding={12} className={styles['lawyer-blog__divider']} />}
+              <BlogItem item={blog} />
+              {index !== blogList.length - 1 && <Divider style={{ margin: '12px 0' }} />}
             </li>
           ))}
         </ul>

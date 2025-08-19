@@ -1,7 +1,7 @@
-import Divider from '@/components/divider/Divider'
 import styles from './lawyerCareer.module.scss'
 import { forwardRef } from 'react'
 import { LawyerDetailResponse } from '@/types/lawyerTypes'
+import { Divider } from 'antd'
 
 interface LawyerCareerProps {
   careerHistory?: LawyerDetailResponse['careers'] | []
@@ -37,7 +37,7 @@ const LawyerCareer = forwardRef<HTMLElement, LawyerCareerProps>(({ careerHistory
     <section ref={ref} className={styles['lawyer-career']}>
       <div className={styles['lawyer-career__group']}>
         <h3 className={styles['lawyer-career__title']}>이력 사항</h3>
-        <Divider padding={14} />
+        <Divider style={{ margin: '14px 0' }} />
         <div className={styles['lawyer-career__section']}>
           {renderSection(careerHistory, '등록된 이력 사항이 없습니다')}
         </div>
@@ -45,7 +45,7 @@ const LawyerCareer = forwardRef<HTMLElement, LawyerCareerProps>(({ careerHistory
 
       <div className={styles['lawyer-career__group']}>
         <h3 className={styles['lawyer-career__title']}>활동 사항</h3>
-        <Divider padding={14} />
+        <Divider style={{ margin: '14px 0' }} />
         <div className={styles['lawyer-career__section']}>
           {renderSection(activities, '등록된 활동 사항이 없습니다')}
         </div>

@@ -17,3 +17,10 @@ export const useLawyerList = (request: LawyerListRequest) => {
     queryFn: () => lawyerService.getLawyerList(request),
   })
 }
+
+export const useLawyerDetail = (lawyerId: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.LAWYER_DETAIL, lawyerId],
+    queryFn: () => lawyerService.getLawyerDetail(lawyerId),
+  })
+}

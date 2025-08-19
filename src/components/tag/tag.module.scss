@@ -1,0 +1,16 @@
+.tag {
+  height: 1.625rem;
+  display: inline-block;
+
+  border: 1px solid $color-line-borderbox;
+  border-radius: 0.625rem;
+
+  padding: 0.3438rem 0.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 0.75rem;
+  color: $color-text-index;
+}

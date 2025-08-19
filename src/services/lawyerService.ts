@@ -1,5 +1,14 @@
 import instance from '@/lib/axios'
-import { LawyerListRequest, LawyerListResponse, LawyerSearchRequest, LawyerSearchResponse } from '@/types/lawyerTypes'
+import {
+  LawyerDetailResponse,
+  LawyerListRequest,
+  LawyerListResponse,
+  LawyerSearchRequest,
+  LawyerSearchResponse,
+} from '@/types/lawyerTypes'
+import axios from 'axios'
+
+const userUrl = import.meta.env.VITE_USER_SERVER_API
 
 export const lawyerService = {
   searchLawyer: async (request: LawyerSearchRequest) => {
@@ -25,6 +34,11 @@ export const lawyerService = {
     const url = `/lawyers?${params.toString()}`
 
     const response = await instance.get<LawyerListResponse>(url)
+    return response.data
+  },
+  getLawyerDetail: async (lawyerId: number) => {
+    const url = `${userUrl}/lawyer/detail/${lawyerId}`
+    const response = await axios.get<LawyerDetailResponse>(url)
     return response.data
   },
 }

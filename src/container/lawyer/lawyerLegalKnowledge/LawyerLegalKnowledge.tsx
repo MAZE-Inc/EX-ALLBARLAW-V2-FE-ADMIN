@@ -1,11 +1,9 @@
-import Divider from '@/components/divider/Divider'
-import SvgIcon from '@/components/SvgIcon'
 import styles from './lawyerLegalKnowledge.module.scss'
 import LegalKnowledgeItem from '@/components/legalKnowledgeItem/LegalKnowledgeItem'
 import { forwardRef } from 'react'
 import { LawyerDetailResponse } from '@/types/lawyerTypes'
-import { useNavigate } from 'react-router-dom'
-import { useSearchStore } from '@/stores/searchStore'
+import { RightOutlined } from '@ant-design/icons'
+import { Divider } from 'antd'
 
 type LawyerLegalKnowledgeProps = {
   knowledgeList: LawyerDetailResponse['consultationRequests'] | []
@@ -15,15 +13,13 @@ type LawyerLegalKnowledgeProps = {
 
 const LawyerLegalKnowledge = forwardRef<HTMLElement, LawyerLegalKnowledgeProps>(
   ({ knowledgeList = [], lawyerId, lawyerName }, ref) => {
-    const navigate = useNavigate()
-    const { setSearchLawyerId, setSearchQuery } = useSearchStore()
     const hasKnowledge = knowledgeList.length > 0
 
     const handleMoreKnowledge = () => {
-      // 검색어는 지우고 변호사 ID만 설정하여 해당 변호사의 모든 법률 지식 표시
-      setSearchQuery(lawyerName)
-      setSearchLawyerId(lawyerId)
-      navigate(`/search/legal-knowledge`)
+      window.open(
+        `${import.meta.env.VITE_USER_URL}/search/legal-knowledge?q=${lawyerName}&lawyerId=${lawyerId}`,
+        '_blank'
+      )
     }
 
     return (
@@ -38,25 +34,23 @@ const LawyerLegalKnowledge = forwardRef<HTMLElement, LawyerLegalKnowledgeProps>(
               onClick={handleMoreKnowledge}
             >
               더보기
-              <SvgIcon name='arrowSmall' className={styles['lawyer-legal-knowledge__button-icon']} size={14} />
+              <RightOutlined />
             </button>
           )}
         </header>
-        <Divider padding={14} />
+        <Divider style={{ margin: '14px 0' }} />
         {hasKnowledge ? (
           <ul className={styles['lawyer-legal-knowledge__list']} role='list'>
             {knowledgeList.map((knowledge, index) => (
               <li key={knowledge.knowledgeId}>
                 <LegalKnowledgeItem
-                  knowledgeId={knowledge.knowledgeId}
-                  knowledgeKeep={knowledge.isKeep}
                   title={knowledge.knowledgeTitle}
                   description={knowledge.summaryContent}
+                  time={new Date(knowledge.lastMessageAt || '')}
                   isLastAnswer={false}
+                  lawyerList={knowledge.lawyers}
                 />
-                {index !== knowledgeList.length - 1 && (
-                  <Divider padding={24} className={styles['lawyer-legal-knowledge__divider']} />
-                )}
+                {index !== knowledgeList.length - 1 && <Divider style={{ margin: '24px 0' }} />}
               </li>
             ))}
           </ul>

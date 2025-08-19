@@ -23,6 +23,8 @@ import {
 } from '@/types/videoTypes'
 import axios from 'axios'
 
+const userUrl = import.meta.env.VITE_USER_SERVER_API
+
 export const contentService = {
   getBlogList: async (request: BlogListRequest) => {
     const { subcategoryId, take, cursor, cursorId, orderBy } = request
@@ -38,16 +40,14 @@ export const contentService = {
     const queryString = params.toString()
     const url = `/blog-case/${subcategoryId}${queryString ? `?${queryString}` : ''}`
 
-    const response = await axios.get<BlogListResponse>('https://v2.allbarlawbiz.com' + url)
+    const response = await axios.get<BlogListResponse>(`${userUrl}${url}`)
 
     return response.data
   },
 
   getBlogDetail: async (request: BlogDetailRequest) => {
     try {
-      const response = await axios.get<BlogDetailResponse>(
-        `https://v2.allbarlawbiz.com/blog-case/detail/${request.blogCaseId}`
-      )
+      const response = await axios.get<BlogDetailResponse>(`${userUrl}/blog-case/detail/${request.blogCaseId}`)
 
       return response.data
     } catch (error) {
@@ -70,16 +70,14 @@ export const contentService = {
     const queryString = params.toString()
     const url = `/video-case/${subcategoryId}${queryString ? `?${queryString}` : ''}`
 
-    const response = await axios.get<VideoListResponse>('https://v2.allbarlawbiz.com' + url)
+    const response = await axios.get<VideoListResponse>(`${userUrl}${url}`)
 
     return response.data
   },
 
   getVideoDetail: async (request: VideoDetailRequest) => {
     const { videoCaseId } = request
-    const response = await axios.get<VideoDetailResponse>(
-      `https://v2.allbarlawbiz.com/video-case/detail/${videoCaseId}`
-    )
+    const response = await axios.get<VideoDetailResponse>(`${userUrl}/video-case/detail/${videoCaseId}`)
     return response.data
   },
 
@@ -97,15 +95,13 @@ export const contentService = {
     const queryString = params.toString()
     const url = `/knowledge/${subcategoryId}${queryString ? `?${queryString}` : ''}`
 
-    const response = await axios.get<KnowledgeListResponse>('https://v2.allbarlawbiz.com' + url)
+    const response = await axios.get<KnowledgeListResponse>(`${userUrl}${url}`)
 
     return response.data
   },
 
   getKnowledgeDetail: async (request: KnowledgeDetailRequest) => {
-    const response = await axios.get<KnowledgeDetailResponse>(
-      `https://v2.allbarlawbiz.com/knowledge/detail/${request.knowledgeId}`
-    )
+    const response = await axios.get<KnowledgeDetailResponse>(`${userUrl}/knowledge/detail/${request.knowledgeId}`)
 
     return response.data
   },

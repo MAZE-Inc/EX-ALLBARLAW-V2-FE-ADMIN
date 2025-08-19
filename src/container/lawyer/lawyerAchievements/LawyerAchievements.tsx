@@ -1,4 +1,4 @@
-import Divider from '@/components/divider/Divider'
+import { Divider } from 'antd'
 import styles from './lawyerAchievements.module.scss'
 import { LawyerAchievement } from '@/types/lawyerTypes'
 
@@ -13,7 +13,7 @@ const LawyerAchievements = ({ achievements }: LawyerAchievementsProps) => {
     return (
       <section className={styles['lawyer-achievements']} aria-label='변호사 업적'>
         <h3 className={styles['lawyer-achievements__title']}>업적</h3>
-        <Divider padding={14} />
+        <Divider style={{ margin: '14px 0' }} />
         <div className={styles['lawyer-achievements__empty']}>
           <p className={styles['lawyer-achievements__empty-text']}>아직 획득한 업적이 없습니다</p>
           <p className={styles['lawyer-achievements__empty-description']}>
@@ -27,7 +27,7 @@ const LawyerAchievements = ({ achievements }: LawyerAchievementsProps) => {
   return (
     <section className={styles['lawyer-achievements']} aria-label='변호사 업적'>
       <h3 className={styles['lawyer-achievements__title']}>업적</h3>
-      <Divider padding={14} />
+      <Divider style={{ margin: '14px 0' }} />
       <ul className={styles['lawyer-achievements__list']}>
         {displayAchievements.map(achievement => (
           <li className={styles['lawyer-achievements__item']} key={achievement.id}>

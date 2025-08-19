@@ -37,3 +37,26 @@
   justify-content: center;
   flex-direction: column;
 }
+
+.sub-main-container {
+  width: 100%;
+  display: flex;
+  gap: 24px;
+  background-color: $color-bg-gray-02;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  gap: 1.5rem;
+  flex-shrink: 0;
+}
+
+.contents-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  gap: 1.5rem;
+}

@@ -1,6 +1,6 @@
-import Divider from '@/components/divider/Divider'
 import styles from './lawyerActivity.module.scss'
 import { LawyerDetailResponse } from '@/types/lawyerTypes'
+import { Divider } from 'antd'
 import dayjs from 'dayjs'
 
 type LawyerActivityProps = {
@@ -16,7 +16,7 @@ const LawyerActivity = ({ statistics, createdAt }: LawyerActivityProps) => {
   return (
     <section className={styles['lawyer-activity']}>
       <h3 className={styles['activity-title']}>올바로 활동</h3>
-      <Divider padding={14} />
+      <Divider style={{ margin: '14px 0' }} />
       <table className={styles['horizontal-table']}>
         <thead>
           <tr>

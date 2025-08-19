@@ -1,11 +1,9 @@
-import Divider from '@/components/divider/Divider'
-import SvgIcon from '@/components/SvgIcon'
 import styles from './lawyerVideo.module.scss'
-import VideoHorizon from '@/components/video/VideoHorizon'
 import { forwardRef } from 'react'
 import { LawyerDetailResponse } from '@/types/lawyerTypes'
-import { useNavigate } from 'react-router-dom'
-import { useSearchStore } from '@/stores/searchStore'
+import { RightOutlined } from '@ant-design/icons'
+import { Divider } from 'antd'
+import VideoHorizon from '@/components/video/VideoHorizon'
 
 type LawyerVideoProps = {
   videoList: LawyerDetailResponse['videoCases'] | []
@@ -14,14 +12,10 @@ type LawyerVideoProps = {
 }
 
 const LawyerVideo = forwardRef<HTMLElement, LawyerVideoProps>(({ videoList = [], lawyerId, lawyerName }, ref) => {
-  const navigate = useNavigate()
-  const { setSearchLawyerId, setSearchQuery } = useSearchStore()
   const hasVideos = videoList && videoList.length > 0
 
   const handleMoreVideo = () => {
-    setSearchQuery(lawyerName)
-    setSearchLawyerId(lawyerId)
-    navigate(`/search/video`)
+    window.open(`${import.meta.env.VITE_USER_URL}/search/video?q=${lawyerName}&lawyerId=${lawyerId}`, '_blank')
   }
 
   return (
@@ -36,11 +30,11 @@ const LawyerVideo = forwardRef<HTMLElement, LawyerVideoProps>(({ videoList = [],
             onClick={handleMoreVideo}
           >
             더보기
-            <SvgIcon name='arrowSmall' className={styles['lawyer-video__button-icon']} size={14} />
+            <RightOutlined />
           </button>
         )}
       </header>
-      <Divider padding={14} />
+      <Divider style={{ margin: '14px 0' }} />
       {hasVideos ? (
         <ul className={styles['lawyer-video__list']} role='list'>
           {videoList.map((video, index) => (
@@ -53,7 +47,7 @@ const LawyerVideo = forwardRef<HTMLElement, LawyerVideoProps>(({ videoList = [],
                 title={video.title}
                 summaryContents={video.summaryContent}
               />
-              {index !== videoList.length - 1 && <Divider padding={12} className={styles['lawyer-video__divider']} />}
+              {index !== videoList.length - 1 && <Divider style={{ margin: '12px 0' }} />}
             </li>
           ))}
         </ul>
