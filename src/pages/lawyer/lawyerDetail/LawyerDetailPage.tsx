@@ -35,7 +35,7 @@ const LawyerDetailPage = () => {
           <Button>변호사 정보 변경하기</Button>
         </div>
       </header>
-      <main className='sub-main-container' style={{ padding: '16px 16px 0 16px' }}>
+      <main className='sub-main-container' style={{ padding: '16px' }}>
         <section className='contents-section'>
           <LawyerProfile
             lawyerId={lawyerDetail?.lawyerId ?? 0}
