@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { Table, TableProps, Avatar } from 'antd'
+import { Table, TableProps, Avatar, Button } from 'antd'
 import dayjs from 'dayjs'
 import { useLawyerList } from '@/hooks/queries/useLawyer'
 import { LawyerListRequest, Lawyer } from '@/types/lawyerTypes'
 import { Pagination } from '@/components/pagination/Pagination'
 import { blog, instagram, youtube } from '@/assets/imgs'
 import styles from './lawyerList.module.scss'
+import { DownloadOutlined } from '@ant-design/icons'
+import { useExcelExport } from '@/hooks/useExcelExport'
 
 const LawyerListPage = () => {
   const [currentPage, setCurrentPage] = useState(1)
@@ -17,6 +19,7 @@ const LawyerListPage = () => {
   })
 
   const { data: lawyerData, isLoading } = useLawyerList(request)
+  const { exportData } = useExcelExport()
 
   // 페이지 변경 핸들러
   const handlePageChange = (page: number) => {
@@ -25,6 +28,30 @@ const LawyerListPage = () => {
       ...prev,
       lawyerPage: page,
     }))
+  }
+
+  console.log(lawyerData)
+
+  // 엑셀 다운로드 핸들러
+  const handleExcelDownload = () => {
+    if (selectedRows.length === 0) return
+
+    // 엑셀에 저장할 데이터 준비
+    const excelData = selectedRows.map(lawyer => ({
+      변호사명: lawyer.lawyerName || '',
+      소속: lawyer.lawyerLawfirmName || '',
+      // 가입일자: lawyer.createdAt ? dayjs(lawyer.createdAt).format('YYYY-MM-DD') : '-',
+      방문횟수: lawyer.lawyerTotalSiteVisitCount || 0,
+      글: lawyer.lawyerBlogCaseCount || 0,
+      영상: lawyer.lawyerVideoCaseCount || 0,
+      지식인: lawyer.lawyerChatRoomCount || 0,
+      블로그URL: lawyer.lawyerBlogUrl || '',
+      유튜브URL: lawyer.lawyerYoutubeUrl || '',
+      인스타그램URL: lawyer.lawyerInstagramUrl || '',
+    }))
+
+    // useExcelExport 훅의 exportData 함수 사용
+    exportData(excelData, '변호사목록', '변호사 목록')
   }
 
   // // SNS 링크 핸들러
@@ -50,8 +77,8 @@ const LawyerListPage = () => {
     },
     {
       title: '소속',
-      dataIndex: 'lawfirmName',
-      key: 'lawfirmName',
+      dataIndex: 'lawyerLawfirmName',
+      key: 'lawyerLawfirmName',
     },
     {
       title: '가입일자',
@@ -128,6 +155,11 @@ const LawyerListPage = () => {
 
   return (
     <div className={styles['lawyer-list-container']}>
+      <div className={styles['button-wrapper']}>
+        <Button icon={<DownloadOutlined />} onClick={handleExcelDownload} disabled={selectedRows.length === 0}>
+          선택 항목 엑셀 다운로드 ({selectedRows.length}건)
+        </Button>
+      </div>
       <Table<Lawyer>
         columns={columns}
         dataSource={lawyerData?.lawyerList || []}

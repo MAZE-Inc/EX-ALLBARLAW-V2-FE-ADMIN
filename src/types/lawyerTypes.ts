@@ -15,7 +15,8 @@ export type Tag = {
 
 export type Lawyer = {
   lawyerId: number
-  lawfirmName: string
+  // lawfirmName: string
+  lawyerLawfirmName: string
   lawyerName: string
   lawyerProfileImage: string
   tags?: Tag[]
@@ -32,7 +33,7 @@ export type Lawyer = {
 
 export type AIRecommenderLawyerItem = Pick<
   Lawyer,
-  'lawyerId' | 'lawfirmName' | 'lawyerName' | 'lawyerProfileImage' | 'tags' | 'lawyerDescription'
+  'lawyerId' | 'lawyerLawfirmName' | 'lawyerName' | 'lawyerProfileImage' | 'tags' | 'lawyerDescription'
 >
 
 export type LawyerListRequest = {
