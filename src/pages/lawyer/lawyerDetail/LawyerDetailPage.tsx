@@ -10,6 +10,7 @@ const LawyerDetailPage = () => {
   const videoRef = useRef<HTMLElement>(null)
   const legalKnowledgeRef = useRef<HTMLElement>(null)
   const { lawyerId } = useParams()
+  console.log('Lawyer ID:', lawyerId)
 
   // const { data: lawyerDetail } = useLawyerDetail(Number(lawyerId))
   // const lawyerDetail = {
@@ -51,11 +52,11 @@ const LawyerDetailPage = () => {
 
   return (
     <main className='sub-main-container'>
-      <header>
-        <nav>
+      <header className={styles['lawyer-detail__header']}>
+        <div className={styles['lawyer-detail__header-actions']}>
           <Button>홈페이지에서 보기</Button>
           <Button>변호사 정보 변경하기</Button>
-        </nav>
+        </div>
       </header>
       <section className='contents-section'>
         {/* <LawyerProfile
@@ -67,7 +68,8 @@ const LawyerDetailPage = () => {
           lawfirmContact={lawyerDetail?.lawfirmContact ?? ''}
           tags={lawyerDetail?.tags ?? []}
         /> */}
-        {/* <LawyerActivity statistics={lawyerDetail?.statistics ?? null} createdAt={lawyerDetail?.createdAt ?? ''} /> */}
+        {/* <LawyerActivity statistics={lawyerDetail?.statistics ?? null} 
+            createdAt={lawyerDetail?.createdAt ?? ''} /> */}
         <section className={styles['lawyer-detail__button-container']}>
           <button className={styles['lawyer-detail__button']} onClick={() => scrollToSection(careerRef)}>
             이력사항 및 활동사항

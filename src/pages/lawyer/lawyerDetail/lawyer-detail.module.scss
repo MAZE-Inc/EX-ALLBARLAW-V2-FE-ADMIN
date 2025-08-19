@@ -43,3 +43,16 @@
     gap: 0.25rem;
   }
 }
+
+.lawyer-detail__header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+.lawyer-detail__header-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
