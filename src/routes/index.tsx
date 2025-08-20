@@ -5,7 +5,6 @@ import MainLayout from '../pages/layout/mainLayout/MainLayout'
 import { ROUTE_PATH } from './routePath'
 import {
   AdBannerPage,
-  AdLawfirmPage,
   AdLawyerPage,
   AdminManagementPage,
   AdminRegisterPage,
@@ -52,6 +51,8 @@ import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
 import MemberLayout from '@/pages/member/memberLayout/MemberLayout'
 import ProtectedRoute from './ProtectedRoute'
 import PublicOnlyRoute from './PublicOnlyRoute'
+import AdLawfirmLayout from '@/pages/ad/adLawfirm/adLawfirmLayout/AdLawfirmLayout'
+import AdLawfirmListPage from '@/pages/ad/adLawfirm/adLawfirmList/AdLawfirmListPage'
 
 const router = createBrowserRouter([
   {
@@ -282,7 +283,13 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.AD_LAWFIRM,
-        element: <AdLawfirmPage />,
+        element: <AdLawfirmLayout />,
+        children: [
+          {
+            path: '',
+            element: <AdLawfirmListPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.AD_LAWYER,

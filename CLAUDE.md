@@ -471,5 +471,277 @@ SCSS 파일에서는 abstracts를 import하지 않습니다:
 - mixin과 function도 전역에서 사용 가능
 - abstracts import는 불필요하며 제거해야 함
 
+## 무한스크롤 구현 규칙
+
+### 개요
+무한스크롤은 `@tanstack/react-query`의 `useInfiniteQuery`와 커스텀 훅 `useInfiniteScroll`을 조합하여 구현합니다.
+
+### 1. React Query 무한 쿼리 훅 생성 (서비스 기반)
+
+#### 서비스가 제공될 때 훅 생성 프로세스:
+
+1. **서비스 분석**: Request/Response 타입 확인
+2. **useInfiniteQuery 훅 생성**: 서비스를 기반으로 무한 쿼리 훅 작성
+3. **커서 파라미터 매핑**: Response의 커서 필드를 다음 페이지 파라미터로 변환
+
+#### 기본 템플릿:
+```tsx
+// hooks/queries/use[Domain].ts
+export const useInfinite[Domain]List = (
+  request: Omit<[Domain]ListRequest, 'cursor' | 'cursorId'>
+) => {
+  const query = useInfiniteQuery({
+    queryKey: [QUERY_KEY.[DOMAIN]_LIST, 'infinite', ...Object.values(request)],
+    queryFn: ({ pageParam }) =>
+      [domain]Service.get[Domain]List({
+        ...request,
+        cursor: pageParam?.cursor,
+        cursorId: pageParam?.cursorId,
+      }),
+    enabled: true, // 필요시 조건 추가
+    initialPageParam: undefined as { cursor?: number; cursorId?: number } | undefined,
+    getNextPageParam: (lastPage) => {
+      // Response 구조에 따라 조정
+      if (!lastPage.hasNextPage) return undefined
+      return {
+        cursor: lastPage.nextCursor,
+        cursorId: lastPage.nextCursorId,
+      }
+    },
+  })
+
+  return {
+    ...query,
+    hasNextPage: query.data?.pages[query.data.pages.length - 1]?.hasNextPage ?? false,
+  }
+}
+```
+
+#### 실제 예시 (BlogList):
+```tsx
+// hooks/queries/useContent.ts
+export const useInfiniteBlogList = (request: Omit<BlogListRequest, 'cursor' | 'cursorId'>) => {
+  const query = useInfiniteQuery({
+    queryKey: [QUERY_KEY.BLOG_LIST, 'infinite', request.subcategoryId, request.orderBy],
+    queryFn: ({ pageParam }) =>
+      contentService.getBlogList({
+        ...request,
+        cursor: pageParam?.cursor,
+        cursorId: pageParam?.cursorId,
+      }),
+    enabled: request.subcategoryId !== undefined,
+    initialPageParam: undefined as { cursor?: number; cursorId?: number } | undefined,
+    getNextPageParam: lastPage => {
+      if (!lastPage.hasNextPage) return undefined
+      return {
+        cursor: lastPage.nextCursor,
+        cursorId: lastPage.nextCursorId,
+      }
+    },
+  })
+
+  return {
+    ...query,
+    hasNextPage: query.data?.pages[query.data.pages.length - 1]?.hasNextPage ?? false,
+  }
+}
+```
+
+#### Response 타입별 getNextPageParam 패턴:
+
+**패턴 1: 커서 기반**
+```tsx
+getNextPageParam: (lastPage) => {
+  if (!lastPage.hasNextPage) return undefined
+  return {
+    cursor: lastPage.nextCursor,
+    cursorId: lastPage.nextCursorId,
+  }
+}
+```
+
+**패턴 2: 페이지 번호 기반**
+```tsx
+getNextPageParam: (lastPage, allPages) => {
+  if (!lastPage.hasMore) return undefined
+  return allPages.length + 1
+}
+```
+
+**패턴 3: 오프셋 기반**
+```tsx
+getNextPageParam: (lastPage, allPages) => {
+  const loadedCount = allPages.reduce((sum, page) => sum + page.data.length, 0)
+  if (loadedCount >= lastPage.totalCount) return undefined
+  return { offset: loadedCount }
+}
+```
+
+### 2. useInfiniteScroll 커스텀 훅
+
+#### 전체 코드:
+```tsx
+// hooks/useInfiniteScroll.ts
+import { useCallback, useEffect } from 'react'
+
+interface UseInfiniteScrollProps {
+  hasNextPage?: boolean
+  isFetchingNextPage?: boolean
+  fetchNextPage: () => void
+  containerSelector?: string
+}
+
+export const useInfiniteScroll = ({
+  hasNextPage = false,
+  isFetchingNextPage = false,
+  fetchNextPage,
+  containerSelector = '.lawyer-selection-container',
+}: UseInfiniteScrollProps) => {
+  const handleScroll = useCallback(() => {
+    const scrollContainer = document.querySelector(containerSelector) as HTMLElement
+    if (!scrollContainer) return
+
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainer
+
+    // 스크롤이 끝에서 100px 이내에 도달했을 때 다음 페이지 로드
+    const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100
+
+    if (isNearBottom && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage()
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, containerSelector])
+
+  // 스크롤 이벤트 리스너 등록
+  useEffect(() => {
+    const scrollContainer = document.querySelector(containerSelector)
+    if (scrollContainer) {
+      scrollContainer.addEventListener('scroll', handleScroll)
+      return () => scrollContainer.removeEventListener('scroll', handleScroll)
+    }
+    return undefined
+  }, [handleScroll, containerSelector])
+
+  // 초기 로드 및 데이터 변경 시 스크롤 체크
+  useEffect(() => {
+    // hasNextPage가 true일 때만 체크
+    if (hasNextPage && !isFetchingNextPage) {
+      // DOM 업데이트를 기다린 후 체크
+      const timeoutId = setTimeout(() => {
+        const scrollContainer = document.querySelector(containerSelector) as HTMLElement
+        if (!scrollContainer) return
+
+        const hasScroll = scrollContainer.scrollHeight > scrollContainer.clientHeight
+
+        // 스크롤이 없고, 다음 페이지가 있고, 로딩중이 아니면 추가 로드
+        if (!hasScroll && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      }, 100)
+      return () => clearTimeout(timeoutId)
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, containerSelector])
+
+  return { handleScroll }
+}
+```
+
+#### 핵심 기능:
+1. **스크롤 감지**: 스크롤이 하단 100px 이내 도달 시 다음 페이지 로드
+2. **자동 로드**: 컨테이너에 스크롤이 없을 때 자동으로 다음 페이지 로드
+3. **중복 방지**: `isFetchingNextPage` 체크로 중복 호출 방지
+
+### 3. 컴포넌트에서 사용
+
+#### 구현 예시:
+```tsx
+// pages/content/blog/blogList/BlogList.tsx
+const BlogList = () => {
+  const navigate = useNavigate()
+  const { subCategoryId } = useParams<{ subCategoryId: string }>()
+
+  // 1. 무한 쿼리 사용
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteBlogList({
+    subcategoryId: subCategoryId ? Number(subCategoryId) : 'all',
+  })
+
+  // 2. 무한스크롤 훅 적용
+  useInfiniteScroll({
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    containerSelector: '.blog-list-container',  // 스크롤 컨테이너 선택자
+  })
+
+  // 3. 빈 데이터 처리
+  const isEmpty = !data?.pages || data.pages.every(page => page.data.length === 0)
+
+  if (isEmpty && !isFetchingNextPage) {
+    return (
+      <main className={styles['blog-list']}>
+        <section className={styles['blog-list-container']}>
+          <EmptyState icon='📄' message='블로그 컨텐츠가 없습니다' />
+        </section>
+      </main>
+    )
+  }
+
+  // 4. 데이터 렌더링
+  return (
+    <main className={styles['blog-list']}>
+      <section className={`${styles['blog-list-container']} blog-list-container`}>
+        {data?.pages.map(page =>
+          page.data.map(blog => (
+            <React.Fragment key={blog.blogCaseId}>
+              <BlogItem item={blog} onClick={() => handleClickBlog(blog.blogCaseId)} />
+              <Divider style={{ margin: 0 }} />
+            </React.Fragment>
+          ))
+        )}
+      </section>
+    </main>
+  )
+}
+```
+
+#### 중요 포인트:
+1. **스크롤 컨테이너 클래스**: CSS 클래스와 JS 선택자를 모두 포함
+2. **빈 데이터 처리**: 데이터가 없을 때 EmptyState 표시
+3. **페이지 매핑**: `data?.pages.map()`으로 모든 페이지 데이터 렌더링
+
+### 4. CSS 스타일 설정
+
+#### 스크롤 컨테이너 스타일:
+```scss
+.blog-list-container {
+  height: calc(100vh - 200px);  // 적절한 높이 설정
+  overflow-y: auto;              // 스크롤 활성화
+  position: relative;
+}
+```
+
+### 5. API Response 타입
+
+#### 서버 응답 구조:
+```tsx
+interface BlogListResponse {
+  data: BlogItem[]
+  hasNextPage: boolean
+  nextCursor?: number
+  nextCursorId?: number
+}
+```
+
+### 구현 체크리스트
+
+무한스크롤 구현 시 다음 사항을 확인하세요:
+
+- [ ] `useInfiniteQuery` 훅 생성
+- [ ] `getNextPageParam` 로직 구현
+- [ ] `useInfiniteScroll` 훅 적용
+- [ ] 스크롤 컨테이너 선택자 지정
+- [ ] 빈 데이터 상태 처리
+- [ ] 스크롤 컨테이너 CSS (height, overflow-y)
+- [ ] 로딩 상태 표시 (선택사항)
+
 ## 기타 규칙
 (추후 추가)

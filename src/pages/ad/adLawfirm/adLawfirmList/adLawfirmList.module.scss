@@ -1,0 +1,43 @@
+.ad-lawfirm-list {
+  background-color: $color-bg-gray-02;
+
+  &__header {
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 24px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: $color-white;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  &__select {
+    min-width: 200px;
+  }
+}
+
+.content-wrapper {
+  padding: 1.5rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.lawfirm-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  background-color: $color-white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
