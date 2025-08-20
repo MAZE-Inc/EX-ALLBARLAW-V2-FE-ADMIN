@@ -51,10 +51,16 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed = false, isTablet = false, 
     return items
       .map(item => {
         if (item.children) {
-          const filteredChildren = item.children.filter((child: any) => {
-            // 서브메뉴가 권한 ID를 가지고 있는지 확인
-            return subMenuIds.includes(child.permissionId)
-          })
+          const filteredChildren = item.children
+            .filter((child: any) => {
+              // 서브메뉴가 권한 ID를 가지고 있는지 확인
+              return subMenuIds.includes(child.permissionId)
+            })
+            .map((child: any) => {
+              // permissionId를 제거하고 나머지 속성만 반환
+              const { permissionId, ...rest } = child
+              return rest
+            })
 
           if (filteredChildren.length > 0) {
             return {
