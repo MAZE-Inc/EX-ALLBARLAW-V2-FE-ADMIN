@@ -21,16 +21,22 @@ const LawyerCareer = forwardRef<HTMLElement, LawyerCareerProps>(({ careerHistory
       )
     }
 
-    return items.map((item, index) => (
-      <div className={styles['lawyer-career__item']} key={index}>
-        <h4 className={styles['lawyer-career__item-title']}>{item.categoryName}</h4>
-        <ul className={styles['lawyer-career__list']}>
-          {item.content.split('\n').map((content, idx) => (
-            <li key={idx}>{content}</li>
-          ))}
-        </ul>
-      </div>
-    ))
+    return items.map((item, index) => {
+      const categoryName =
+        'lawyerCareerCategoryName' in item ? item.lawyerCareerCategoryName : item.lawyerActivityCategoryName
+      const content = 'lawyerCareerContent' in item ? item.lawyerCareerContent : item.lawyerActivityContent
+
+      return (
+        <div className={styles['lawyer-career__item']} key={index}>
+          <h4 className={styles['lawyer-career__item-title']}>{categoryName}</h4>
+          <ul className={styles['lawyer-career__list']}>
+            {content.split('\n').map((contentLine: string, idx: number) => (
+              <li key={idx}>{contentLine}</li>
+            ))}
+          </ul>
+        </div>
+      )
+    })
   }
 
   return (

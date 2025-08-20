@@ -34,7 +34,7 @@ const LawyerDetailPage = () => {
   }
 
   const handleOpenEditPage = () => {
-    navigate(`/lawyer-management/lawyer/edit/${lawyerId}`)
+    navigate(`/lawyer-management/lawyer/edit/${lawyerId}`, { state: { lawyerName: lawyerDetail?.lawyerName } })
   }
 
   return (

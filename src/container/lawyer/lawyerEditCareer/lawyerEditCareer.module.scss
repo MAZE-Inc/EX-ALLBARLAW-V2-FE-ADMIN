@@ -18,7 +18,66 @@
   }
 
   .leftPanel {
+    .tableWrapper {
+      :global {
+        .ant-table {
+          font-size: 14px;
+        }
+
+        .ant-table-thead > tr > th {
+          background: #fafafa;
+          font-weight: 600;
+          border-bottom: 2px solid #f0f0f0;
+        }
+
+        .ant-table-tbody > tr {
+          cursor: pointer;
+
+          &:hover > td {
+            background: rgba(82, 196, 26, 0.05);
+          }
+
+          &.selected > td {
+            background: rgba(82, 196, 26, 0.1);
+          }
+        }
+
+        .ant-table-tbody > tr > td {
+          padding: 12px 16px;
+          border-bottom: 1px solid #f0f0f0;
+        }
+      }
+    }
+
+    .categoryCell {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .addButtonWrapper {
+      margin-top: 16px;
+
+      :global {
+        .ant-btn {
+          background-color: #fff;
+          border-color: #d9d9d9;
+          color: #262626;
+
+          &:hover {
+            border-color: $color-green-02;
+            color: $color-green-02;
+          }
+        }
+      }
+    }
+  }
+
+  .rightPanel {
     .panelHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 24px;
 
       .title {
@@ -26,10 +85,6 @@
         font-weight: 600;
         margin: 0;
       }
-    }
-
-    .addButtonWrapper {
-      margin-top: 16px;
     }
 
     .editorContent {
@@ -86,58 +141,6 @@
       background: #fafafa;
       border-radius: 4px;
       border: 1px dashed #d9d9d9;
-    }
-  }
-
-  .rightPanel {
-    .panelHeader {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-
-      .title {
-        font-size: 16px;
-        font-weight: 600;
-        margin: 0;
-      }
-    }
-
-    .tableWrapper {
-      :global {
-        .ant-table {
-          font-size: 14px;
-        }
-
-        .ant-table-thead > tr > th {
-          background: #fafafa;
-          font-weight: 600;
-          border-bottom: 2px solid #f0f0f0;
-        }
-
-        .ant-table-tbody > tr {
-          cursor: pointer;
-
-          &:hover > td {
-            background: rgba(82, 196, 26, 0.05);
-          }
-
-          &.selected > td {
-            background: rgba(82, 196, 26, 0.1);
-          }
-        }
-
-        .ant-table-tbody > tr > td {
-          padding: 12px 16px;
-          border-bottom: 1px solid #f0f0f0;
-        }
-      }
-    }
-
-    .categoryCell {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
     }
   }
 }

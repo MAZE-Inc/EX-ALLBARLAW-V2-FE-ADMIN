@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Table, TableProps, Avatar, Button } from 'antd'
 import dayjs from 'dayjs'
 import { useLawyerList } from '@/hooks/queries/useLawyer'
@@ -32,8 +32,6 @@ const LawyerListPage = () => {
     }))
   }
 
-  console.log(lawyerData)
-
   // 엑셀 다운로드 핸들러
   const handleExcelDownload = () => {
     if (selectedRows.length === 0) return
@@ -52,17 +50,15 @@ const LawyerListPage = () => {
       인스타그램URL: lawyer.lawyerInstagramUrl || '',
     }))
 
-    // useExcelExport 훅의 exportData 함수 사용
     exportData(excelData, '변호사목록', '변호사 목록')
   }
 
-  // // SNS 링크 핸들러
-  // const handleSnsClick = (url: string | undefined, e: React.MouseEvent) => {
-  //   e.stopPropagation() // 행 클릭 이벤트 방지
-  //   if (url) {
-  //     window.open(url, '_blank')
-  //   }
-  // }
+  const handleSnsClick = (url: string | undefined, e: React.MouseEvent) => {
+    e.stopPropagation() // 행 클릭 이벤트 방지
+    if (url) {
+      window.open(url, '_blank')
+    }
+  }
 
   const columns: TableProps<Lawyer>['columns'] = [
     {
@@ -122,19 +118,19 @@ const LawyerListPage = () => {
             src={blog}
             alt='Blog'
             className={`${styles.snsIcon} ${!record.lawyerBlogUrl ? styles.disabled : ''}`}
-            // onClick={e => handleSnsClick(record.lawyerBlogUrl, e)}
+            onClick={e => handleSnsClick(record.lawyerBlogUrl, e)}
           />
           <img
             src={youtube}
             alt='YouTube'
             className={`${styles.snsIcon} ${!record.lawyerYoutubeUrl ? styles.disabled : ''}`}
-            // onClick={e => handleSnsClick(record.lawyerYoutubeUrl, e)}
+            onClick={e => handleSnsClick(record.lawyerYoutubeUrl, e)}
           />
           <img
             src={instagram}
             alt='Instagram'
             className={`${styles.snsIcon} ${!record.lawyerInstagramUrl ? styles.disabled : ''}`}
-            // onClick={e => handleSnsClick(record.lawyerInstagramUrl, e)}
+            onClick={e => handleSnsClick(record.lawyerInstagramUrl, e)}
           />
         </div>
       ),
@@ -171,7 +167,7 @@ const LawyerListPage = () => {
         loading={isLoading}
         onRow={record => ({
           onClick: () => navigate(`/lawyer-management/lawyer/${record.lawyerId}`),
-          style: { cursor: 'pointer' }
+          style: { cursor: 'pointer' },
         })}
       />
       {lawyerData?.totalPages && (

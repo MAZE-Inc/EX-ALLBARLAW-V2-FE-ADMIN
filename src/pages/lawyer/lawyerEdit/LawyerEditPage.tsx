@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { Button, Tabs, message } from 'antd'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import styles from './lawyerEdit.module.scss'
 import LawyerEditBasicInfo, { LawyerEditBasicInfoRef } from '@/container/lawyer/lawyerEditBasicInfo/LawyerEditBasicInfo'
 import LawyerEditActivity, { LawyerEditActivityRef } from '@/container/lawyer/lawyerEditActivity/LawyerEditActivity'
@@ -12,6 +12,7 @@ import { LawyerUpdateRequest } from '@/types/lawyerTypes'
 const LawyerEditPage = () => {
   const navigate = useNavigate()
   const { lawyerId } = useParams<{ lawyerId: string }>()
+  const { state } = useLocation()
   const [activeTab, setActiveTab] = useState('basic')
   const [isSaving, setIsSaving] = useState(false)
 
@@ -190,6 +191,7 @@ const LawyerEditPage = () => {
   return (
     <>
       <header className={styles['lawyer-edit__header']}>
+        <h1 className={styles['lawyer-edit__header-title']}>{state?.lawyerName} 변호사의 활동사항 화면입니다.</h1>
         <div className={styles['lawyer-edit__header-actions']}>
           <Button onClick={handleCancel}>취소</Button>
           <Button
