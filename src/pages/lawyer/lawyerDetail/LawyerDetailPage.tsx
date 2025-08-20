@@ -12,6 +12,7 @@ import LawyerBlog from '@/container/lawyer/lawyerBlog/LawyerBlog'
 import LawyerVideo from '@/container/lawyer/lawyerVideo/LawyerVideo'
 import LawyerLegalKnowledge from '@/container/lawyer/lawyerLegalKnowledge/LawyerLegalKnowledge'
 import LawyerAchievements from '@/container/lawyer/lawyerAchievements/LawyerAchievements'
+import { COLOR } from '@/styles/abstracts/color'
 
 const LawyerDetailPage = () => {
   const careerRef = useRef<HTMLElement>(null)
@@ -44,7 +45,7 @@ const LawyerDetailPage = () => {
           <Button onClick={handleOpenEditPage}>변호사 정보 변경하기</Button>
         </div>
       </header>
-      <main className='sub-main-container' style={{ padding: '16px' }}>
+      <main className='sub-main-container' style={{ padding: '16px', backgroundColor: COLOR.GRAY_01 }}>
         <section className='contents-section'>
           <LawyerProfile
             lawyerId={lawyerDetail?.lawyerId ?? 0}

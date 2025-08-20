@@ -3,10 +3,10 @@ import { Button, Tabs, message } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import styles from './lawyerEdit.module.scss'
 import LawyerEditBasicInfo, { LawyerEditBasicInfoRef } from '@/container/lawyer/lawyerEditBasicInfo/LawyerEditBasicInfo'
-import LawyerEditActivity from '@/container/lawyer/lawyerEditActivity/LawyerEditActivity'
+import LawyerEditActivity, { LawyerEditActivityRef } from '@/container/lawyer/lawyerEditActivity/LawyerEditActivity'
 import LawyerEditCareer, { LawyerEditCareerRef } from '@/container/lawyer/lawyerEditCareer/LawyerEditCareer'
 import LawyerEditAchievements from '@/container/lawyer/lawyerEditAchievements/LawyerEditAchievements'
-import { useLawyerBasicInfoUpdate, useLawyerCareerUpdate } from '@/hooks/queries/useLawyer'
+import { useLawyerBasicInfoUpdate, useLawyerCareerUpdate, useLawyerActivityUpdate } from '@/hooks/queries/useLawyer'
 import { LawyerUpdateRequest } from '@/types/lawyerTypes'
 
 const LawyerEditPage = () => {
@@ -19,7 +19,7 @@ const LawyerEditPage = () => {
   const basicInfoRef = useRef<LawyerEditBasicInfoRef>(null)
   const achievementsRef = useRef<any>(null)
   const careerRef = useRef<LawyerEditCareerRef>(null)
-  const activityRef = useRef<any>(null)
+  const activityRef = useRef<LawyerEditActivityRef>(null)
 
   // 기본정보 업데이트 훅
   const updateBasicInfoMutation = useLawyerBasicInfoUpdate(
@@ -47,6 +47,19 @@ const LawyerEditPage = () => {
     }
   )
 
+  // 활동사항 업데이트 훅
+  const updateActivityMutation = useLawyerActivityUpdate(
+    Number(lawyerId),
+    () => {
+      message.success('활동 사항이 저장되었습니다.')
+      setIsSaving(false)
+    },
+    () => {
+      message.error('활동 사항 저장 중 오류가 발생했습니다.')
+      setIsSaving(false)
+    }
+  )
+
   const items = [
     {
       label: '변호사 기본정보',
@@ -55,7 +68,7 @@ const LawyerEditPage = () => {
     },
     { label: '업적 관리', key: 'achievements', children: <LawyerEditAchievements /> },
     { label: '이력 사항', key: 'career', children: <LawyerEditCareer ref={careerRef} lawyerId={lawyerId} /> },
-    { label: '활동 사항', key: 'activity', children: <LawyerEditActivity /> },
+    { label: '활동 사항', key: 'activity', children: <LawyerEditActivity ref={activityRef} lawyerId={lawyerId} /> },
   ]
 
   const handleCancel = () => {
@@ -64,10 +77,15 @@ const LawyerEditPage = () => {
 
   const handleSave = async () => {
     // mutation이 진행 중이거나 이미 저장 중인 경우 차단
-    if (isSaving || updateBasicInfoMutation.isPending || updateCareerMutation.isPending) {
+    if (
+      isSaving ||
+      updateBasicInfoMutation.isPending ||
+      updateCareerMutation.isPending ||
+      updateActivityMutation.isPending
+    ) {
       return
     }
-    
+
     setIsSaving(true)
 
     try {
@@ -105,7 +123,7 @@ const LawyerEditPage = () => {
                   subcategoryId: cat.subcategoryId,
                   subcategoryName: '', // API에서 필요시 채워질 값
                 })),
-              
+
               // LawyerUpdateRequest 고유 필드들 (재정의된 필드)
               lawyerTags: formData.tags || [], // 문자열 배열
               lawyerProfileImages: imageData, // 구조화된 이미지 데이터 사용
@@ -145,9 +163,20 @@ const LawyerEditPage = () => {
 
         case 'activity':
           if (activityRef.current) {
-            // TODO: activity 데이터 가져오기 및 API 호출
-            message.success('활동 사항이 저장되었습니다.')
-            setIsSaving(false)
+            const activityData = activityRef.current.getFormData()
+
+            // 데이터 유효성 검사
+            const hasEmptyCategory = activityData.some(
+              item => !item.lawyerActivityCategoryName || item.lawyerActivityCategoryName.trim() === ''
+            )
+            if (hasEmptyCategory) {
+              message.warning('활동 분류를 모두 입력해주세요.')
+              setIsSaving(false)
+              return
+            }
+
+            // API 호출
+            updateActivityMutation.mutate(activityData)
           }
           break
       }
@@ -163,11 +192,18 @@ const LawyerEditPage = () => {
       <header className={styles['lawyer-edit__header']}>
         <div className={styles['lawyer-edit__header-actions']}>
           <Button onClick={handleCancel}>취소</Button>
-          <Button 
-            type='primary' 
+          <Button
+            type='primary'
             onClick={handleSave}
-            loading={isSaving || updateBasicInfoMutation.isPending || updateCareerMutation.isPending}
-            disabled={updateBasicInfoMutation.isPending || updateCareerMutation.isPending}
+            loading={
+              isSaving ||
+              updateBasicInfoMutation.isPending ||
+              updateCareerMutation.isPending ||
+              updateActivityMutation.isPending
+            }
+            disabled={
+              updateBasicInfoMutation.isPending || updateCareerMutation.isPending || updateActivityMutation.isPending
+            }
           >
             변경완료
           </Button>
