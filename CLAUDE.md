@@ -450,5 +450,26 @@ const DataInfo = ({ title, items, data }: InfoTableProps) => {
 - 각 항목별 포매터 함수 지원
 - 재사용 가능한 컴포넌트 구조
 
+## SCSS 규칙
+
+### Import 규칙
+SCSS 파일에서는 abstracts를 import하지 않습니다:
+
+```scss
+// ❌ 잘못된 예시
+@import '@/styles/abstracts/abstracts';
+
+// ✅ 올바른 예시
+// abstracts는 전역에 선언되어 있으므로 import 없이 바로 사용
+.element {
+  color: $color-green-02;  // 바로 사용 가능
+}
+```
+
+#### 특징:
+- `$color-*` 변수들은 전역에 선언되어 있음
+- mixin과 function도 전역에서 사용 가능
+- abstracts import는 불필요하며 제거해야 함
+
 ## 기타 규칙
 (추후 추가)

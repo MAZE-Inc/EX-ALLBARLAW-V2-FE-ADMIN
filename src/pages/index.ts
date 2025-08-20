@@ -29,8 +29,11 @@ import CategoryLayout from './category/categoryLayout/CategoryLayout'
 import CategoryManagementPage from './category/categoryManagement/CategoryManagementPage'
 import MemberDetailPage from './member/memberDetail/MemberDetailPage'
 import LawyerMemberPage from './member/lawyerMember/LawyerMemberPage'
+
+// lawyer
 import LawyerListPage from './lawyer/lawyerList/LawyerListPage'
 import LawyerDetailPage from './lawyer/lawyerDetail/LawyerDetailPage'
+import LawyerEditPage from './lawyer/lawyerEdit/LawyerEditPage'
 
 // content
 import ContentLayout from './content/contentLayout/ContentLayout'
@@ -88,4 +91,5 @@ export {
   LegalTermErrorReportList,
   LegalTermDetail,
   LegalTermEdit,
+  LawyerEditPage,
 }

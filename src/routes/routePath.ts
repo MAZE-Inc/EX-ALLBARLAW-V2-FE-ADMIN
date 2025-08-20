@@ -16,6 +16,7 @@ export const ROUTE_PATH = {
   // 변호사 관리
   LAWYER_MANAGEMENT: '/lawyer-management',
   LAWYER_DETAIL: 'lawyer/:lawyerId',
+  LAWYER_EDIT: 'lawyer/edit/:lawyerId',
 
   // 분류별 컨텐츠 관리
   CONTENT: '/content',

@@ -42,6 +42,9 @@ export const QUERY_KEY = {
   LAWYER_SEARCH: 'lawyerSearch',
   LAWYER_LIST: 'lawyerList',
   LAWYER_DETAIL: 'lawyerDetail',
+  LAWYER_BASIC_INFO: 'lawyerBasicInfo',
+  LAWYER_CAREER: 'lawyerCareer',
+  LAWYER_ACTIVITY: 'lawyerActivity',
 
   // 채팅
   CHAT_LIST: 'chatList',

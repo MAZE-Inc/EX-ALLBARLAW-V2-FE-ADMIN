@@ -1,10 +1,14 @@
 import instance from '@/lib/axios'
 import {
+  LawyerActivity,
+  LawyerBasicInfo,
+  LawyerCareer,
   LawyerDetailResponse,
   LawyerListRequest,
   LawyerListResponse,
   LawyerSearchRequest,
   LawyerSearchResponse,
+  LawyerUpdateRequest,
 } from '@/types/lawyerTypes'
 import axios from 'axios'
 
@@ -39,6 +43,36 @@ export const lawyerService = {
   getLawyerDetail: async (lawyerId: number) => {
     const url = `${userUrl}/lawyer/detail/${lawyerId}`
     const response = await axios.get<LawyerDetailResponse>(url)
+    return response.data
+  },
+  getLawyerBasicInfo: async (lawyerId: number) => {
+    const response = await instance.get<LawyerBasicInfo>(`/lawyer/profile/${lawyerId}/basic-info`)
+    return response.data
+  },
+  updateLawyerBasicInfo: async (lawyerId: number, data: LawyerUpdateRequest) => {
+    const response = await instance.put(`/lawyer/profile/${lawyerId}/basic-info`, data)
+    return response.data
+  },
+  getLawyerCareer: async (lawyerId: number) => {
+    const response = await instance.get<{ lawyerCareers: LawyerCareer[] }>(`/lawyer/profile/${lawyerId}/career`)
+    return response.data
+  },
+  updateLawyerCareer: async (lawyerId: number, data: LawyerCareer[]) => {
+    const requestBody = {
+      lawyerCareers: data,
+    }
+    const response = await instance.put(`/lawyer/profile/${lawyerId}/career`, requestBody)
+    return response.data
+  },
+  getLawyerActivity: async (lawyerId: number) => {
+    const response = await instance.get<{ lawyerActivities: LawyerActivity[] }>(`/lawyer/profile/${lawyerId}/activity`)
+    return response.data
+  },
+  updateLawyerActivity: async (lawyerId: number, data: LawyerActivity[]) => {
+    const requestBody = {
+      lawyerActivities: data,
+    }
+    const response = await instance.put(`/lawyer/profile/${lawyerId}/activity`, requestBody)
     return response.data
   },
 }

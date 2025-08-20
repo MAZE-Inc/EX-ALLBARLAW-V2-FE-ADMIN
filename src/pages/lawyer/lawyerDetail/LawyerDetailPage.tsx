@@ -2,7 +2,7 @@ import { Button } from 'antd'
 import styles from './lawyer-detail.module.scss'
 
 import React, { useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useLawyerDetail } from '@/hooks/queries/useLawyer'
 import LawyerProfile from '@/container/lawyer/lawyerProfile/LawyerProfile'
 import LawyerDetailSidebar from '@/container/lawyer/lawyerDetailSidebar/LawyerDetailSidebar'
@@ -20,6 +20,7 @@ const LawyerDetailPage = () => {
   const legalKnowledgeRef = useRef<HTMLElement>(null)
   const { lawyerId } = useParams()
   const { data: lawyerDetail } = useLawyerDetail(Number(lawyerId))
+  const navigate = useNavigate()
 
   const scrollToSection = (ref: React.RefObject<HTMLElement | null>) => {
     ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -27,12 +28,20 @@ const LawyerDetailPage = () => {
 
   const lawyerProfileImages = lawyerDetail?.lawyerProfileImages.map(image => image.imageUrl)
 
+  const handleOpenHomepage = () => {
+    window.open(`${import.meta.env.VITE_USER_URL}/search/lawyer/${lawyerId}`, '_blank')
+  }
+
+  const handleOpenEditPage = () => {
+    navigate(`/lawyer-management/lawyer/edit/${lawyerId}`)
+  }
+
   return (
     <>
       <header className={styles['lawyer-detail__header']}>
         <div className={styles['lawyer-detail__header-actions']}>
-          <Button>홈페이지에서 보기</Button>
-          <Button>변호사 정보 변경하기</Button>
+          <Button onClick={handleOpenHomepage}>홈페이지에서 보기</Button>
+          <Button onClick={handleOpenEditPage}>변호사 정보 변경하기</Button>
         </div>
       </header>
       <main className='sub-main-container' style={{ padding: '16px' }}>
