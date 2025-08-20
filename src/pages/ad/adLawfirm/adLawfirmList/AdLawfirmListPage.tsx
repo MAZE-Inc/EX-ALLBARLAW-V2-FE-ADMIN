@@ -11,6 +11,7 @@ import MultipleImageSlider from '@/components/multipleImageSlider/MultipleImageS
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { useExcelExport } from '@/hooks/useExcelExport'
 import { Lawfirm } from '@/types/lawfirmTypes'
+import { ROUTE_PATH } from '@/routes/routePath'
 
 interface AdLawfirmListHeaderProps {
   subcategories: Subcategory[]
@@ -133,7 +134,7 @@ const AdLawfirmListPage = () => {
       }
     } else {
       // 일반 모드: 상세 페이지로 이동
-      navigate(`/ad/lawfirm/edit/${lawfirm.lawfirmId}`)
+      navigate(`${ROUTE_PATH.AD_LAWFIRM}/edit/${lawfirm.lawfirmId}`)
     }
   }
 

@@ -1,6 +1,6 @@
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { lawfirmService } from '@/services/lawfirmService'
-import { LawfirmListRequest } from '@/types/lawfirmTypes'
+import { LawfirmApiRequest, LawfirmListRequest } from '@/types/lawfirmTypes'
 import { QUERY_KEY } from '@/constants/query'
 
 interface UseLawfirmInfiniteScrollProps {
@@ -46,4 +46,42 @@ export const useLawfirmInfiniteScroll = ({
     lawfirmData,
     lawfirmTotal,
   }
+}
+
+export const useLawfirm = (lawfirmId: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.LAWFIRM_DETAIL, lawfirmId],
+    queryFn: () => lawfirmService.getLawfirm(lawfirmId),
+    enabled: !!lawfirmId,
+  })
+}
+
+export const useCreateLawfirm = ({ onSuccess, onError }: { onSuccess?: () => void; onError?: () => void } = {}) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: lawfirmService.createLawfirm,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LAWFIRM_LIST] })
+      onSuccess?.()
+    },
+    onError: () => {
+      onError?.()
+    },
+  })
+}
+
+export const useUpdateLawfirm = ({ onSuccess, onError }: { onSuccess?: () => void; onError?: () => void } = {}) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ lawfirmId, request }: { lawfirmId: number; request: LawfirmApiRequest }) =>
+      lawfirmService.updateLawfirm(lawfirmId, request),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LAWFIRM_LIST] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LAWFIRM_DETAIL, variables.lawfirmId] })
+      onSuccess?.()
+    },
+    onError: () => {
+      onError?.()
+    },
+  })
 }

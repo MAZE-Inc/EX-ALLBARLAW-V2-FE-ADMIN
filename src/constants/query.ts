@@ -48,6 +48,7 @@ export const QUERY_KEY = {
 
   // 로펌
   LAWFIRM_LIST: 'lawfirmList',
+  LAWFIRM_DETAIL: 'lawfirmDetail',
 
   // 채팅
   CHAT_LIST: 'chatList',

@@ -27,6 +27,32 @@ export type Lawfirm = {
 
 export type CreateLawfirmRequest = Omit<Lawfirm, 'lawfirmCreatedAt' | 'lawfirmUpdatedAt'>
 
+// API 요청용 타입 (선택적 필드는 undefined 허용)
+export type LawfirmApiRequest = {
+  lawfirmId: number
+  lawfirmName: string
+  lawfirmEmail: string
+  lawfirmContact: string
+  lawfirmAddress?: string
+  lawfirmGreetingTitle?: string
+  lawfirmGreetingContent?: string
+  lawfirmHomepageUrl?: string
+  lawfirmLogoImageUrl?: string
+  lawfirmBlogUrl?: string
+  lawfirmViewCount: number
+  lawfirmCategoryId?: number
+  lawfirmSubcategoryId?: number
+  lawfirmDirects: {
+    id: number
+    name: string
+    link: string
+  }[]
+  lawfirmImages: {
+    id: number
+    imageUrl: string
+  }[]
+}
+
 export type LawfirmList = {
   lawfirmData: Lawfirm[]
   lawfirmTotal: number

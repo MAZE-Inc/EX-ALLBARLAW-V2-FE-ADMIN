@@ -290,14 +290,14 @@ const router = createBrowserRouter([
             path: '',
             element: <AdLawfirmListPage />,
           },
-          {
-            path: 'edit/:lawfirmId',
-            element: <AdLawfirmEditPage />,
-          },
         ],
       },
       {
         path: ROUTE_PATH.AD_LAWFIRM_CREATE,
+        element: <AdLawfirmEditPage />,
+      },
+      {
+        path: `${ROUTE_PATH.AD_LAWFIRM}/edit/:lawfirmId`,
         element: <AdLawfirmEditPage />,
       },
       {
