@@ -38,12 +38,14 @@ import {
   BlogPage,
   BlogList,
   LawyerListPage,
+  LawyerDetailPage,
   BlogEditor,
   VideoEditor,
   LegalTermListPage,
   LegalTermErrorReportList,
   LegalTermDetail,
   LegalTermEdit,
+  LawyerEditPage,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
@@ -91,11 +93,24 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.LAWYER_MANAGEMENT,
-        element: <LawyerLayout />,
         children: [
           {
             path: '',
-            element: <LawyerListPage />,
+            element: <LawyerLayout />,
+            children: [
+              {
+                path: '',
+                element: <LawyerListPage />,
+              },
+            ],
+          },
+          {
+            path: ROUTE_PATH.LAWYER_DETAIL,
+            element: <LawyerDetailPage />,
+          },
+          {
+            path: ROUTE_PATH.LAWYER_EDIT,
+            element: <LawyerEditPage />,
           },
         ],
       },

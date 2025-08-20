@@ -8,7 +8,7 @@ import { AdminSubMenu } from '@/types/adminTypes'
 
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false)
-  const [isTablet, setIsTablet] = useState(window.innerWidth <= 768)
+  const [isTablet, setIsTablet] = useState(window.innerWidth <= 1280)
 
   const { data: adminProfile } = useAdminProfile()
   const subMenuIds = adminProfile?.adminSubMenus?.map((subMenu: AdminSubMenu) => subMenu.subMenuId) || []
@@ -16,7 +16,7 @@ const MainLayout = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      const newIsTablet = window.innerWidth <= 768
+      const newIsTablet = window.innerWidth <= 1280
       setIsTablet(newIsTablet)
 
       if (!newIsTablet) {

@@ -15,7 +15,8 @@ export type Tag = {
 
 export type Lawyer = {
   lawyerId: number
-  lawfirmName: string
+  // lawfirmName: string
+  lawyerLawfirmName: string
   lawyerName: string
   lawyerProfileImage: string
   tags?: Tag[]
@@ -32,7 +33,7 @@ export type Lawyer = {
 
 export type AIRecommenderLawyerItem = Pick<
   Lawyer,
-  'lawyerId' | 'lawfirmName' | 'lawyerName' | 'lawyerProfileImage' | 'tags' | 'lawyerDescription'
+  'lawyerId' | 'lawyerLawfirmName' | 'lawyerName' | 'lawyerProfileImage' | 'tags' | 'lawyerDescription'
 >
 
 export type LawyerListRequest = {
@@ -67,20 +68,6 @@ type LawyerStatistics = {
   knowledgeAnswerCount: number
   last30DaysSiteVisitCount: number
   totalSiteVisitCount: number
-}
-
-type LawyerCareer = {
-  id: number
-  categoryName: string
-  content: string
-  displayOrder: number
-}
-
-type LawyerActivity = {
-  id: number
-  categoryName: string
-  content: string
-  displayOrder: number
 }
 
 export type LawyerDetailResponse = {
@@ -252,4 +239,53 @@ export type LawyerSearchResponse = {
     lawyerLawfirmName: string | null
     lawyerCreatedAt: string
   }[]
+}
+
+export interface LawyerBasicInfo {
+  lawyerDescription: string
+  lawyerName: string
+  lawyerBirthYear: number
+  lawyerBirthMonth: number
+  lawyerBirthDay: number
+  lawyerGender: number
+  lawyerPhone: string
+  lawyerTags: {
+    tagId: number
+    tagName: string
+  }[]
+
+  lawyerLawfirmName: string
+  lawyerLawfirmAddress: string
+  lawyerLawfirmAddressDetail: string
+  lawyerLawfirmContact: string
+  lawyerSubcategories: {
+    subcategoryId: number
+    subcategoryName: string
+  }[]
+  lawyerProfileImages?: {
+    id: number
+    imageUrl: string
+    displayOrder: number
+    isDefault: boolean
+  }[]
+}
+
+export interface LawyerUpdateRequest extends Omit<LawyerBasicInfo, 'lawyerTags' | 'lawyerProfileImages'> {
+  lawyerTags: string[]
+  lawyerProfileImages: {
+    imageUrl: string
+    displayOrder: number
+  }[]
+}
+
+export type LawyerCareer = {
+  lawyerCareerCategoryName: string
+  lawyerCareerContent: string
+  lawyerCareerDisplayOrder: number
+}
+
+export type LawyerActivity = {
+  lawyerActivityCategoryName: string
+  lawyerActivityContent: string
+  lawyerActivityDisplayOrder: number
 }

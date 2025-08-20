@@ -5,6 +5,7 @@ import styles from './knowledgeList.module.scss'
 import { ROUTE_PATH } from '@/routes/routePath'
 import LegalKnowledgeItem from '@/components/legalKnowledgeItem/LegalKnowledgeItem'
 import { Divider } from 'antd'
+import { Fragment } from 'react/jsx-runtime'
 
 const KnowledgeList = () => {
   const { subCategoryId } = useParams()
@@ -30,7 +31,7 @@ const KnowledgeList = () => {
     <main className={styles['knowledge-list']}>
       <section className={`${styles['knowledge-list-container']} knowledge-list-container`}>
         {knowledgeList?.map(knowledge => (
-          <>
+          <Fragment key={knowledge.knowledgeId}>
             <LegalKnowledgeItem
               title={knowledge.knowledgeTitle}
               description={knowledge.summaryContent}
@@ -40,7 +41,7 @@ const KnowledgeList = () => {
               onClick={() => handleClickKnowledge(knowledge.knowledgeId)}
             />
             <Divider />
-          </>
+          </Fragment>
         ))}
       </section>
     </main>

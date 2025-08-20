@@ -1,0 +1,360 @@
+.image-slider-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 24px;
+
+  // CSS 변수 - 커스텀 가능
+  --slider-border-radius: 8px;
+  --slider-box-shadow: none;
+  --overlay-background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+  --title-color: #ffffff;
+  --description-color: #f3f4f6;
+  --arrow-color: #ffffff;
+  --arrow-background: rgba(0, 0, 0, 0.5);
+  --dot-color: #ffffff;
+  --dot-active-color: #3b82f6;
+
+  .image-slider {
+    border-radius: var(--slider-border-radius);
+    overflow: hidden;
+    box-shadow: var(--slider-box-shadow);
+
+    .slide-wrapper {
+      outline: none;
+
+      .slide-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        
+        .slide-image {
+          width: 100%;
+          height: 100%;
+          display: block;
+          object-fit: cover;
+          border-radius: var(--slider-border-radius);
+        }
+
+        .image-container {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          cursor: pointer;
+          transition: transform 0.3s ease;
+
+          &:hover {
+            transform: scale(1.02);
+          }
+
+          &[role='button'] {
+            cursor: pointer;
+
+            &:focus {
+              outline: 2px solid var(--dot-active-color);
+              outline-offset: 2px;
+            }
+          }
+
+          .slide-image {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+          }
+
+          .slide-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--overlay-background);
+            padding: 1.5rem;
+            color: var(--title-color);
+
+            .slide-title {
+              font-size: 1.25rem;
+              font-weight: 600;
+              margin: 0 0 0.5rem 0;
+              line-height: 1.3;
+              color: var(--title-color);
+            }
+
+            .slide-description {
+              font-size: 0.875rem;
+              margin: 0;
+              line-height: 1.4;
+              color: var(--description-color);
+              opacity: 0.9;
+            }
+          }
+        }
+      }
+    }
+
+    // Slick 기본 스타일 커스터마이징
+    :global(.slick-prev),
+    :global(.slick-next) {
+      z-index: 2;
+      width: 40px;
+      height: 40px;
+      background: var(--arrow-background);
+      border-radius: 50%;
+      backdrop-filter: blur(4px);
+      transition: all 0.3s ease;
+
+      &:before {
+        color: var(--arrow-color);
+        font-size: 18px;
+        opacity: 1;
+      }
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.7);
+        transform: scale(1.1);
+      }
+    }
+
+    :global(.slick-prev) {
+      left: 1rem;
+    }
+
+    :global(.slick-next) {
+      right: 1rem;
+    }
+
+    :global(.slick-dots) {
+      bottom: -12px;
+      position: relative;
+
+      li {
+        margin: 0 2px;
+
+        button {
+          width: 16px;
+          height: 16px;
+          padding: 6px;
+          border-radius: 50%;
+          background: rgba(32, 191, 98, 0.3);
+          transition: all 0.3s ease;
+
+          &:before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: transparent;
+            transition: all 0.3s ease;
+          }
+
+          &:hover:before {
+            background: rgba(32, 191, 98, 0.5);
+          }
+        }
+
+        &.slick-active button:before {
+          background: var(--key-color-green, #20bf62);
+        }
+      }
+    }
+  }
+}
+
+// 커스텀 닷 컨테이너 - 자연스러운 문서 흐름 구조
+.custom-dots-container {
+  // padding-bottom 제거 - 닷이 자연스럽게 차지할 공간
+
+  .image-slider {
+    :global(.slick-dots) {
+      display: none !important; // 기본 닷 완전히 숨김
+    }
+  }
+}
+
+// 커스텀 닷 스타일
+.custom-dots-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px; // 이미지와 닷 사이 간격만
+  position: relative;
+
+  .custom-dot {
+    width: 16px;
+    height: 16px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    padding: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(32, 191, 98, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    &:hover::before {
+      background: rgba(32, 191, 98, 0.5);
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    &:focus {
+      outline: 2px solid rgba(32, 191, 98, 0.5);
+      outline-offset: 2px;
+    }
+  }
+
+  .custom-dot-active {
+    &::before {
+      background: var(--key-color-green, #20bf62);
+      transform: translate(-50%, -50%) scale(1.3);
+    }
+
+    &:hover::before {
+      background: var(--key-color-green, #20bf62);
+      transform: translate(-50%, -50%) scale(1.3);
+    }
+  }
+}
+
+.image-slider-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: #f9fafb;
+  border: 2px dashed #d1d5db;
+  border-radius: var(--slider-border-radius);
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+// 반응형 디자인
+@media (max-width: 768px) {
+  .image-slider-container {
+    .image-slider {
+      .slide-wrapper {
+        .slide-content {
+          .image-container {
+            &:hover {
+              transform: none; // 모바일에서는 호버 효과 제거
+            }
+
+            .slide-overlay {
+              padding: 1rem;
+
+              .slide-title {
+                font-size: 1.125rem;
+              }
+
+              .slide-description {
+                font-size: 0.8rem;
+              }
+            }
+          }
+        }
+      }
+
+      :global(.slick-prev),
+      :global(.slick-next) {
+        width: 32px;
+        height: 32px;
+
+        &:before {
+          font-size: 14px;
+        }
+      }
+
+      :global(.slick-prev) {
+        left: 0.5rem;
+      }
+
+      :global(.slick-next) {
+        right: 0.5rem;
+      }
+
+      :global(.slick-dots) {
+        bottom: 0.5rem;
+
+        li button {
+          width: 8px;
+          height: 8px;
+        }
+      }
+    }
+  }
+
+  .custom-dots-wrapper {
+    .custom-dot {
+      width: 14px;
+      height: 14px;
+      padding: 5px;
+
+      &::before {
+        width: 4px;
+        height: 4px;
+      }
+    }
+  }
+}
+
+// 다크 모드 지원
+@media (prefers-color-scheme: dark) {
+  .image-slider-container {
+    --arrow-background: rgba(255, 255, 255, 0.2);
+    --arrow-color: #ffffff;
+    --dot-color: #ffffff;
+    --dot-active-color: #60a5fa;
+  }
+
+  .image-slider-empty {
+    background: #1f2937;
+    border-color: #374151;
+    color: #9ca3af;
+  }
+}
+
+// 테마별 커스터마이징을 위한 클래스
+.theme-minimal {
+  --slider-border-radius: 0;
+  --slider-box-shadow: none;
+
+  .image-slider {
+    :global(.slick-prev),
+    :global(.slick-next) {
+      display: none !important;
+    }
+
+    :global(.slick-dots) {
+      bottom: -2rem;
+
+      li button {
+        background: #e5e7eb;
+      }
+
+      li.slick-active button {
+        background: #111827;
+      }
+    }
+  }
+}
+
+.theme-rounded {
+  --slider-border-radius: 20px;
+}
+
+.theme-square {
+  --slider-border-radius: 0;
+}

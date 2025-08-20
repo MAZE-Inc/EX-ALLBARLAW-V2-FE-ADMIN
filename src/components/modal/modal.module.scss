@@ -1,0 +1,116 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  max-height: 80vh;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e5e5;
+  background-color: white;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: #333;
+  }
+}
+
+.body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.footer {
+  padding: 16px 24px;
+  border-top: 1px solid #e5e5e5;
+  background-color: #f9f9f9;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+// Alert 모달 스타일
+.modalAlert {
+  max-width: 320px;
+  width: 90%;
+
+  .footer {
+    border-top: none;
+    background-color: white;
+    padding-top: 0;
+    justify-content: center;
+  }
+}
+
+.alertContent {
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #333;
+  padding: 8px 0;
+  white-space: pre-line;
+}
+
+.alertButton {
+  flex: 1;
+  padding: 10px 20px;
+  background-color: #59c47c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: center;
+
+  &:hover {
+    background-color: #4caf50;
+  }
+
+  &:active {
+    background-color: #45a049;
+  }
+}

@@ -1,0 +1,156 @@
+.lawyer-profile {
+  background-color: $color-white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 2rem;
+}
+
+.description {
+  font-size: 1.25rem;
+  font-weight: $font-weight-regular;
+  color: $color-07-black;
+
+  margin: 0;
+
+  white-space: pre-line;
+  word-break: keep-all;
+}
+
+.lawyer-banner {
+  display: none;
+}
+
+.lawfirm {
+  &__info {
+    position: relative;
+  }
+
+  &__name {
+    font-size: 1.25rem;
+    font-weight: $font-weight-extra-bold;
+    color: $color-text-black;
+
+    margin-bottom: 1.0625rem;
+  }
+
+  &__address {
+    font-style: normal;
+    font-size: 0.875rem;
+    margin-bottom: 0;
+  }
+
+  &__buttons {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    display: flex;
+    gap: 0.625rem;
+
+    button {
+      background-color: $color-white;
+      padding: 0.3438rem 0.5rem;
+
+      border-radius: 0.625rem;
+      border: 1px solid $color-green-01;
+
+      font-size: 0.75rem;
+      color: $color-green-01;
+    }
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  &__item {
+    border: none;
+    background-color: $color-bg-gray-01;
+  }
+}
+
+.modal {
+  width: 18.375rem;
+  padding: 2rem 0;
+
+  text-align: center;
+  white-space: pre-line;
+  word-break: keep-all;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+
+  .close-button {
+    width: 11.875rem;
+    height: 2rem;
+
+    background-color: transparent;
+    border-radius: 0.625rem;
+    border: 1px solid $color-green-01;
+
+    text-align: center;
+    font-size: 0.75rem;
+    color: $color-green-01;
+  }
+}
+
+@media (max-width: $breakpoint-desktop) {
+  .lawyer-profile {
+    padding: 0;
+    background-color: transparent;
+    gap: 1rem;
+  }
+
+  .description {
+    font-size: 0.9375rem;
+  }
+
+  .lawyer-banner {
+    display: block;
+    background-color: $color-white;
+
+    padding: 1rem 1.625rem;
+    border-radius: 0.5rem;
+
+    &-item {
+      --lawyer-horizon-gap: 0.75rem;
+    }
+  }
+
+  .lawfirm-container {
+    background-color: $color-white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .lawfirm {
+    &__buttons {
+      position: relative;
+      margin-top: 0.5rem;
+    }
+  }
+
+  .tags {
+    gap: 0.75rem;
+  }
+
+  .barotalk-button {
+    padding: 0.75rem 0;
+    text-align: center;
+    border-radius: 0.625rem;
+
+    background-color: $color-green-01;
+
+    color: $color-white;
+    font-size: 0.875rem;
+    font-weight: $font-weight-regular;
+  }
+}

@@ -1,0 +1,193 @@
+.video-slider-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  .slider-content {
+    background-color: $color-white;
+    border: 1px solid rgba($color-green-01, 0.2);
+    border-radius: 0.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .slider-title {
+      font-size: 0.875rem;
+      font-weight: $font-weight-extra-bold;
+      color: $color-text-caption;
+      flex-shrink: 0;
+    }
+
+    .slider-wrapper {
+      overflow: hidden;
+      flex: 1;
+      user-select: none;
+      cursor: grab;
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      .slider-track {
+        display: flex;
+        height: 100%;
+
+        .slide-item {
+          flex: 0 0 100%; // 한 장씩 100% 차지
+          cursor: pointer;
+          display: flex;
+          gap: 1rem;
+
+          transition: transform 0.2s ease;
+          box-sizing: border-box;
+
+          &:hover {
+            transform: translateY(-2px);
+          }
+
+          .video-thumbnail {
+            overflow: hidden;
+            flex-shrink: 0;
+            img {
+              width: 5.625rem;
+              height: 3.1875rem;
+              object-fit: cover;
+              border-radius: 0.5rem;
+            }
+
+            // 플레이 아이콘 오버레이
+            &::after {
+              content: '▶';
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              color: white;
+              font-size: 1.5rem;
+              opacity: 0;
+              transition: opacity 0.2s ease;
+              text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            }
+
+            &:hover::after {
+              opacity: 0.8;
+            }
+          }
+
+          .video-info {
+            .video-title {
+              font-size: 1rem;
+              font-weight: $font-weight-regular;
+              color: $color-text-black;
+              line-height: 1.5rem;
+              margin-bottom: 0.25rem;
+
+              @include ellipsis(2);
+            }
+
+            .channel-name {
+              font-size: 0.75rem;
+              color: $color-text-index;
+              font-weight: $font-weight-regular;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 페이지네이션을 카드 바깥으로
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.875rem;
+    margin-top: 0.75rem;
+    position: relative;
+
+    .pagination-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      border: none;
+      background-color: rgba($color-green-01, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+
+      &.active {
+        background-color: $color-green-01;
+      }
+
+      &:hover:not(.active) {
+        background-color: rgba($color-green-01, 0.6);
+      }
+
+      // 각 점에서 다음 점까지 선 연결 (마지막 점 제외)
+      &:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        left: 2px; // 현재 점의 중심에서 시작
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0.875rem; // gap 전체 길이
+        height: 1px;
+        background-color: rgba($color-green-01, 0.3);
+        z-index: 1;
+      }
+    }
+  }
+}
+
+// 모바일 반응형
+@media (max-width: $breakpoint-desktop) {
+  .video-slider-container {
+    .slider-content {
+      padding: 1.5rem;
+
+      .slider-title {
+        font-size: 1rem;
+      }
+
+      .slider-wrapper {
+        .slider-track {
+          .slide-item {
+            .video-info {
+              .video-title {
+                font-size: 0.8125rem;
+              }
+
+              .channel-name {
+                font-size: 0.6875rem;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .pagination {
+      margin-top: 0.75rem;
+
+      .pagination-dot {
+        width: 4px;
+        height: 4px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .video-slider-container {
+    .slider-wrapper {
+      .slider-track {
+        .slide-item {
+          flex: 0 0 calc(60% - 0.5rem); // 더 작은 화면에서는 1.5개씩
+        }
+      }
+    }
+  }
+}

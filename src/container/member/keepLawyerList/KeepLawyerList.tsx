@@ -40,7 +40,7 @@ const KeepLawyerList = ({ userId, sort }: { userId: number; sort: 'asc' | 'desc'
               name={item.lawyerName}
               profileImage={item.lawyerProfileImage}
               description={item.lawyerDescription}
-              lawfirm={item.lawfirmName}
+              lawfirm={item.lawyerLawfirmName}
               // onClick={() => handleClickLawyer(item.lawyerId)}
             />
             {index !== page.data.length - 1 && <Divider />}

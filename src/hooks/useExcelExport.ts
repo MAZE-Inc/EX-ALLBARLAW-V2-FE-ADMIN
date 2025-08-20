@@ -15,7 +15,7 @@ export const useExcelExport = () => {
       message.warning('다운로드할 데이터가 없습니다.')
       return
     }
-    
+
     try {
       exportCategoriesToExcel(categoryData, '전체분류')
       message.success('엑셀 파일이 다운로드되었습니다.')
@@ -24,20 +24,16 @@ export const useExcelExport = () => {
       message.error('엑셀 다운로드에 실패했습니다.')
     }
   }, [])
-  
+
   /**
    * 범용 엑셀 다운로드 함수
    */
-  const exportData = useCallback(<T extends Record<string, any>>(
-    data: T[],
-    fileName: string,
-    sheetName?: string
-  ) => {
+  const exportData = useCallback(<T extends Record<string, any>>(data: T[], fileName: string, sheetName?: string) => {
     if (!data || data.length === 0) {
       message.warning('다운로드할 데이터가 없습니다.')
       return
     }
-    
+
     try {
       exportToExcel(data, fileName, sheetName)
       message.success('엑셀 파일이 다운로드되었습니다.')
@@ -46,7 +42,7 @@ export const useExcelExport = () => {
       message.error('엑셀 다운로드에 실패했습니다.')
     }
   }, [])
-  
+
   return {
     exportCategories,
     exportData,
