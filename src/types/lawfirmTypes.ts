@@ -25,6 +25,8 @@ export type Lawfirm = {
   lawfirmUpdatedAt: '2025-08-20T03:18:32.340Z'
 }
 
+export type CreateLawfirmRequest = Omit<Lawfirm, 'lawfirmCreatedAt' | 'lawfirmUpdatedAt'>
+
 export type LawfirmList = {
   lawfirmData: Lawfirm[]
   lawfirmTotal: number

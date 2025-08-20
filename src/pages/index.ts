@@ -11,7 +11,6 @@ import VideoList from './content/video/videoList/VideoList'
 import VideoDetail from './content/video/videoDetail/VideoDetail'
 import VideoEditor from './content/video/videoEditor/VideoEditor'
 import LawyerLayout from './lawyer/lawyerLayout/LawyerLayout'
-import AdLawfirmPage from './ad/adLawfirm/AdLawfirmPage'
 import AdLawyerPage from './ad/adLawyer/AdLawyerPage'
 import AdBannerPage from './ad/adBanner/AdBanner'
 import StatisticsPage from './statistics/statistics/StatisticsPage'
@@ -34,6 +33,11 @@ import LawyerMemberPage from './member/lawyerMember/LawyerMemberPage'
 import LawyerListPage from './lawyer/lawyerList/LawyerListPage'
 import LawyerDetailPage from './lawyer/lawyerDetail/LawyerDetailPage'
 import LawyerEditPage from './lawyer/lawyerEdit/LawyerEditPage'
+
+// lawfirm
+import AdLawfirmLayout from './ad/adLawfirm/adLawfirmLayout/AdLawfirmLayout'
+import AdLawfirmListPage from './ad/adLawfirm/adLawfirmList/AdLawfirmListPage'
+import AdLawfirmEditPage from './ad/adLawfirm/adLawfirmEdit/AdLawfirmEditPage'
 
 // content
 import ContentLayout from './content/contentLayout/ContentLayout'
@@ -62,7 +66,6 @@ export {
   LawyerLayout,
   MemberPage,
   LawyerMemberLayout,
-  AdLawfirmPage,
   AdLawyerPage,
   AdBannerPage,
   StatisticsPage,
@@ -92,4 +95,7 @@ export {
   LegalTermDetail,
   LegalTermEdit,
   LawyerEditPage,
+  AdLawfirmLayout,
+  AdLawfirmListPage,
+  AdLawfirmEditPage,
 }

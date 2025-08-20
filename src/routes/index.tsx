@@ -45,14 +45,15 @@ import {
   LegalTermDetail,
   LegalTermEdit,
   LawyerEditPage,
+  AdLawfirmLayout,
+  AdLawfirmListPage,
+  AdLawfirmEditPage,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
 import MemberLayout from '@/pages/member/memberLayout/MemberLayout'
 import ProtectedRoute from './ProtectedRoute'
 import PublicOnlyRoute from './PublicOnlyRoute'
-import AdLawfirmLayout from '@/pages/ad/adLawfirm/adLawfirmLayout/AdLawfirmLayout'
-import AdLawfirmListPage from '@/pages/ad/adLawfirm/adLawfirmList/AdLawfirmListPage'
 
 const router = createBrowserRouter([
   {
@@ -289,7 +290,15 @@ const router = createBrowserRouter([
             path: '',
             element: <AdLawfirmListPage />,
           },
+          {
+            path: 'edit/:lawfirmId',
+            element: <AdLawfirmEditPage />,
+          },
         ],
+      },
+      {
+        path: ROUTE_PATH.AD_LAWFIRM_CREATE,
+        element: <AdLawfirmEditPage />,
       },
       {
         path: ROUTE_PATH.AD_LAWYER,

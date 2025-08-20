@@ -38,8 +38,12 @@ export const useLawfirmInfiniteScroll = ({
   // 모든 페이지의 데이터를 플랫하게 합치기
   const lawfirmData = query.data?.pages.flatMap(page => page.lawfirmData) || []
 
+  // 첫 번째 페이지에서 전체 개수 가져오기
+  const lawfirmTotal = query.data?.pages[0]?.lawfirmTotal || 0
+
   return {
     ...query,
     lawfirmData,
+    lawfirmTotal,
   }
 }
