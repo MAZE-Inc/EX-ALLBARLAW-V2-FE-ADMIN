@@ -46,6 +46,10 @@ export const QUERY_KEY = {
   LAWYER_CAREER: 'lawyerCareer',
   LAWYER_ACTIVITY: 'lawyerActivity',
 
+  // 로펌
+  LAWFIRM_LIST: 'lawfirmList',
+  LAWFIRM_DETAIL: 'lawfirmDetail',
+
   // 채팅
   CHAT_LIST: 'chatList',
 

@@ -1,0 +1,158 @@
+.ad-lawfirm-list {
+  background-color: $color-bg-gray-02;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: $color-white;
+    flex-shrink: 0;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  &__select {
+    min-width: 200px;
+  }
+}
+
+.selection-mode-bar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.selection-mode {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #595959;
+  }
+
+  :global {
+    .ant-switch-checked {
+      background-color: $color-green-02;
+    }
+
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: $color-green-02;
+      border-color: $color-green-02;
+    }
+
+    .ant-checkbox:hover .ant-checkbox-inner {
+      border-color: $color-green-02;
+    }
+
+    .ant-checkbox-indeterminate .ant-checkbox-inner::after {
+      background-color: $color-green-02;
+    }
+  }
+}
+
+.divider {
+  width: 1px;
+  height: 20px;
+  background-color: #d9d9d9;
+  margin: 0 0.5rem;
+}
+
+.selection-count {
+  font-size: 14px;
+  color: $color-green-02;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.content-wrapper {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.lawfirm-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background-color: $color-white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  position: relative;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+  border: 2px solid transparent;
+
+  &--selection-mode {
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &--selected {
+    border-color: $color-green-02;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: rgba(82, 196, 26, 0.05);
+      border-radius: 0.5rem;
+      pointer-events: none;
+    }
+  }
+}
+
+.selection-indicator {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 24px;
+  color: $color-green-02;
+  z-index: 1;
+}
+
+.select-all-wrapper {
+  background-color: $color-white;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+
+  :global {
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: $color-green-02;
+      border-color: $color-green-02;
+    }
+
+    .ant-checkbox:hover .ant-checkbox-inner {
+      border-color: $color-green-02;
+    }
+
+    .ant-checkbox-indeterminate .ant-checkbox-inner::after {
+      background-color: $color-green-02;
+    }
+  }
+}

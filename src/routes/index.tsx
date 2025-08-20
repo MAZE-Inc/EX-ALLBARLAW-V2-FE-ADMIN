@@ -5,7 +5,6 @@ import MainLayout from '../pages/layout/mainLayout/MainLayout'
 import { ROUTE_PATH } from './routePath'
 import {
   AdBannerPage,
-  AdLawfirmPage,
   AdLawyerPage,
   AdminManagementPage,
   AdminRegisterPage,
@@ -46,6 +45,9 @@ import {
   LegalTermDetail,
   LegalTermEdit,
   LawyerEditPage,
+  AdLawfirmLayout,
+  AdLawfirmListPage,
+  AdLawfirmEditPage,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
@@ -282,7 +284,21 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.AD_LAWFIRM,
-        element: <AdLawfirmPage />,
+        element: <AdLawfirmLayout />,
+        children: [
+          {
+            path: '',
+            element: <AdLawfirmListPage />,
+          },
+        ],
+      },
+      {
+        path: ROUTE_PATH.AD_LAWFIRM_CREATE,
+        element: <AdLawfirmEditPage />,
+      },
+      {
+        path: `${ROUTE_PATH.AD_LAWFIRM}/edit/:lawfirmId`,
+        element: <AdLawfirmEditPage />,
       },
       {
         path: ROUTE_PATH.AD_LAWYER,

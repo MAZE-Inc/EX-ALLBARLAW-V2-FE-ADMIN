@@ -41,6 +41,10 @@ export const ROUTE_PATH = {
 
   // 광고 관리
   AD_LAWFIRM: '/ad-lawfirm',
+  AD_LAWFIRM_LIST: 'list',
+
+  AD_LAWFIRM_CREATE: '/ad-lawfirm/create',
+
   AD_LAWYER: '/ad-lawyer',
   AD_BANNER: '/ad-banner',
 

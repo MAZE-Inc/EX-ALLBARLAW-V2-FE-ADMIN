@@ -1,0 +1,193 @@
+.ad-lawfirm-edit-page {
+  &__header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 16px;
+  }
+
+  &__form {
+    padding: 1.5rem;
+
+    .formRow {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 0;
+      border-top: 1px solid #d9d9d9;
+
+      &:last-child {
+        border-bottom: 1px solid #d9d9d9;
+        margin-bottom: 24px;
+      }
+
+      // TextArea가 있는 row에 대한 특별 처리
+      &.textareaRow {
+        .labelCol {
+          align-items: flex-start;
+          padding-top: 20px;
+        }
+
+        .inputCol {
+          align-items: flex-start;
+        }
+      }
+
+      // 이미지 업로드 row
+      &.imageRow {
+        .labelCol {
+          align-items: flex-start;
+          padding-top: 20px;
+        }
+
+        .inputCol {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 16px;
+        }
+      }
+
+      // 바로가기 링크 row
+      &.linksRow {
+        .labelCol {
+          align-items: flex-start;
+          padding-top: 20px;
+        }
+
+        .inputCol {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 12px;
+        }
+      }
+    }
+
+    .labelCol {
+      width: 150px;
+      flex-shrink: 0;
+      padding: 16px;
+      background-color: #fafafa;
+      border-right: 1px solid #d9d9d9;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+    }
+
+    .inputCol {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+      gap: 8px;
+    }
+
+    .label {
+      display: block;
+      margin: 0;
+      font-weight: 500;
+      text-align: left;
+      color: #262626;
+      font-size: 14px;
+    }
+
+    // 드롭다운 그룹
+    .dropdownGroup {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    // 링크 항목
+    .linkItem {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      width: 100%;
+    }
+
+    // 이미지 업로드 영역
+    .uploadArea {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .uploadBox {
+        width: 120px;
+        height: 120px;
+        border: 1px dashed #d9d9d9;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background-color: #fafafa;
+        transition: all 0.3s;
+
+        &:hover {
+          border-color: $color-green-02;
+          background-color: rgba(82, 196, 26, 0.05);
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 8px;
+        }
+      }
+
+      .uploadHint {
+        font-size: 12px;
+        color: #8c8c8c;
+        line-height: 1.5;
+      }
+    }
+
+    // 이미지 목록
+    .imageList {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+
+      .imageItem {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #d9d9d9;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .imageActions {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          display: flex;
+          gap: 4px;
+          padding: 4px;
+          background: rgba(0, 0, 0, 0.7);
+          justify-content: center;
+        }
+      }
+    }
+
+    // 버튼 그룹
+    .buttonGroup {
+      display: flex;
+      gap: 8px;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px 0;
+  }
+}
