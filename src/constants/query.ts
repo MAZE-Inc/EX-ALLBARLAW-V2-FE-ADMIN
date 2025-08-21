@@ -60,4 +60,5 @@ export const QUERY_KEY = {
 
   //ad
   AD_LAWYER_LIST: 'adLawyerList',
+  AD_LAWYER_DETAIL: 'adLawyerDetail',
 } as const

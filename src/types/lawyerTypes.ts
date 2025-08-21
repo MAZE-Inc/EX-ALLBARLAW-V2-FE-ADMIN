@@ -231,12 +231,22 @@ export type LawyerSearchRequest = {
   searchType?: 'lawyerName' | 'lawfirmName'
 }
 
+export type LawyerSearchResult = {
+  lawyerId: number
+  lawyerName: string
+  lawyerProfileImage: string | null
+  lawyerLawfirmName: string | null
+  lawyerDescription: string | null
+  lawyerCreatedAt: string
+}
+
 export type LawyerSearchResponse = {
   lawyerSearchResults: {
     lawyerId: number
     lawyerName: string
     lawyerProfileImage: string | null
     lawyerLawfirmName: string | null
+    lawyerDescription: string | null
     lawyerCreatedAt: string
   }[]
 }
@@ -304,6 +314,6 @@ export type AdLawyer = {
 
 export type AdLawyerUpdateRequest = {
   lawyerAdLawyerId: number
-  lawyerAdStartedAt: string
-  lawyerAdFinishedAt: string
+  lawyerAdStartedAt: string | Date
+  lawyerAdFinishedAt: string | Date
 }

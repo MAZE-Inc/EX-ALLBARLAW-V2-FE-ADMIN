@@ -14,14 +14,12 @@ const AdLawyerListPage = () => {
 
   const { data: adLawyerList } = useAdLawyerList()
 
-  console.log(adLawyerList)
-
   const handleCreateLawyer = () => {
     navigate(ROUTE_PATH.AD_LAWYER_CREATE)
   }
 
-  const handleEditAd = (_record: AdLawyer) => {
-    // navigate(`${ROUTE_PATH.AD_LAWYER_/EDIT}/${record.lawyerAdId}`)
+  const handleEditAd = (record: AdLawyer) => {
+    navigate(`${ROUTE_PATH.AD_LAWYER}/edit/${record.lawyerAdId}`)
   }
 
   const columns: TableProps<AdLawyer>['columns'] = [

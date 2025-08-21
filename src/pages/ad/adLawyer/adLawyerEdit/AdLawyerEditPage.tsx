@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, DatePicker, Space, Select, message } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
-import { Dayjs } from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import LawyerHorizon from '@/components/lawyer/LawyerHorizon'
 import LawyerSearchModal from '@/components/modal/LawyerSearchModal'
-import { useAdLawyerCreate } from '@/hooks/queries/useLawyer'
-import { AdLawyerUpdateRequest } from '@/types/lawyerTypes'
+import { useAdLawyerCreate, useAdLawyerUpdate, useAdLawyerDetail } from '@/hooks/queries/useLawyer'
+import { AdLawyerUpdateRequest, LawyerSearchResult } from '@/types/lawyerTypes'
 import { ROUTE_PATH } from '@/routes/routePath'
 import styles from './adLawyerEdit.module.scss'
 
@@ -22,34 +22,63 @@ const AdLawyerEditPage = () => {
   const [endDate, setEndDate] = useState<Dayjs | null>(null)
   const [endHour, setEndHour] = useState<string>('23')
   const [endMinute, setEndMinute] = useState<string>('59')
-  const [selectedLawyer, setSelectedLawyer] = useState<any>(null)
+  const [selectedLawyer, setSelectedLawyer] = useState<LawyerSearchResult | null>(null)
 
-  // Modal state
   const [isLawyerModalOpen, setIsLawyerModalOpen] = useState(false)
+
+  const { data: adLawyerDetail } = useAdLawyerDetail(Number(lawyerAdId), isEditMode)
 
   const createAdLawyerMutation = useAdLawyerCreate(
     () => {
-      message.success(isEditMode ? '광고가 수정되었습니다.' : '광고가 등록되었습니다.')
+      message.success('광고가 등록되었습니다.')
       navigate(ROUTE_PATH.AD_LAWYER)
     },
     () => {
-      message.error(isEditMode ? '광고 수정에 실패했습니다.' : '광고 등록에 실패했습니다.')
+      message.error('광고 등록에 실패했습니다.')
+    }
+  )
+
+  const updateAdLawyerMutation = useAdLawyerUpdate(
+    Number(lawyerAdId),
+    () => {
+      message.success('광고가 수정되었습니다.')
+      navigate(ROUTE_PATH.AD_LAWYER)
+    },
+    () => {
+      message.error('광고 수정에 실패했습니다.')
     }
   )
 
   // Load existing data in edit mode
   useEffect(() => {
-    if (isEditMode && lawyerAdId) {
-      // TODO: Load existing ad data
-      // const loadAdData = async () => {
-      //   const data = await lawyerService.getAdLawyerDetail(lawyerAdId)
-      //   setStartDate(dayjs(data.lawyerAdStartedAt))
-      //   setEndDate(dayjs(data.lawyerAdFinishedAt))
-      //   setSelectedLawyer(data.lawyer)
-      // }
-      // loadAdData()
+    console.log('useEffect triggered - isEditMode:', isEditMode, 'adLawyerDetail:', adLawyerDetail)
+
+    if (isEditMode && adLawyerDetail) {
+      // Set start date and time
+      const startDateTime = dayjs(adLawyerDetail.lawyerAdStartedAt)
+      setStartDate(startDateTime)
+      setStartHour(startDateTime.format('HH'))
+      setStartMinute(startDateTime.format('mm'))
+
+      // Set end date and time
+      const endDateTime = dayjs(adLawyerDetail.lawyerAdFinishedAt)
+      setEndDate(endDateTime)
+      setEndHour(endDateTime.format('HH'))
+      setEndMinute(endDateTime.format('mm'))
+
+      // Set lawyer info
+      const lawyerInfo = {
+        lawyerId: adLawyerDetail.lawyerAdLawyerId,
+        lawyerName: adLawyerDetail.lawyerAdLawyerName,
+        lawyerProfileImage: adLawyerDetail.lawyerAdLawyerProfileImage || '',
+        lawyerDescription: adLawyerDetail.lawyerAdLawyerDescription || '',
+        lawyerLawfirmName: '법무법인',
+        lawyerCreatedAt: adLawyerDetail.lawyerAdCreatedAt,
+      }
+      console.log('Setting lawyer info:', lawyerInfo)
+      setSelectedLawyer(lawyerInfo)
     }
-  }, [isEditMode, lawyerAdId])
+  }, [isEditMode, adLawyerDetail])
 
   const handleSelectLawyer = () => {
     setIsLawyerModalOpen(true)
@@ -79,13 +108,29 @@ const AdLawyerEditPage = () => {
       return
     }
 
+    const startDateTime = startDate
+      .set('hour', parseInt(startHour))
+      .set('minute', parseInt(startMinute))
+      .set('second', 0)
+      .toISOString()
+
+    const endDateTime = endDate
+      .set('hour', parseInt(endHour))
+      .set('minute', parseInt(endMinute))
+      .set('second', 0)
+      .toISOString()
+
     const requestData: AdLawyerUpdateRequest = {
       lawyerAdLawyerId: selectedLawyer.lawyerId,
-      lawyerAdStartedAt: `${startDate.format('YYYY-MM-DD')} ${startHour}:${startMinute}:00`,
-      lawyerAdFinishedAt: `${endDate.format('YYYY-MM-DD')} ${endHour}:${endMinute}:00`,
+      lawyerAdStartedAt: startDateTime,
+      lawyerAdFinishedAt: endDateTime,
     }
 
-    createAdLawyerMutation.mutate(requestData)
+    if (isEditMode) {
+      updateAdLawyerMutation.mutate(requestData)
+    } else {
+      createAdLawyerMutation.mutate(requestData)
+    }
   }
 
   const handleCancel = () => {
@@ -96,7 +141,6 @@ const AdLawyerEditPage = () => {
     return !!startDate && !!endDate && !!selectedLawyer
   }
 
-  // Generate hour and minute options
   const hourOptions = Array.from({ length: 24 }, (_, i) => ({
     value: i.toString().padStart(2, '0'),
     label: `${i.toString().padStart(2, '0')}시`,
@@ -205,11 +249,7 @@ const AdLawyerEditPage = () => {
                   profileImage={selectedLawyer.lawyerProfileImage || ''}
                   description={selectedLawyer.lawyerDescription || ''}
                   lawfirm={selectedLawyer.lawyerLawfirmName || '법무법인 일신 강남분사무소'}
-                  tags={[
-                    { id: 1, name: '재산분할' },
-                    { id: 2, name: '형사' },
-                    { id: 3, name: '재임용' },
-                  ]}
+                  tags={[]}
                   size='small'
                   ad={true}
                 />
@@ -231,7 +271,7 @@ const AdLawyerEditPage = () => {
             type='primary'
             size='large'
             onClick={handleSave}
-            loading={createAdLawyerMutation.isPending}
+            loading={isEditMode ? updateAdLawyerMutation.isPending : createAdLawyerMutation.isPending}
             disabled={!isFormValid()}
           >
             {isEditMode ? '수정' : '저장'}

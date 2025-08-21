@@ -86,8 +86,28 @@ export const lawyerService = {
     const response = await instance.get<AdLawyer[]>(url)
     return response.data
   },
+  getAdLawyerDetail: async (lawyerAdId: number) => {
+    const response = await instance.get<AdLawyer>(`/lawyer-ads/${lawyerAdId}`)
+    return response.data
+  },
   createAdLawyer: async (data: AdLawyerUpdateRequest) => {
-    const response = await instance.post('/lawyer-ads', data)
+    // Ensure dates are Date objects for the API
+    const requestData = {
+      ...data,
+      lawyerAdStartedAt: data.lawyerAdStartedAt instanceof Date ? data.lawyerAdStartedAt : new Date(data.lawyerAdStartedAt),
+      lawyerAdFinishedAt: data.lawyerAdFinishedAt instanceof Date ? data.lawyerAdFinishedAt : new Date(data.lawyerAdFinishedAt),
+    }
+    const response = await instance.post('/lawyer-ads', requestData)
+    return response.data
+  },
+  updateAdLawyer: async (lawyerAdId: number, data: AdLawyerUpdateRequest) => {
+    // Ensure dates are Date objects for the API
+    const requestData = {
+      ...data,
+      lawyerAdStartedAt: data.lawyerAdStartedAt instanceof Date ? data.lawyerAdStartedAt : new Date(data.lawyerAdStartedAt),
+      lawyerAdFinishedAt: data.lawyerAdFinishedAt instanceof Date ? data.lawyerAdFinishedAt : new Date(data.lawyerAdFinishedAt),
+    }
+    const response = await instance.put(`/lawyer-ads/${lawyerAdId}`, requestData)
     return response.data
   },
 }
