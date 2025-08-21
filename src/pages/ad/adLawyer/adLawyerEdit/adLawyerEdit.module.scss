@@ -1,0 +1,191 @@
+.adLawyerEditPage {
+  padding: 24px;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 24px;
+
+    span {
+      color: $color-green-02;
+      font-size: 18px;
+    }
+  }
+
+  &__form {
+    border-top: 1px solid #d9d9d9;
+    
+    .formRow {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 0;
+      border-bottom: 1px solid #d9d9d9;
+      
+      &:last-child {
+        margin-bottom: 24px;
+      }
+    }
+
+    .labelCol {
+      width: 150px;
+      flex-shrink: 0;
+      padding: 16px;
+      background-color: #fafafa;
+      border-right: 1px solid #d9d9d9;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+    }
+
+    .inputCol {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+    }
+
+    .label {
+      display: block;
+      margin: 0;
+      font-weight: 500;
+      text-align: left;
+      color: #262626;
+      font-size: 14px;
+    }
+
+    .dateTimeWrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .dateTimeRow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .dateLabel {
+        font-size: 14px;
+        color: #595959;
+        width: 60px;
+      }
+
+      :global {
+        .ant-picker {
+          &:hover {
+            border-color: $color-green-02;
+          }
+
+          &.ant-picker-focused {
+            border-color: $color-green-02;
+            box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.2);
+          }
+        }
+
+        .ant-select {
+          &:hover .ant-select-selector {
+            border-color: $color-green-02;
+          }
+
+          &.ant-select-focused .ant-select-selector {
+            border-color: $color-green-02;
+            box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.2);
+          }
+        }
+      }
+    }
+
+    .selectButton {
+      background-color: $color-green-02;
+      border-color: $color-green-02;
+
+      &:hover {
+        background-color: $color-green-02;
+        border-color: $color-green-02;
+        opacity: 0.9;
+      }
+    }
+
+    .lawyerPreview {
+      width: 100%;
+      padding: 12px;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+    }
+
+    .emptyPreview {
+      width: 100%;
+      padding: 40px;
+      text-align: center;
+      color: #8c8c8c;
+      background-color: #fafafa;
+      border: 1px dashed #d9d9d9;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0;
+
+    :global {
+      .ant-btn {
+        min-width: 100px;
+      }
+
+      .ant-btn-primary {
+        background-color: $color-green-02;
+        border-color: $color-green-02;
+
+        &:hover:not(:disabled) {
+          background-color: $color-green-02;
+          border-color: $color-green-02;
+          opacity: 0.9;
+        }
+
+        &:disabled {
+          background-color: #f5f5f5;
+          border-color: #d9d9d9;
+          color: rgba(0, 0, 0, 0.25);
+        }
+      }
+    }
+  }
+}
+
+:global {
+  .ant-modal {
+    .ant-modal-header {
+      background-color: #fafafa;
+    }
+
+    .ant-table {
+      .ant-table-thead > tr > th {
+        background-color: #fafafa;
+        font-weight: 600;
+      }
+
+      .ant-table-tbody > tr:hover > td {
+        background-color: rgba(82, 196, 26, 0.05);
+      }
+    }
+
+    .ant-btn-primary {
+      background-color: $color-green-02;
+      border-color: $color-green-02;
+
+      &:hover {
+        background-color: $color-green-02;
+        border-color: $color-green-02;
+        opacity: 0.9;
+      }
+    }
+  }
+}

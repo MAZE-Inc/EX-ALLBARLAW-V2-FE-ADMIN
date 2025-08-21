@@ -57,4 +57,7 @@ export const QUERY_KEY = {
   LEGAL_TERM_LIST: 'legalTermList',
   LEGAL_TERM_REPORT_LIST: 'legalTermReportList',
   LEGAL_TERM_DETAIL: 'legalTermDetail',
+
+  //ad
+  AD_LAWYER_LIST: 'adLawyerList',
 } as const

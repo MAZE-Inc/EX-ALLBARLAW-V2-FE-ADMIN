@@ -1,5 +1,7 @@
 import instance from '@/lib/axios'
 import {
+  AdLawyer,
+  AdLawyerUpdateRequest,
   LawyerActivity,
   LawyerBasicInfo,
   LawyerCareer,
@@ -73,6 +75,19 @@ export const lawyerService = {
       lawyerActivities: data,
     }
     const response = await instance.put(`/lawyer/profile/${lawyerId}/activity`, requestBody)
+    return response.data
+  },
+  getAdLawyerList: async ({ searchQuery }: { searchQuery?: string }) => {
+    const params = new URLSearchParams()
+    if (searchQuery) params.append('searchQuery', searchQuery)
+
+    const url = `/lawyer-ads?${params.toString()}`
+
+    const response = await instance.get<AdLawyer[]>(url)
+    return response.data
+  },
+  createAdLawyer: async (data: AdLawyerUpdateRequest) => {
+    const response = await instance.post('/lawyer-ads', data)
     return response.data
   },
 }

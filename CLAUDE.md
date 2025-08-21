@@ -471,6 +471,28 @@ SCSS 파일에서는 abstracts를 import하지 않습니다:
 - mixin과 function도 전역에서 사용 가능
 - abstracts import는 불필요하며 제거해야 함
 
+### SCSS 함수 사용 규칙
+SCSS에서 darken, lighten 등의 색상 조작 함수를 사용하지 않습니다:
+
+```scss
+// ❌ 잘못된 예시
+&:hover {
+  background-color: darken($color-green-02, 10%);
+  border-color: lighten($color-green-02, 10%);
+}
+
+// ✅ 올바른 예시
+&:hover {
+  background-color: $color-green-02;
+  border-color: $color-green-02;
+}
+```
+
+#### 특징:
+- darken(), lighten() 등의 SCSS 색상 함수 사용 금지
+- 색상은 정의된 변수를 그대로 사용
+- 호버 효과가 필요한 경우 rgba를 사용한 투명도 조절 권장
+
 ## 무한스크롤 구현 규칙
 
 ### 개요

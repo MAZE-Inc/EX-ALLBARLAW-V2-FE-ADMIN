@@ -289,3 +289,21 @@ export type LawyerActivity = {
   lawyerActivityContent: string
   lawyerActivityDisplayOrder: number
 }
+
+export type AdLawyer = {
+  lawyerAdId: number
+  lawyerAdLawyerId: number
+  lawyerAdLawyerName: string
+  lawyerAdLawyerProfileImage: string | null
+  lawyerAdLawyerDescription: string
+  lawyerAdLawyerTags: Tag[]
+  lawyerAdStartedAt: string
+  lawyerAdFinishedAt: string
+  lawyerAdCreatedAt: string
+}
+
+export type AdLawyerUpdateRequest = {
+  lawyerAdLawyerId: number
+  lawyerAdStartedAt: string
+  lawyerAdFinishedAt: string
+}
