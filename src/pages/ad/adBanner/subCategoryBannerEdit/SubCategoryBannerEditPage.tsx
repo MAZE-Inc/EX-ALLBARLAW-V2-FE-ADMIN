@@ -49,12 +49,12 @@ const SubCategoryBannerEditPage = () => {
       setBannerName(bannerDetail.subBannerName)
       setBannerLink(bannerDetail.subBannerLink || '')
       setPcImageUrl(bannerDetail.subBannerImageUrl)
-      setSelectedSubCategory(bannerDetail.subSubCategoryId)
+      setSelectedSubCategory(bannerDetail.subBannerSubCategoryId)
 
       // Find category from subcategory
-      if (categories && bannerDetail.subSubCategoryId) {
+      if (categories && bannerDetail.subBannerSubCategoryId) {
         const category = categories.find(cat =>
-          cat.subcategories.some(sub => sub.subcategoryId === bannerDetail.subSubCategoryId)
+          cat.subcategories.some(sub => sub.subcategoryId === bannerDetail.subBannerSubCategoryId)
         )
         if (category) {
           setSelectedCategory(category.categoryId)
@@ -144,13 +144,12 @@ const SubCategoryBannerEditPage = () => {
       ...(isEditMode && { subBannerId: Number(subCategoryBannerId) }),
       subBannerName: bannerName,
       subBannerImageUrl: pcImageUrl,
-      subBannerMobileImageUrl: null,
       subBannerStartedAt: startDateTime,
       subBannerFinishedAt: endDateTime,
       ...(bannerLink && { subBannerLink: bannerLink }),
       subBannerDisplayOrder: 0,
       subBannerIsActive: true,
-      subSubCategoryId: selectedSubCategory,
+      subBannerSubCategoryId: selectedSubCategory,
       ...(isEditMode &&
         bannerDetail && {
           subBannerCreatedAt: bannerDetail.subBannerCreatedAt,
