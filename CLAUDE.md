@@ -493,6 +493,137 @@ SCSS에서 darken, lighten 등의 색상 조작 함수를 사용하지 않습니
 - 색상은 정의된 변수를 그대로 사용
 - 호버 효과가 필요한 경우 rgba를 사용한 투명도 조절 권장
 
+## 배너 리스트 페이지 규칙
+
+### 기본 구조
+배너 관리 페이지는 탭 구조로 구성되며, 각 탭마다 테이블 형식의 리스트를 표시합니다:
+
+#### 컴포넌트 구조:
+```tsx
+import React, { useState } from 'react'
+import { Table, TableProps, Button, Image } from 'antd'
+import dayjs from 'dayjs'
+import styles from './bannerList.module.scss'
+
+const BannerListPage = () => {
+  const { data, isLoading } = useBannerHook()
+  const [selectedRows, setSelectedRows] = useState<BannerType[]>([])
+
+  const columns: TableProps<BannerType>['columns'] = [
+    {
+      title: 'No.',
+      width: 60,
+      render: (_, __, index) => index + 1,
+    },
+    {
+      title: '이미지 미리보기',
+      dataIndex: 'bannerImageUrl',
+      width: 300,
+      render: (imageUrl: string | null) =>
+        imageUrl ? (
+          <div className={styles.imagePreview}>
+            <Image src={imageUrl} alt='배너 이미지' style={{ maxWidth: '100%', height: 'auto', maxHeight: '80px' }} />
+          </div>
+        ) : (
+          <div className={styles.noImage}>이미지 없음</div>
+        ),
+    },
+    {
+      title: '배너이름',
+      dataIndex: 'bannerName',
+      render: (name: string) => <span className={styles.bannerName}>{name}</span>,
+    },
+    {
+      title: '배너기간',
+      render: (_, record) => (
+        <div className={styles.period}>
+          {dayjs(record.bannerStartedAt).format('YYYY-MM-DD')} ~<br />
+          {dayjs(record.bannerFinishedAt).format('YYYY-MM-DD')}
+        </div>
+      ),
+    },
+    {
+      title: '관리',
+      width: 100,
+      render: (_, record) => (
+        <Button type='primary' size='small' onClick={() => handleEdit(record)} className={styles.editButton}>
+          배너관리
+        </Button>
+      ),
+    },
+  ]
+
+  return (
+    <div className={styles.bannerListPage}>
+      <Table<BannerType>
+        columns={columns}
+        dataSource={data || []}
+        rowKey='bannerId'
+        rowSelection={rowSelection}
+        loading={isLoading}
+        pagination={false}
+        className={styles.bannerTable}
+      />
+    </div>
+  )
+}
+```
+
+#### SCSS 스타일:
+```scss
+.bannerListPage {
+  padding: 24px 0;
+
+  .bannerTable {
+    background: #fff;
+    border-radius: 4px;
+
+    :global {
+      .ant-table-thead > tr > th {
+        background: #fafafa;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .ant-table-tbody > tr > td {
+        text-align: center;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .imagePreview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+  }
+
+  .period {
+    line-height: 1.5;
+    color: #595959;
+    font-size: 13px;
+  }
+
+  .editButton {
+    background-color: $color-green-02;
+    border-color: $color-green-02;
+    
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+```
+
+### 특징:
+- 테이블 컬럼: No. / 이미지 미리보기 / 배너이름 / 배너기간 / 관리
+- 이미지는 최대 높이 80px로 제한
+- 날짜는 YYYY-MM-DD 형식으로 표시
+- 배너기간은 시작일~종료일을 두 줄로 표시
+- 관리 버튼은 녹색 테마 적용
+- PC/모바일 노출 클릭수 컬럼은 제외
+
 ## 무한스크롤 구현 규칙
 
 ### 개요

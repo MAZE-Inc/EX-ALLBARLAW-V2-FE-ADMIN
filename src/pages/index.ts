@@ -12,7 +12,10 @@ import VideoDetail from './content/video/videoDetail/VideoDetail'
 import VideoEditor from './content/video/videoEditor/VideoEditor'
 import LawyerLayout from './lawyer/lawyerLayout/LawyerLayout'
 import AdLawyerPage from './ad/adLawyer/adLawyerList/AdLawyerListPage'
-import AdBannerPage from './ad/adBanner/AdBanner'
+import AdBannerLayout from './ad/adBanner/adBannerLayout/AdBannerLayout'
+import MainBannerListPage from './ad/adBanner/mainBannerList/MainBannerListPage'
+import CategoryBannerListPage from './ad/adBanner/categoryBannerList/CategoryBannerListPage'
+import SubCategoryBannerListPage from './ad/adBanner/subCategoryBannerList/SubCategoryBannerListPage'
 import StatisticsPage from './statistics/statistics/StatisticsPage'
 import ChatListPage from './chat/ChatListPage'
 import LegalDictionaryPage from './board/legalDictionary/legalDictionaryLayout/LegalDictionaryPage'
@@ -70,7 +73,10 @@ export {
   MemberPage,
   LawyerMemberLayout,
   AdLawyerPage,
-  AdBannerPage,
+  AdBannerLayout,
+  MainBannerListPage,
+  CategoryBannerListPage,
+  SubCategoryBannerListPage,
   StatisticsPage,
   ChatListPage,
   LegalDictionaryPage,

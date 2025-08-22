@@ -61,4 +61,8 @@ export const QUERY_KEY = {
   //ad
   AD_LAWYER_LIST: 'adLawyerList',
   AD_LAWYER_DETAIL: 'adLawyerDetail',
+
+  AD_MAIN_BANNER_LIST: 'adMainBannerList',
+  AD_CATEGORY_BANNER_LIST: 'adCategoryBannerList',
+  AD_SUB_CATEGORY_BANNER_LIST: 'adSubCategoryBannerList',
 } as const

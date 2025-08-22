@@ -4,7 +4,7 @@ import NotFound from '../pages/NotFound'
 import MainLayout from '../pages/layout/mainLayout/MainLayout'
 import { ROUTE_PATH } from './routePath'
 import {
-  AdBannerPage,
+  AdBannerLayout,
   AdLawyerListPage,
   AdminManagementPage,
   AdminRegisterPage,
@@ -49,6 +49,9 @@ import {
   AdLawfirmListPage,
   AdLawfirmEditPage,
   AdLawyerEditPage,
+  MainBannerListPage,
+  CategoryBannerListPage,
+  SubCategoryBannerListPage,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
@@ -315,7 +318,21 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.AD_BANNER,
-        element: <AdBannerPage />,
+        element: <AdBannerLayout />,
+        children: [
+          {
+            path: '',
+            element: <MainBannerListPage />,
+          },
+          {
+            path: 'category-main',
+            element: <CategoryBannerListPage />,
+          },
+          {
+            path: 'sub-category',
+            element: <SubCategoryBannerListPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.STATISTICS_LIST,

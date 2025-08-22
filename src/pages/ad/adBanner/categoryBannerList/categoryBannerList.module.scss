@@ -1,0 +1,76 @@
+.categoryBannerListPage {
+  padding: 24px 0;
+
+  .bannerTable {
+    background: #fff;
+    border-radius: 4px;
+
+    :global {
+      .ant-table {
+        font-size: 14px;
+      }
+
+      .ant-table-thead > tr > th {
+        background: #fafafa;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .ant-table-tbody > tr > td {
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .ant-checkbox-checked .ant-checkbox-inner {
+        background-color: $color-green-02;
+        border-color: $color-green-02;
+      }
+
+      .ant-checkbox:hover .ant-checkbox-inner {
+        border-color: $color-green-02;
+      }
+
+      .ant-table-tbody > tr:hover > td {
+        background-color: rgba(82, 196, 26, 0.05) !important;
+      }
+
+      .ant-table-tbody > tr.ant-table-row-selected > td {
+        background-color: rgba(82, 196, 26, 0.1);
+      }
+    }
+  }
+
+  .imagePreview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+  }
+
+  .noImage {
+    color: #8c8c8c;
+    font-size: 13px;
+  }
+
+  .bannerName {
+    font-weight: 500;
+    color: #262626;
+  }
+
+  .period {
+    line-height: 1.5;
+    color: #595959;
+    font-size: 13px;
+  }
+
+  .editButton {
+    background-color: $color-green-02;
+    border-color: $color-green-02;
+    
+    &:hover {
+      background-color: $color-green-02;
+      border-color: $color-green-02;
+      opacity: 0.9;
+    }
+  }
+}
