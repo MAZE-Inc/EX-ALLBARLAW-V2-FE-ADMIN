@@ -716,7 +716,7 @@ const AdLawfirmEditPage = () => {
                   )}
                 </div>
                 <Upload
-                  beforeUpload={(file, fileList) => {
+                  beforeUpload={(_, fileList) => {
                     const remainingSlots = 20 - localImages.length
                     const filesToUpload = fileList.slice(0, remainingSlots)
                     if (filesToUpload.length > 0) {
