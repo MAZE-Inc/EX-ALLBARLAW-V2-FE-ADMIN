@@ -3,7 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button, DatePicker, Space, Select, Input, Upload, message, Image } from 'antd'
 import { CalendarOutlined, UploadOutlined } from '@ant-design/icons'
 import dayjs, { Dayjs } from 'dayjs'
-import { useSubCategoryBannerDetail, useCreateSubCategoryBanner, useUpdateSubCategoryBanner } from '@/hooks/queries/useAdBanner'
+import {
+  useSubCategoryBannerDetail,
+  useCreateSubCategoryBanner,
+  useUpdateSubCategoryBanner,
+} from '@/hooks/queries/useAdBanner'
 import { useCategory } from '@/hooks/queries/useCategory'
 import { SubCategoryBanner, SubCategoryBannerCreate } from '@/types/adBannerTypes'
 import { useFileUpload } from '@/hooks/useFileUpload'
@@ -24,7 +28,6 @@ const SubCategoryBannerEditPage = () => {
   const [endHour, setEndHour] = useState<string>('23')
   const [endMinute, setEndMinute] = useState<string>('59')
   const [pcImageUrl, setPcImageUrl] = useState<string | null>(null)
-  const [mobileImageUrl, setMobileImageUrl] = useState<string | null>(null)
   const [bannerLink, setBannerLink] = useState<string>('')
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>()
   const [selectedSubCategory, setSelectedSubCategory] = useState<number | undefined>()
@@ -46,7 +49,6 @@ const SubCategoryBannerEditPage = () => {
       setBannerName(bannerDetail.subBannerName)
       setBannerLink(bannerDetail.subBannerLink || '')
       setPcImageUrl(bannerDetail.subBannerImageUrl)
-      setMobileImageUrl(bannerDetail.subBannerMobileImageUrl)
       setSelectedSubCategory(bannerDetail.subSubCategoryId)
 
       // Find category from subcategory
@@ -88,36 +90,12 @@ const SubCategoryBannerEditPage = () => {
     return false
   }
 
-  const handleMobileImageUpload = async (file: File) => {
-    try {
-      const result = await uploadFile(file, {
-        folder: 'banner/subcategory/mobile',
-        maxSize: 10,
-        allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-      })
-      setMobileImageUrl(result.fileUrl)
-      message.success('모바일 배너 이미지가 업로드되었습니다.')
-    } catch {
-      message.error('모바일 배너 이미지 업로드에 실패했습니다.')
-    }
-    return false
-  }
-
   const handleRemovePcImage = () => {
     setPcImageUrl(null)
   }
 
-  const handleRemoveMobileImage = () => {
-    setMobileImageUrl(null)
-  }
-
   const handleReuploadPcImage = async (file: File) => {
     await handlePcImageUpload(file)
-    return false
-  }
-
-  const handleReuploadMobileImage = async (file: File) => {
-    await handleMobileImageUpload(file)
     return false
   }
 
@@ -166,7 +144,7 @@ const SubCategoryBannerEditPage = () => {
       ...(isEditMode && { subBannerId: Number(subCategoryBannerId) }),
       subBannerName: bannerName,
       subBannerImageUrl: pcImageUrl,
-      subBannerMobileImageUrl: mobileImageUrl,
+      subBannerMobileImageUrl: null,
       subBannerStartedAt: startDateTime,
       subBannerFinishedAt: endDateTime,
       ...(bannerLink && { subBannerLink: bannerLink }),
@@ -405,66 +383,6 @@ const SubCategoryBannerEditPage = () => {
                   </div>
                   <Upload
                     beforeUpload={handlePcImageUpload}
-                    showUploadList={false}
-                    accept='image/*'
-                    disabled={isUploading}
-                  >
-                    <Button icon={<UploadOutlined />} size='large' loading={isUploading}>
-                      배너등록
-                    </Button>
-                  </Upload>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* 모바일 배너 이미지 등록 */}
-        <div className={styles.formRow}>
-          <div className={styles.labelCol}>
-            <label className={styles.label}>모바일 배너 이미지 등록</label>
-          </div>
-          <div className={styles.inputCol}>
-            <div className={styles.uploadSection}>
-              {mobileImageUrl ? (
-                <div className={styles.imageContainer}>
-                  <div className={styles.imagePreviewWrapper}>
-                    <Image
-                      src={mobileImageUrl}
-                      alt='모바일 배너 이미지'
-                      style={{ width: '335px', height: '118px', objectFit: 'cover' }}
-                      preview={{
-                        mask: '미리보기',
-                      }}
-                    />
-                  </div>
-                  <div className={styles.imageActions}>
-                    <Button type='primary' danger size='small' onClick={handleRemoveMobileImage}>
-                      배너삭제
-                    </Button>
-                    <Upload
-                      beforeUpload={handleReuploadMobileImage}
-                      showUploadList={false}
-                      accept='image/*'
-                      disabled={isUploading}
-                    >
-                      <Button size='small' loading={isUploading}>
-                        배너수정
-                      </Button>
-                    </Upload>
-                  </div>
-                </div>
-              ) : (
-                <div className={styles.uploadContainer}>
-                  <div className={styles.uploadNote}>
-                    <ul>
-                      <li>모바일 배너 권장 사이즈는 335 x 118 입니다.</li>
-                      <li>모바일 화면에 최적화된 이미지를 등록해주세요.</li>
-                      <li>미리보기는 실제 비율로 표시됩니다.</li>
-                    </ul>
-                  </div>
-                  <Upload
-                    beforeUpload={handleMobileImageUpload}
                     showUploadList={false}
                     accept='image/*'
                     disabled={isUploading}
