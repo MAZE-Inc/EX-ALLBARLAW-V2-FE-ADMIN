@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Button, Select, Switch, message, Checkbox } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useCategory } from '@/hooks/queries/useCategory'
 import styles from './adLawfirmList.module.scss'
 import { CategoryList, Subcategory } from '@/types/categoryTypes'
@@ -88,12 +88,21 @@ const AdLawfirmListHeader = ({
 
 const AdLawfirmListPage = () => {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { data: categoryData } = useCategory()
   const [selectedMainCategory, setSelectedMainCategory] = useState<number | 'all'>('all')
   const [selectedSubCategory, setSelectedSubCategory] = useState<number | 'all'>('all')
   const [selectedLawfirms, setSelectedLawfirms] = useState<Lawfirm[]>([])
   const [isSelectionMode, setIsSelectionMode] = useState(false)
-  const { lawfirmData, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading, error } = useLawfirmInfiniteScroll()
+  
+  // URL에서 검색 파라미터 가져오기
+  const searchQuery = searchParams.get('search') || undefined
+  const searchType = (searchParams.get('searchType') as 'name' | 'greeting') || 'name'
+  
+  const { lawfirmData, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading, error } = useLawfirmInfiniteScroll({
+    searchQuery,
+    lawfirmSearchType: searchType,
+  })
   const { exportData } = useExcelExport()
 
   useInfiniteScroll({

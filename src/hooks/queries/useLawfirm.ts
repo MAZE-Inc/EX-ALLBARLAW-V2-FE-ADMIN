@@ -4,7 +4,7 @@ import { LawfirmApiRequest, LawfirmListRequest } from '@/types/lawfirmTypes'
 import { QUERY_KEY } from '@/constants/query'
 
 interface UseLawfirmInfiniteScrollProps {
-  searchQuery?: number
+  searchQuery?: string
   lawfirmSearchType?: 'name' | 'greeting'
   lawfirmOrderBy?: 'name' | 'createdAt' | 'viewCount'
   lawfirmSort?: 'asc' | 'desc'

@@ -1,5 +1,4 @@
 import SearchHeader, { SearchHeaderMenuItemType } from '@/components/searchHeader/SearchHeader'
-import { adminMenuItems } from '@/constants/admin'
 import { useCategory } from '@/hooks/queries/useCategory'
 import { useCreateLawfirm, useLawfirm, useUpdateLawfirm } from '@/hooks/queries/useLawfirm'
 import { LawfirmApiRequest } from '@/types/lawfirmTypes'
@@ -10,6 +9,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import styles from './adLawfirmEdit.module.scss'
 import { ROUTE_PATH } from '@/routes/routePath'
+import { adLawfirmMenuItems } from '../adLawfirmLayout/AdLawfirmLayout'
 
 const AdLawfirmEditPage = () => {
   const navigate = useNavigate()
@@ -43,7 +43,10 @@ const AdLawfirmEditPage = () => {
     },
   })
 
-  const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>(null)
+  const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>({ 
+    label: '로펌이름', 
+    key: 'name' 
+  })
   const [formData, setFormData] = useState<LawfirmApiRequest>({
     lawfirmId: 0,
     lawfirmName: '',
@@ -293,14 +296,25 @@ const AdLawfirmEditPage = () => {
     )
   }
 
+  const onSearch = (value: string) => {
+    // 검색어와 검색 타입과 함께 리스트 페이지로 이동
+    if (value.trim()) {
+      const searchType = selectedItem?.key as string || 'name'
+      navigate(`${ROUTE_PATH.AD_LAWFIRM}?search=${encodeURIComponent(value)}&searchType=${searchType}`)
+    } else {
+      navigate(ROUTE_PATH.AD_LAWFIRM)
+    }
+  }
+
   return (
     <div>
       <SearchHeader
-        menuItems={adminMenuItems}
+        menuItems={adLawfirmMenuItems}
         bordered={false}
         title={isEditMode ? '로펌 광고 수정 화면입니다.' : '로펌 광고 등록 화면입니다.'}
         selectedItem={selectedItem}
         onSelectionChange={handleSelectionChange}
+        onSearch={onSearch}
       />
       <section className={styles['ad-lawfirm-edit-page']}>
         <header className={styles['ad-lawfirm-edit-page__header']}>

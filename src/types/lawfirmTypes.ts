@@ -62,7 +62,7 @@ export type LawfirmList = {
 
 export type LawfirmListRequest = {
   lawfirmPage?: number
-  searchQuery?: number
+  searchQuery?: string
   lawfirmSearchType?: 'name' | 'greeting'
   lawfirmOrderBy?: 'name' | 'createdAt' | 'viewCount'
   lawfirmSort?: 'asc' | 'desc'
