@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
 import { Table, TableProps, Button, Image } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { useCategoryBanner } from '@/hooks/queries/useAdBanner'
 import { CategoryBanner } from '@/types/adBannerTypes'
 import styles from './categoryBannerList.module.scss'
+import { ROUTE_PATH } from '@/routes/routePath'
 
 const CategoryBannerListPage = () => {
+  const navigate = useNavigate()
   const { data, isLoading } = useCategoryBanner()
   const [selectedRows, setSelectedRows] = useState<CategoryBanner[]>([])
 
   const handleEdit = (record: CategoryBanner) => {
-    // TODO: 배너 수정 페이지로 이동
-    console.log('Edit banner:', record.subMainBannerId)
+    navigate(`${ROUTE_PATH.AD_BANNER}/category-banner/${record.subMainBannerId}`)
   }
 
   const columns: TableProps<CategoryBanner>['columns'] = [
@@ -65,8 +67,17 @@ const CategoryBannerListPage = () => {
     },
   }
 
+  const handleCreate = () => {
+    navigate(`${ROUTE_PATH.AD_BANNER}/category-banner/create`)
+  }
+
   return (
     <div className={styles.categoryBannerListPage}>
+      <header>
+        <Button type='primary' onClick={handleCreate}>
+          카테고리 화면 배너 광고 등록하기
+        </Button>
+      </header>
       <Table<CategoryBanner>
         columns={columns}
         dataSource={data || []}

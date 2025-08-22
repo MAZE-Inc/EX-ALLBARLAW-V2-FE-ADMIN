@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
 import { Table, TableProps, Button, Image } from 'antd'
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { useMainBanner } from '@/hooks/queries/useAdBanner'
 import { MainBanner } from '@/types/adBannerTypes'
 import styles from './mainBannerList.module.scss'
+import { ROUTE_PATH } from '@/routes/routePath'
 
 const MainBannerListPage = () => {
-  //   const navigate = useNavigate()
+  const navigate = useNavigate()
   const { data, isLoading } = useMainBanner()
   const [selectedRows, setSelectedRows] = useState<MainBanner[]>([])
 
   const handleEdit = (record: MainBanner) => {
-    // TODO: 배너 수정 페이지로 이동
-    console.log('Edit banner:', record.mainBannerId)
+    navigate(`${ROUTE_PATH.AD_BANNER}/main-banner/${record.mainBannerId}`)
   }
 
   const columns: TableProps<MainBanner>['columns'] = [
@@ -67,8 +67,17 @@ const MainBannerListPage = () => {
     },
   }
 
+  const handleCreate = () => {
+    navigate(`${ROUTE_PATH.AD_BANNER}/main-banner/create`)
+  }
+
   return (
     <div className={styles.mainBannerListPage}>
+      <header>
+        <Button type='primary' onClick={handleCreate}>
+          메인 화면 배너 광고 등록하기
+        </Button>
+      </header>
       <Table<MainBanner>
         columns={columns}
         dataSource={data || []}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button, Tabs, ConfigProvider } from 'antd'
+import { Tabs, ConfigProvider } from 'antd'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { COLOR } from '@/styles/abstracts/color'
 import { ROUTE_PATH } from '@/routes/routePath'
@@ -12,9 +12,9 @@ const AdBannerLayout = () => {
 
   // 현재 경로에 따라 활성 탭 설정
   useEffect(() => {
-    if (location.pathname.includes('category-main')) {
+    if (location.pathname.includes('category-main') || location.pathname.includes('category-banner')) {
       setActiveTab('categoryMain')
-    } else if (location.pathname.includes('sub-category')) {
+    } else if (location.pathname.includes('sub-category') || location.pathname.includes('sub-category-banner')) {
       setActiveTab('categorySubMain')
     } else {
       setActiveTab('main')
@@ -32,14 +32,14 @@ const AdBannerLayout = () => {
     }
   }
 
-  const handleCancel = () => {
-    navigate(-1)
-  }
+  // const handleCancel = () => {
+  //   navigate(-1)
+  // }
 
-  const handleSave = () => {
-    // TODO: 각 탭별 저장 로직 구현
-    console.log('Saving tab:', activeTab)
-  }
+  // const handleSave = () => {
+  //   // TODO: 각 탭별 저장 로직 구현
+  //   console.log('Saving tab:', activeTab)
+  // }
 
   const items = [
     {
@@ -59,7 +59,7 @@ const AdBannerLayout = () => {
   return (
     <div className={styles.adBannerPage}>
       <header className={styles['adBannerPage__header']}>
-        <h1 className={styles['adBannerPage__header-title']}>배너 관리</h1>
+        {/* <h1 className={styles['adBannerPage__header-title']}>배너 관리</h1>
         <div className={styles['adBannerPage__header-actions']}>
           <Button size='large' onClick={handleCancel}>
             취소
@@ -67,7 +67,7 @@ const AdBannerLayout = () => {
           <Button type='primary' size='large' onClick={handleSave}>
             저장
           </Button>
-        </div>
+        </div> */}
       </header>
 
       <main className={styles['adBannerPage__main']}>

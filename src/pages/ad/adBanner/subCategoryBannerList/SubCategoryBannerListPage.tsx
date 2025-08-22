@@ -1,17 +1,22 @@
 import React, { useState } from 'react'
 import { Table, TableProps, Button, Image } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { useSubCategoryBanner } from '@/hooks/queries/useAdBanner'
 import { SubCategoryBanner } from '@/types/adBannerTypes'
 import styles from './subCategoryBannerList.module.scss'
 
 const SubCategoryBannerListPage = () => {
+  const navigate = useNavigate()
   const { data, isLoading } = useSubCategoryBanner()
   const [selectedRows, setSelectedRows] = useState<SubCategoryBanner[]>([])
 
   const handleEdit = (record: SubCategoryBanner) => {
-    // TODO: 배너 수정 페이지로 이동
-    console.log('Edit banner:', record.subBannerId)
+    navigate(`/ad-banner/sub-category-banner/${record.subBannerId}`)
+  }
+
+  const handleCreate = () => {
+    navigate('/ad-banner/sub-category-banner/create')
   }
 
   const columns: TableProps<SubCategoryBanner>['columns'] = [
@@ -67,6 +72,11 @@ const SubCategoryBannerListPage = () => {
 
   return (
     <div className={styles.subCategoryBannerListPage}>
+      <header>
+        <Button type='primary' onClick={handleCreate}>
+          서브 카테고리 배너 광고 등록하기
+        </Button>
+      </header>
       <Table<SubCategoryBanner>
         columns={columns}
         dataSource={data || []}

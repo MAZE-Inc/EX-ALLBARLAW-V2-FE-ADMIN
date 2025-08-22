@@ -1,0 +1,216 @@
+.mainBannerEditPage {
+  &__header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 0;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 24px;
+
+    span {
+      color: $color-green-02;
+      font-size: 18px;
+    }
+  }
+
+  &__form {
+    border-top: 1px solid #d9d9d9;
+
+    .formRow {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 0;
+      border-bottom: 1px solid #d9d9d9;
+
+      &:last-child {
+        margin-bottom: 24px;
+      }
+    }
+
+    .labelCol {
+      width: 200px;
+      flex-shrink: 0;
+      padding: 16px;
+      background-color: #fafafa;
+      border-right: 1px solid #d9d9d9;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+    }
+
+    .inputCol {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+      gap: 16px;
+    }
+
+    .label {
+      display: block;
+      margin: 0;
+      font-weight: 500;
+      text-align: left;
+      color: #262626;
+      font-size: 14px;
+    }
+
+    .dateTimeWrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .dateTimeRow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .dateLabel {
+        font-size: 14px;
+        color: #595959;
+        width: 60px;
+      }
+
+      :global {
+        .ant-picker {
+          &:hover {
+            border-color: $color-green-02;
+          }
+
+          &.ant-picker-focused {
+            border-color: $color-green-02;
+            box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.2);
+          }
+        }
+
+        .ant-select {
+          &:hover .ant-select-selector {
+            border-color: $color-green-02;
+          }
+
+          &.ant-select-focused .ant-select-selector {
+            border-color: $color-green-02;
+            box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.2);
+          }
+        }
+      }
+    }
+
+    .uploadSection {
+      width: 100%;
+    }
+
+    .uploadContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .imageContainer {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .imagePreviewWrapper {
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        padding: 8px;
+        background-color: #fafafa;
+        
+        :global {
+          .ant-image {
+            display: block;
+          }
+        }
+      }
+
+      .imageActions {
+        display: flex;
+        gap: 8px;
+
+        :global {
+          .ant-btn-primary.ant-btn-dangerous {
+            background-color: #ff4d4f;
+            border-color: #ff4d4f;
+
+            &:hover {
+              background-color: #ff7875;
+              border-color: #ff7875;
+            }
+          }
+        }
+      }
+    }
+
+    .uploadNote {
+      padding: 12px;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      
+      ul {
+        margin: 0;
+        padding-left: 20px;
+        
+        li {
+          font-size: 13px;
+          color: #666;
+          line-height: 1.6;
+        }
+      }
+    }
+
+    :global {
+      .ant-upload {
+        display: inline-block;
+      }
+
+      .ant-btn {
+        &:hover:not(.ant-btn-dangerous) {
+          border-color: $color-green-02;
+          color: $color-green-02;
+        }
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0;
+
+    :global {
+      .ant-btn {
+        min-width: 100px;
+      }
+
+      .ant-btn-primary {
+        background-color: $color-green-02;
+        border-color: $color-green-02;
+
+        &:hover:not(:disabled) {
+          background-color: $color-green-02;
+          border-color: $color-green-02;
+          opacity: 0.9;
+        }
+
+        &:disabled {
+          background-color: #f5f5f5;
+          border-color: #d9d9d9;
+          color: rgba(0, 0, 0, 0.25);
+        }
+      }
+    }
+  }
+}

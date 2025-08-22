@@ -58,6 +58,9 @@ import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
 import MemberLayout from '@/pages/member/memberLayout/MemberLayout'
 import ProtectedRoute from './ProtectedRoute'
 import PublicOnlyRoute from './PublicOnlyRoute'
+import MainBannerEditPage from '@/pages/ad/adBanner/mainBannerEdit/MainBannerEditPage'
+import CategoryBannerEditPage from '@/pages/ad/adBanner/categoryBannerEdit/CategoryBannerEditPage'
+import SubCategoryBannerEditPage from '@/pages/ad/adBanner/subCategoryBannerEdit/SubCategoryBannerEditPage'
 
 const router = createBrowserRouter([
   {
@@ -325,12 +328,36 @@ const router = createBrowserRouter([
             element: <MainBannerListPage />,
           },
           {
+            path: 'main-banner/create',
+            element: <MainBannerEditPage />,
+          },
+          {
+            path: 'main-banner/:mainBannerId',
+            element: <MainBannerEditPage />,
+          },
+          {
             path: 'category-main',
             element: <CategoryBannerListPage />,
           },
           {
+            path: 'category-banner/create',
+            element: <CategoryBannerEditPage />,
+          },
+          {
+            path: 'category-banner/:categoryBannerId',
+            element: <CategoryBannerEditPage />,
+          },
+          {
             path: 'sub-category',
             element: <SubCategoryBannerListPage />,
+          },
+          {
+            path: 'sub-category-banner/create',
+            element: <SubCategoryBannerEditPage />,
+          },
+          {
+            path: 'sub-category-banner/:subCategoryBannerId',
+            element: <SubCategoryBannerEditPage />,
           },
         ],
       },

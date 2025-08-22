@@ -65,4 +65,7 @@ export const QUERY_KEY = {
   AD_MAIN_BANNER_LIST: 'adMainBannerList',
   AD_CATEGORY_BANNER_LIST: 'adCategoryBannerList',
   AD_SUB_CATEGORY_BANNER_LIST: 'adSubCategoryBannerList',
+  AD_MAIN_BANNER_DETAIL: 'adMainBannerDetail',
+  AD_CATEGORY_BANNER_DETAIL: 'adCategoryBannerDetail',
+  AD_SUB_CATEGORY_BANNER_DETAIL: 'adSubCategoryBannerDetail',
 } as const

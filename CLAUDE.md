@@ -896,5 +896,201 @@ interface BlogListResponse {
 - [ ] 스크롤 컨테이너 CSS (height, overflow-y)
 - [ ] 로딩 상태 표시 (선택사항)
 
+## 광고/배너 등록 페이지 패턴
+
+### 개요
+모든 광고 및 배너 등록/수정 페이지는 동일한 디자인 패턴과 로직을 따릅니다. 내부 구성 요소만 달라집니다.
+
+### 공통 구조
+
+#### 1. 페이지 레이아웃
+```tsx
+const [Domain]EditPage = () => {
+  const { id } = useParams<{ id: string }>()
+  const isEditMode = !!id
+  
+  return (
+    <div className={styles.[domain]EditPage}>
+      <h1 className={styles.[domain]EditPage__title}>
+        <span>♦</span> {isEditMode ? '[도메인] 수정' : '[도메인] 등록'}
+      </h1>
+      
+      <section className={styles.[domain]EditPage__form}>
+        {/* 폼 필드들 */}
+      </section>
+      
+      <div className={styles.[domain]EditPage__actions}>
+        <Space>
+          <Button size='large' onClick={handleCancel}>취소</Button>
+          <Button type='primary' size='large' onClick={handleSave}>
+            {isEditMode ? '수정' : '저장'}
+          </Button>
+        </Space>
+      </div>
+    </div>
+  )
+}
+```
+
+#### 2. 날짜/시간 선택 패턴
+모든 광고/배너 페이지에서 동일한 날짜/시간 선택 로직을 사용합니다:
+
+```tsx
+// 상태 정의
+const [startDate, setStartDate] = useState<Dayjs | null>(null)
+const [startHour, setStartHour] = useState<string>('00')
+const [startMinute, setStartMinute] = useState<string>('00')
+const [endDate, setEndDate] = useState<Dayjs | null>(null)
+const [endHour, setEndHour] = useState<string>('23')
+const [endMinute, setEndMinute] = useState<string>('59')
+
+// 시간 옵션 생성
+const hourOptions = Array.from({ length: 24 }, (_, i) => ({
+  value: i.toString().padStart(2, '0'),
+  label: `${i.toString().padStart(2, '0')}시`,
+}))
+
+const minuteOptions = Array.from({ length: 60 }, (_, i) => ({
+  value: i.toString().padStart(2, '0'),
+  label: `${i.toString().padStart(2, '0')}분`,
+}))
+
+// UI 구성
+<div className={styles.dateTimeWrapper}>
+  <div className={styles.dateTimeRow}>
+    <span className={styles.dateLabel}>시작 일시</span>
+    <DatePicker
+      value={startDate}
+      onChange={setStartDate}
+      format='YYYY-MM-DD'
+      placeholder='날짜 선택'
+      suffixIcon={<CalendarOutlined />}
+      size='large'
+      style={{ width: 150 }}
+    />
+    <Select value={startHour} onChange={setStartHour} options={hourOptions} size='large' style={{ width: 80 }} />
+    <Select value={startMinute} onChange={setStartMinute} options={minuteOptions} size='large' style={{ width: 80 }} />
+  </div>
+  
+  <div className={styles.dateTimeRow}>
+    <span className={styles.dateLabel}>종료 일시</span>
+    <DatePicker
+      value={endDate}
+      onChange={setEndDate}
+      format='YYYY-MM-DD'
+      placeholder='날짜 선택'
+      suffixIcon={<CalendarOutlined />}
+      size='large'
+      style={{ width: 150 }}
+    />
+    <Select value={endHour} onChange={setEndHour} options={hourOptions} size='large' style={{ width: 80 }} />
+    <Select value={endMinute} onChange={setEndMinute} options={minuteOptions} size='large' style={{ width: 80 }} />
+  </div>
+</div>
+
+// 저장 시 날짜/시간 조합
+const startDateTime = startDate
+  .set('hour', parseInt(startHour))
+  .set('minute', parseInt(startMinute))
+  .set('second', 0)
+  .toISOString()
+
+const endDateTime = endDate
+  .set('hour', parseInt(endHour))
+  .set('minute', parseInt(endMinute))
+  .set('second', 0)
+  .toISOString()
+```
+
+#### 3. API 연동 패턴
+```tsx
+// 수정 모드 데이터 로드
+const { data: detail } = use[Domain]Detail(Number(id), isEditMode)
+
+// 등록/수정 뮤테이션
+const createMutation = use[Domain]Create(
+  () => {
+    message.success('[도메인]이 등록되었습니다.')
+    navigate(ROUTE_PATH.[DOMAIN])
+  },
+  () => {
+    message.error('[도메인] 등록에 실패했습니다.')
+  }
+)
+
+const updateMutation = use[Domain]Update(
+  Number(id),
+  () => {
+    message.success('[도메인]이 수정되었습니다.')
+    navigate(ROUTE_PATH.[DOMAIN])
+  },
+  () => {
+    message.error('[도메인] 수정에 실패했습니다.')
+  }
+)
+
+// 데이터 로드 시 폼 자동 채우기
+useEffect(() => {
+  if (isEditMode && detail) {
+    // 날짜/시간 파싱
+    const startDateTime = dayjs(detail.startedAt)
+    setStartDate(startDateTime)
+    setStartHour(startDateTime.format('HH'))
+    setStartMinute(startDateTime.format('mm'))
+    
+    const endDateTime = dayjs(detail.finishedAt)
+    setEndDate(endDateTime)
+    setEndHour(endDateTime.format('HH'))
+    setEndMinute(endDateTime.format('mm'))
+    
+    // 기타 필드 설정
+  }
+}, [isEditMode, detail])
+```
+
+#### 4. 유효성 검증
+```tsx
+const handleSave = () => {
+  // 필수 항목 체크
+  if (!startDate || !endDate) {
+    message.warning('노출기간을 선택해주세요.')
+    return
+  }
+  
+  // 날짜 유효성 체크
+  if (startDate.isAfter(endDate)) {
+    message.warning('시작일이 종료일보다 늦을 수 없습니다.')
+    return
+  }
+  
+  // 기타 필드 유효성 체크
+  
+  // API 호출
+  const requestData = {
+    startedAt: startDateTime,
+    finishedAt: endDateTime,
+    // 기타 필드
+  }
+  
+  if (isEditMode) {
+    updateMutation.mutate(requestData)
+  } else {
+    createMutation.mutate(requestData)
+  }
+}
+```
+
+### 특징
+- 모든 광고/배너 페이지가 동일한 디자인 패턴 공유
+- 날짜/시간 선택 로직 재사용
+- 등록/수정 모드 자동 구분
+- 일관된 유효성 검증 및 에러 처리
+- 성공/실패 메시지 표준화
+
+### 적용 페이지
+- 변호사 광고 (AdLawyerEditPage)
+- 배너 광고 (추가 예정)
+- 기타 광고 관련 페이지
+
 ## 기타 규칙
 (추후 추가)

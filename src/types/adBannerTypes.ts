@@ -1,15 +1,20 @@
-export type MainBanner = {
+export interface MainBanner {
   mainBannerId: number
   mainBannerName: string
   mainBannerImageUrl: string | null
   mainBannerMobileImageUrl: string | null
   mainBannerStartedAt: string
   mainBannerFinishedAt: string
-  mainBannerLink: string | null
+  mainBannerLink?: string
   mainBannerDisplayOrder: number
   mainBannerIsActive: boolean
   mainBannerCreatedAt: string
   mainBannerUpdatedAt: string
+}
+
+export interface MainBannerCreate
+  extends Omit<MainBanner, 'mainBannerId' | 'mainBannerCreatedAt' | 'mainBannerUpdatedAt'> {
+  mainBannerLink?: string
 }
 
 export type CategoryBanner = {
@@ -19,11 +24,17 @@ export type CategoryBanner = {
   subMainBannerMobileImageUrl: string | null
   subMainBannerStartedAt: string
   subMainBannerFinishedAt: string
-  subMainBannerLink: string | null
+  subMainBannerLink?: string | null
   subMainBannerDisplayOrder: number
   subMainBannerIsActive: boolean
   subMainBannerCreatedAt: string
   subMainBannerUpdatedAt: string
+  subMainSubCategoryId: number
+}
+
+export interface CategoryBannerCreate
+  extends Omit<CategoryBanner, 'subMainBannerId' | 'subMainBannerCreatedAt' | 'subMainBannerUpdatedAt'> {
+  subMainBannerLink?: string
 }
 
 export type SubCategoryBanner = {
@@ -32,9 +43,15 @@ export type SubCategoryBanner = {
   subBannerImageUrl: string
   subBannerStartedAt: string
   subBannerFinishedAt: string
-  subBannerLink: string | null
+  subBannerLink?: string | null
   subBannerDisplayOrder: number
   subBannerIsActive: boolean
   subBannerCreatedAt: string
   subBannerUpdatedAt: string
+  subBannerSubCategoryId: number
+}
+
+export interface SubCategoryBannerCreate
+  extends Omit<SubCategoryBanner, 'subBannerId' | 'subBannerCreatedAt' | 'subBannerUpdatedAt'> {
+  subBannerLink?: string
 }
