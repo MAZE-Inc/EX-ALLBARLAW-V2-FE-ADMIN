@@ -9,6 +9,7 @@ import { useAdLawyerCreate, useAdLawyerUpdate, useAdLawyerDetail } from '@/hooks
 import { AdLawyerUpdateRequest, LawyerSearchResult } from '@/types/lawyerTypes'
 import { ROUTE_PATH } from '@/routes/routePath'
 import styles from './adLawyerEdit.module.scss'
+import SearchHeader from '@/components/searchHeader/SearchHeader'
 
 const AdLawyerEditPage = () => {
   const navigate = useNavigate()
@@ -51,8 +52,6 @@ const AdLawyerEditPage = () => {
 
   // Load existing data in edit mode
   useEffect(() => {
-    console.log('useEffect triggered - isEditMode:', isEditMode, 'adLawyerDetail:', adLawyerDetail)
-
     if (isEditMode && adLawyerDetail) {
       // Set start date and time
       const startDateTime = dayjs(adLawyerDetail.lawyerAdStartedAt)
@@ -151,137 +150,154 @@ const AdLawyerEditPage = () => {
     label: `${i.toString().padStart(2, '0')}분`,
   }))
 
+  const onSearch = (value: string) => {
+    // 검색어와 함께 리스트 페이지로 이동
+    if (value.trim()) {
+      navigate(`${ROUTE_PATH.AD_LAWYER}?search=${encodeURIComponent(value)}`)
+    } else {
+      navigate(ROUTE_PATH.AD_LAWYER)
+    }
+  }
   return (
-    <div className={styles.adLawyerEditPage}>
-      <h1 className={styles.adLawyerEditPage__title}>
-        <span>♦</span> {isEditMode ? '메인화면배너광고 수정' : '메인화면배너광고 등록'}
-      </h1>
+    <>
+      <SearchHeader
+        bordered={false}
+        menuItems={[{ label: '변호사 이름', key: 'lawyerName' }]}
+        selectedItem={{ label: '변호사 이름', key: 'lawyerName' }}
+        title={isEditMode ? '변호사 광고 수정 화면입니다. ' : '변호사 광고 등록 화면입니다. '}
+        onSearch={onSearch}
+      />
+      <div className={styles.adLawyerEditPage}>
+        <h1 className={styles.adLawyerEditPage__title}>
+          <span>♦</span> {isEditMode ? '메인화면배너광고 수정' : '메인화면배너광고 등록'}
+        </h1>
 
-      <section className={styles.adLawyerEditPage__form}>
-        {/* 배너 노출기간 */}
-        <div className={styles.formRow}>
-          <div className={styles.labelCol}>
-            <label className={styles.label}>배너 노출기간</label>
-          </div>
-          <div className={styles.inputCol}>
-            <div className={styles.dateTimeWrapper}>
-              {/* 시작 일시 */}
-              <div className={styles.dateTimeRow}>
-                <span className={styles.dateLabel}>시작 일시</span>
-                <DatePicker
-                  value={startDate}
-                  onChange={setStartDate}
-                  format='YYYY-MM-DD'
-                  placeholder='날짜 선택'
-                  suffixIcon={<CalendarOutlined />}
-                  size='large'
-                  style={{ width: 150 }}
-                />
-                <Select
-                  value={startHour}
-                  onChange={setStartHour}
-                  options={hourOptions}
-                  size='large'
-                  style={{ width: 80 }}
-                />
-                <Select
-                  value={startMinute}
-                  onChange={setStartMinute}
-                  options={minuteOptions}
-                  size='large'
-                  style={{ width: 80 }}
-                />
-              </div>
+        <section className={styles.adLawyerEditPage__form}>
+          {/* 배너 노출기간 */}
+          <div className={styles.formRow}>
+            <div className={styles.labelCol}>
+              <label className={styles.label}>배너 노출기간</label>
+            </div>
+            <div className={styles.inputCol}>
+              <div className={styles.dateTimeWrapper}>
+                {/* 시작 일시 */}
+                <div className={styles.dateTimeRow}>
+                  <span className={styles.dateLabel}>시작 일시</span>
+                  <DatePicker
+                    value={startDate}
+                    onChange={setStartDate}
+                    format='YYYY-MM-DD'
+                    placeholder='날짜 선택'
+                    suffixIcon={<CalendarOutlined />}
+                    size='large'
+                    style={{ width: 150 }}
+                  />
+                  <Select
+                    value={startHour}
+                    onChange={setStartHour}
+                    options={hourOptions}
+                    size='large'
+                    style={{ width: 80 }}
+                  />
+                  <Select
+                    value={startMinute}
+                    onChange={setStartMinute}
+                    options={minuteOptions}
+                    size='large'
+                    style={{ width: 80 }}
+                  />
+                </div>
 
-              {/* 종료 일시 */}
-              <div className={styles.dateTimeRow}>
-                <span className={styles.dateLabel}>종료 일시</span>
-                <DatePicker
-                  value={endDate}
-                  onChange={setEndDate}
-                  format='YYYY-MM-DD'
-                  placeholder='날짜 선택'
-                  suffixIcon={<CalendarOutlined />}
-                  size='large'
-                  style={{ width: 150 }}
-                />
-                <Select
-                  value={endHour}
-                  onChange={setEndHour}
-                  options={hourOptions}
-                  size='large'
-                  style={{ width: 80 }}
-                />
-                <Select
-                  value={endMinute}
-                  onChange={setEndMinute}
-                  options={minuteOptions}
-                  size='large'
-                  style={{ width: 80 }}
-                />
+                {/* 종료 일시 */}
+                <div className={styles.dateTimeRow}>
+                  <span className={styles.dateLabel}>종료 일시</span>
+                  <DatePicker
+                    value={endDate}
+                    onChange={setEndDate}
+                    format='YYYY-MM-DD'
+                    placeholder='날짜 선택'
+                    suffixIcon={<CalendarOutlined />}
+                    size='large'
+                    style={{ width: 150 }}
+                  />
+                  <Select
+                    value={endHour}
+                    onChange={setEndHour}
+                    options={hourOptions}
+                    size='large'
+                    style={{ width: 80 }}
+                  />
+                  <Select
+                    value={endMinute}
+                    onChange={setEndMinute}
+                    options={minuteOptions}
+                    size='large'
+                    style={{ width: 80 }}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* 변호사 선택 */}
-        <div className={styles.formRow}>
-          <div className={styles.labelCol}>
-            <label className={styles.label}>변호사 선택</label>
+          {/* 변호사 선택 */}
+          <div className={styles.formRow}>
+            <div className={styles.labelCol}>
+              <label className={styles.label}>변호사 선택</label>
+            </div>
+            <div className={styles.inputCol}>
+              <Button type='primary' size='large' onClick={handleSelectLawyer} className={styles.selectButton}>
+                변호사 검색
+              </Button>
+            </div>
           </div>
-          <div className={styles.inputCol}>
-            <Button type='primary' size='large' onClick={handleSelectLawyer} className={styles.selectButton}>
-              변호사 검색
+
+          {/* 실제 노출된 화면 */}
+          <div className={styles.formRow}>
+            <div className={styles.labelCol}>
+              <label className={styles.label}>실제 노출된 화면</label>
+            </div>
+            <div className={styles.inputCol}>
+              {selectedLawyer ? (
+                <div className={styles.lawyerPreview}>
+                  <LawyerHorizon
+                    name={selectedLawyer.lawyerName}
+                    profileImage={selectedLawyer.lawyerProfileImage || ''}
+                    description={selectedLawyer.lawyerDescription || ''}
+                    lawfirm={selectedLawyer.lawyerLawfirmName || '법무법인 일신 강남분사무소'}
+                    tags={[]}
+                    size='small'
+                    ad={true}
+                  />
+                </div>
+              ) : (
+                <div className={styles.emptyPreview}>변호사를 선택해주세요</div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* 액션 버튼 */}
+        <div className={styles.adLawyerEditPage__actions}>
+          <Space>
+            <Button size='large' onClick={handleCancel}>
+              취소
             </Button>
-          </div>
+            <Button
+              type='primary'
+              size='large'
+              onClick={handleSave}
+              loading={isEditMode ? updateAdLawyerMutation.isPending : createAdLawyerMutation.isPending}
+              disabled={!isFormValid()}
+            >
+              {isEditMode ? '수정' : '저장'}
+            </Button>
+          </Space>
         </div>
 
-        {/* 실제 노출된 화면 */}
-        <div className={styles.formRow}>
-          <div className={styles.labelCol}>
-            <label className={styles.label}>실제 노출된 화면</label>
-          </div>
-          <div className={styles.inputCol}>
-            {selectedLawyer ? (
-              <div className={styles.lawyerPreview}>
-                <LawyerHorizon
-                  name={selectedLawyer.lawyerName}
-                  profileImage={selectedLawyer.lawyerProfileImage || ''}
-                  description={selectedLawyer.lawyerDescription || ''}
-                  lawfirm={selectedLawyer.lawyerLawfirmName || '법무법인 일신 강남분사무소'}
-                  tags={[]}
-                  size='small'
-                  ad={true}
-                />
-              </div>
-            ) : (
-              <div className={styles.emptyPreview}>변호사를 선택해주세요</div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* 액션 버튼 */}
-      <div className={styles.adLawyerEditPage__actions}>
-        <Space>
-          <Button size='large' onClick={handleCancel}>
-            취소
-          </Button>
-          <Button
-            type='primary'
-            size='large'
-            onClick={handleSave}
-            loading={isEditMode ? updateAdLawyerMutation.isPending : createAdLawyerMutation.isPending}
-            disabled={!isFormValid()}
-          >
-            {isEditMode ? '수정' : '저장'}
-          </Button>
-        </Space>
+        {/* 변호사 검색 모달 */}
+        <LawyerSearchModal open={isLawyerModalOpen} onCancel={handleModalCancel} onSelect={handleLawyerSelect} />
       </div>
-
-      {/* 변호사 검색 모달 */}
-      <LawyerSearchModal open={isLawyerModalOpen} onCancel={handleModalCancel} onSelect={handleLawyerSelect} />
-    </div>
+    </>
   )
 }
 
