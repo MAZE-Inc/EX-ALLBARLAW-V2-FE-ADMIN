@@ -1,5 +1,10 @@
 .mainBannerListPage {
-  padding: 24px 0;
+  &__header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 0 16px 0;
+  }
 
   .bannerTable {
     background: #fff;

@@ -72,7 +72,7 @@ const SubCategoryBannerListPage = () => {
 
   return (
     <div className={styles.subCategoryBannerListPage}>
-      <header>
+      <header className={styles.subCategoryBannerListPage__header}>
         <Button type='primary' onClick={handleCreate}>
           서브 카테고리 배너 광고 등록하기
         </Button>

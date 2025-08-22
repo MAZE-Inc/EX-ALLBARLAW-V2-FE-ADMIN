@@ -1,5 +1,10 @@
 .categoryBannerListPage {
-  padding: 24px 0;
+  &__header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 16px 0;
+  }
 
   .bannerTable {
     background: #fff;
@@ -66,7 +71,7 @@
   .editButton {
     background-color: $color-green-02;
     border-color: $color-green-02;
-    
+
     &:hover {
       background-color: $color-green-02;
       border-color: $color-green-02;

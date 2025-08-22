@@ -73,7 +73,7 @@ const MainBannerListPage = () => {
 
   return (
     <div className={styles.mainBannerListPage}>
-      <header>
+      <header className={styles.mainBannerListPage__header}>
         <Button type='primary' onClick={handleCreate}>
           메인 화면 배너 광고 등록하기
         </Button>

@@ -73,7 +73,7 @@ const CategoryBannerListPage = () => {
 
   return (
     <div className={styles.categoryBannerListPage}>
-      <header>
+      <header className={styles.categoryBannerListPage__header}>
         <Button type='primary' onClick={handleCreate}>
           카테고리 화면 배너 광고 등록하기
         </Button>
