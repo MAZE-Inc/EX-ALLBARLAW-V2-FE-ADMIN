@@ -12,11 +12,11 @@ const AdBannerLayout = () => {
 
   // 현재 경로에 따라 활성 탭 설정
   useEffect(() => {
-    if (location.pathname.includes('category-main') || location.pathname.includes('category-banner')) {
-      setActiveTab('categoryMain')
-    } else if (location.pathname.includes('sub-category') || location.pathname.includes('sub-category-banner')) {
+    if (location.pathname.includes('/ad-banner/sub-category')) {
       setActiveTab('categorySubMain')
-    } else {
+    } else if (location.pathname.includes('/ad-banner/category')) {
+      setActiveTab('categoryMain')
+    } else if (location.pathname.includes('/ad-banner')) {
       setActiveTab('main')
     }
   }, [location.pathname])

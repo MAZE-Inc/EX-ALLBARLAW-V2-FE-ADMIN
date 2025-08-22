@@ -75,6 +75,7 @@ export const useUpdateCategoryBanner = () => {
     mutationFn: (categoryBanner: CategoryBanner) =>
       adBannerService.updateCategoryBanner(categoryBanner.subMainBannerId, categoryBanner),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.AD_CATEGORY_BANNER_DETAIL] })
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.AD_CATEGORY_BANNER_LIST] })
     },
   })
@@ -111,6 +112,7 @@ export const useUpdateSubCategoryBanner = () => {
     mutationFn: (subCategoryBanner: SubCategoryBanner) =>
       adBannerService.updateSubCategoryBanner(subCategoryBanner.subBannerId, subCategoryBanner),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.AD_SUB_CATEGORY_BANNER_DETAIL] })
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.AD_SUB_CATEGORY_BANNER_LIST] })
     },
   })
