@@ -94,8 +94,10 @@ export const lawyerService = {
     // Ensure dates are Date objects for the API
     const requestData = {
       ...data,
-      lawyerAdStartedAt: data.lawyerAdStartedAt instanceof Date ? data.lawyerAdStartedAt : new Date(data.lawyerAdStartedAt),
-      lawyerAdFinishedAt: data.lawyerAdFinishedAt instanceof Date ? data.lawyerAdFinishedAt : new Date(data.lawyerAdFinishedAt),
+      lawyerAdStartedAt:
+        data.lawyerAdStartedAt instanceof Date ? data.lawyerAdStartedAt : new Date(data.lawyerAdStartedAt),
+      lawyerAdFinishedAt:
+        data.lawyerAdFinishedAt instanceof Date ? data.lawyerAdFinishedAt : new Date(data.lawyerAdFinishedAt),
     }
     const response = await instance.post('/lawyer-ads', requestData)
     return response.data
@@ -104,8 +106,10 @@ export const lawyerService = {
     // Ensure dates are Date objects for the API
     const requestData = {
       ...data,
-      lawyerAdStartedAt: data.lawyerAdStartedAt instanceof Date ? data.lawyerAdStartedAt : new Date(data.lawyerAdStartedAt),
-      lawyerAdFinishedAt: data.lawyerAdFinishedAt instanceof Date ? data.lawyerAdFinishedAt : new Date(data.lawyerAdFinishedAt),
+      lawyerAdStartedAt:
+        data.lawyerAdStartedAt instanceof Date ? data.lawyerAdStartedAt : new Date(data.lawyerAdStartedAt),
+      lawyerAdFinishedAt:
+        data.lawyerAdFinishedAt instanceof Date ? data.lawyerAdFinishedAt : new Date(data.lawyerAdFinishedAt),
     }
     const response = await instance.put(`/lawyer-ads/${lawyerAdId}`, requestData)
     return response.data

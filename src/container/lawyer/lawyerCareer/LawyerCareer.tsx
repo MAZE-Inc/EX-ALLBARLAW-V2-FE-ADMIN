@@ -30,7 +30,7 @@ const LawyerCareer = forwardRef<HTMLElement, LawyerCareerProps>(({ careerHistory
         <div className={styles['lawyer-career__item']} key={index}>
           <h4 className={styles['lawyer-career__item-title']}>{categoryName}</h4>
           <ul className={styles['lawyer-career__list']}>
-            {content.split('\n').map((contentLine: string, idx: number) => (
+            {(content || '').split('\n').map((contentLine: string, idx: number) => (
               <li key={idx}>{contentLine}</li>
             ))}
           </ul>
