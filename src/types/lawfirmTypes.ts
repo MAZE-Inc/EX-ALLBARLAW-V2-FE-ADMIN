@@ -26,7 +26,7 @@ export type Lawfirm = {
   lawfirmSubcategoryId: number
 }
 
-export type CreateLawfirmRequest = Omit<
+export type RequestLawfirm = Omit<
   Lawfirm,
   'lawfirmCreatedAt' | 'lawfirmUpdatedAt' | 'lawfirmDirects' | 'lawfirmImages'
 > & {
@@ -55,12 +55,10 @@ export type LawfirmApiRequest = {
   lawfirmCategoryId?: number
   lawfirmSubcategoryId?: number
   lawfirmDirects: {
-    id: number
     name: string
     link: string
   }[]
   lawfirmImages: {
-    id: number
     imageUrl: string
   }[]
 }
