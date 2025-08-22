@@ -174,6 +174,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({
       }`}
       style={containerStyle}
     >
+      {/* @ts-ignore - react-slick type compatibility issue */}
       <Slider {...mergedSettings} className={styles['image-slider']} ref={sliderRef}>
         {normalizedImages.map((item, index) => (
           <div key={item.id} className={styles['slide-wrapper']}>

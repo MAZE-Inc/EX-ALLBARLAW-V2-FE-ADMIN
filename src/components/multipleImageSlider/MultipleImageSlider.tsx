@@ -77,6 +77,7 @@ const MultipleImageSlider = ({
 
   return (
     <div className={styles.sliderWrapper} style={sliderStyle}>
+      {/* @ts-ignore - react-slick type compatibility issue */}
       <Slider ref={sliderRef} {...settings}>
         {imageList.map((img, index) => (
           <div key={index} className={styles.slideItem} style={{ height: `${imgHeight}px` }}>
