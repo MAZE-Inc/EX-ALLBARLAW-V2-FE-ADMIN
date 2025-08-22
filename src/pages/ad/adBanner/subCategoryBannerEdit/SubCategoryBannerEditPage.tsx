@@ -161,7 +161,7 @@ const SubCategoryBannerEditPage = () => {
       updateMutation.mutate(requestData as SubCategoryBanner, {
         onSuccess: () => {
           message.success('서브 카테고리 배너가 수정되었습니다.')
-          navigate(`${ROUTE_PATH.AD_BANNER}/sub-category`)
+          navigate(`${ROUTE_PATH.AD_BANNER_SUB_CATEGORY}`)
         },
         onError: () => {
           message.error('서브 카테고리 배너 수정에 실패했습니다.')
@@ -171,7 +171,7 @@ const SubCategoryBannerEditPage = () => {
       createMutation.mutate(requestData as SubCategoryBannerCreate, {
         onSuccess: () => {
           message.success('서브 카테고리 배너가 등록되었습니다.')
-          navigate(`${ROUTE_PATH.AD_BANNER}/sub-category`)
+          navigate(`${ROUTE_PATH.AD_BANNER_SUB_CATEGORY}`)
         },
         onError: () => {
           message.error('서브 카테고리 배너 등록에 실패했습니다.')

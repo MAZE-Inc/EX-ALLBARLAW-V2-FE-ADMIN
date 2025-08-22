@@ -20,11 +20,11 @@ export interface MainBannerCreate
 export type CategoryBanner = {
   subMainBannerId: number
   subMainBannerName: string
-  subMainBannerImageUrl: string | null
-  subMainBannerMobileImageUrl: string | null
+  subMainBannerImageUrl?: string
+  subMainBannerMobileImageUrl?: string
   subMainBannerStartedAt: string
   subMainBannerFinishedAt: string
-  subMainBannerLink?: string | null
+  subMainBannerLink?: string
   subMainBannerDisplayOrder: number
   subMainBannerIsActive: boolean
   subMainBannerCreatedAt: string

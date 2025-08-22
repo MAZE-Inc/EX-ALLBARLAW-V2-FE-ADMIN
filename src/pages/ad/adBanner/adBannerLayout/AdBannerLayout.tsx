@@ -26,9 +26,9 @@ const AdBannerLayout = () => {
     if (key === 'main') {
       navigate(ROUTE_PATH.AD_BANNER)
     } else if (key === 'categoryMain') {
-      navigate(`${ROUTE_PATH.AD_BANNER}/category-main`)
+      navigate(`${ROUTE_PATH.AD_BANNER_CATEGORY}`)
     } else if (key === 'categorySubMain') {
-      navigate(`${ROUTE_PATH.AD_BANNER}/sub-category`)
+      navigate(`${ROUTE_PATH.AD_BANNER_SUB_CATEGORY}`)
     }
   }
 

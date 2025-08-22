@@ -336,7 +336,7 @@ const router = createBrowserRouter([
             element: <MainBannerEditPage />,
           },
           {
-            path: 'category-main',
+            path: ROUTE_PATH.AD_BANNER_CATEGORY,
             element: <CategoryBannerListPage />,
           },
           {
@@ -348,7 +348,7 @@ const router = createBrowserRouter([
             element: <CategoryBannerEditPage />,
           },
           {
-            path: 'sub-category',
+            path: ROUTE_PATH.AD_BANNER_SUB_CATEGORY,
             element: <SubCategoryBannerListPage />,
           },
           {

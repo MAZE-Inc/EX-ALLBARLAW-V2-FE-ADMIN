@@ -45,8 +45,8 @@ const CategoryBannerEditPage = () => {
     if (isEditMode && bannerDetail) {
       setBannerName(bannerDetail.subMainBannerName)
       setBannerLink(bannerDetail.subMainBannerLink || '')
-      setPcImageUrl(bannerDetail.subMainBannerImageUrl)
-      setMobileImageUrl(bannerDetail.subMainBannerMobileImageUrl)
+      setPcImageUrl(bannerDetail.subMainBannerImageUrl || null)
+      setMobileImageUrl(bannerDetail.subMainBannerMobileImageUrl || null)
       setSelectedSubCategory(bannerDetail.subMainBannerSubcategoryId)
 
       // Find category from subcategory
@@ -165,8 +165,8 @@ const CategoryBannerEditPage = () => {
     const requestData: CategoryBannerCreate | CategoryBanner = {
       ...(isEditMode && { subMainBannerId: Number(categoryBannerId) }),
       subMainBannerName: bannerName,
-      subMainBannerImageUrl: pcImageUrl,
-      subMainBannerMobileImageUrl: mobileImageUrl,
+      ...(pcImageUrl && { subMainBannerImageUrl: pcImageUrl }),
+      ...(mobileImageUrl && { subMainBannerMobileImageUrl: mobileImageUrl }),
       subMainBannerStartedAt: startDateTime,
       subMainBannerFinishedAt: endDateTime,
       ...(bannerLink && { subMainBannerLink: bannerLink }),
@@ -184,7 +184,7 @@ const CategoryBannerEditPage = () => {
       updateMutation.mutate(requestData as CategoryBanner, {
         onSuccess: () => {
           message.success('카테고리 배너가 수정되었습니다.')
-          navigate(ROUTE_PATH.AD_BANNER)
+          navigate(ROUTE_PATH.AD_BANNER_CATEGORY)
         },
         onError: () => {
           message.error('카테고리 배너 수정에 실패했습니다.')
@@ -194,7 +194,7 @@ const CategoryBannerEditPage = () => {
       createMutation.mutate(requestData as CategoryBannerCreate, {
         onSuccess: () => {
           message.success('카테고리 배너가 등록되었습니다.')
-          navigate(ROUTE_PATH.AD_BANNER)
+          navigate(ROUTE_PATH.AD_BANNER_CATEGORY)
         },
         onError: () => {
           message.error('카테고리 배너 등록에 실패했습니다.')
