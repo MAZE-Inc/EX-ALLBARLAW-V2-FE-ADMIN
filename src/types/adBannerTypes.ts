@@ -29,7 +29,7 @@ export type CategoryBanner = {
   subMainBannerIsActive: boolean
   subMainBannerCreatedAt: string
   subMainBannerUpdatedAt: string
-  subMainSubCategoryId: number
+  subMainBannerSubcategoryId: number
 }
 
 export interface CategoryBannerCreate
@@ -48,7 +48,7 @@ export type SubCategoryBanner = {
   subBannerIsActive: boolean
   subBannerCreatedAt: string
   subBannerUpdatedAt: string
-  subBannerSubCategoryId: number
+  subBannerSubcategoryId: number
 }
 
 export interface SubCategoryBannerCreate

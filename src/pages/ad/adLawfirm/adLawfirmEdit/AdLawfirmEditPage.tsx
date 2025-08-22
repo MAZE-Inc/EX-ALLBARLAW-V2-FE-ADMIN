@@ -5,7 +5,7 @@ import { LawfirmApiRequest } from '@/types/lawfirmTypes'
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Input, Radio, RadioChangeEvent, Select, Spin, message } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import styles from './adLawfirmEdit.module.scss'
 import { ROUTE_PATH } from '@/routes/routePath'
@@ -20,6 +20,15 @@ const AdLawfirmEditPage = () => {
 
   const { data: categories, isLoading: categoriesLoading } = useCategory()
   const { data: lawfirmData, isLoading: lawfirmLoading } = useLawfirm(isEditMode ? Number(lawfirmId) : 0)
+
+  const getMainCategoryIdBySubcategoryId = (subcategoryId: number) => {
+    return categories?.find(cat => cat.subcategories.some(sub => sub.subcategoryId === subcategoryId))?.categoryId
+  }
+
+  const getMainCategoryId = useMemo(() => {
+    if (!lawfirmData?.lawfirmSubcategoryId) return null
+    return getMainCategoryIdBySubcategoryId(lawfirmData.lawfirmSubcategoryId)
+  }, [categories, lawfirmData])
 
   // 법무법인 생성 훅
   const createLawfirmMutation = useCreateLawfirm({
@@ -43,9 +52,9 @@ const AdLawfirmEditPage = () => {
     },
   })
 
-  const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>({ 
-    label: '로펌이름', 
-    key: 'name' 
+  const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>({
+    label: '로펌이름',
+    key: 'name',
   })
   const [formData, setFormData] = useState<LawfirmApiRequest>({
     lawfirmId: 0,
@@ -278,9 +287,15 @@ const AdLawfirmEditPage = () => {
         lawfirmDirects: lawfirmData.lawfirmDirects || [],
         lawfirmImages: lawfirmData.lawfirmImages || [],
       })
-      // TODO: 카테고리 설정 로직 추가 필요
+      // 카테고리 설정
+      if (getMainCategoryId) {
+        setSelectedCategory(getMainCategoryId)
+      }
+      if (lawfirmData.lawfirmSubcategoryId) {
+        setSelectedSubCategory(lawfirmData.lawfirmSubcategoryId)
+      }
     }
-  }, [isEditMode, lawfirmData])
+  }, [isEditMode, lawfirmData, getMainCategoryId])
 
   // 카테고리 변경 시 서브카테고리 초기화
   const handleCategoryChange = (categoryId: number | undefined) => {
@@ -299,7 +314,7 @@ const AdLawfirmEditPage = () => {
   const onSearch = (value: string) => {
     // 검색어와 검색 타입과 함께 리스트 페이지로 이동
     if (value.trim()) {
-      const searchType = selectedItem?.key as string || 'name'
+      const searchType = (selectedItem?.key as string) || 'name'
       navigate(`${ROUTE_PATH.AD_LAWFIRM}?search=${encodeURIComponent(value)}&searchType=${searchType}`)
     } else {
       navigate(ROUTE_PATH.AD_LAWFIRM)

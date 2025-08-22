@@ -1,5 +1,5 @@
 import { DownOutlined } from '@ant-design/icons'
-import { Button, Dropdown, Input, MenuProps, message, Space } from 'antd'
+import { Button, Dropdown, Input, MenuProps, Space } from 'antd'
 import React, { CSSProperties, useState, useEffect } from 'react'
 import styles from './search-header.module.scss'
 
@@ -58,9 +58,6 @@ const SearchHeader = ({
     const clickedItem = items?.find(item => item?.key === e.key)
     if (clickedItem) {
       onSelectionChange?.(clickedItem)
-
-      const label = 'label' in clickedItem ? clickedItem.label : e.key
-      message.info(`선택됨: ${label}`)
     }
   }
 

@@ -47,12 +47,12 @@ const CategoryBannerEditPage = () => {
       setBannerLink(bannerDetail.subMainBannerLink || '')
       setPcImageUrl(bannerDetail.subMainBannerImageUrl)
       setMobileImageUrl(bannerDetail.subMainBannerMobileImageUrl)
-      setSelectedSubCategory(bannerDetail.subMainSubCategoryId)
+      setSelectedSubCategory(bannerDetail.subMainBannerSubcategoryId)
 
       // Find category from subcategory
-      if (categories && bannerDetail.subMainSubCategoryId) {
+      if (categories && bannerDetail.subMainBannerSubcategoryId) {
         const category = categories.find(cat =>
-          cat.subcategories.some(sub => sub.subcategoryId === bannerDetail.subMainSubCategoryId)
+          cat.subcategories.some(sub => sub.subcategoryId === bannerDetail.subMainBannerSubcategoryId)
         )
         if (category) {
           setSelectedCategory(category.categoryId)
@@ -172,7 +172,7 @@ const CategoryBannerEditPage = () => {
       ...(bannerLink && { subMainBannerLink: bannerLink }),
       subMainBannerDisplayOrder: 0,
       subMainBannerIsActive: true,
-      subMainSubCategoryId: selectedSubCategory,
+      subMainBannerSubcategoryId: selectedSubCategory,
       ...(isEditMode &&
         bannerDetail && {
           subMainBannerCreatedAt: bannerDetail.subMainBannerCreatedAt,
