@@ -1,6 +1,6 @@
 import { DownOutlined } from '@ant-design/icons'
-import { Button, Dropdown, Input, MenuProps, message, Space } from 'antd'
-import React, { CSSProperties, useState } from 'react'
+import { Button, Dropdown, Input, MenuProps, Space } from 'antd'
+import React, { CSSProperties, useState, useEffect } from 'react'
 import styles from './search-header.module.scss'
 
 export type SearchHeaderMenuItemType = NonNullable<MenuProps['items']>[number]
@@ -17,6 +17,7 @@ interface SearchHeaderProps {
   onSearch?: (value: string) => void
   title?: string
   bordered?: boolean
+  defaultValue?: string
 }
 
 const SearchHeader = ({
@@ -31,9 +32,15 @@ const SearchHeader = ({
   buttonComponent,
   onSearch,
   bordered = true,
+  defaultValue = '',
 }: SearchHeaderProps) => {
-  const [searchValue, setSearchValue] = useState('')
+  const [searchValue, setSearchValue] = useState(defaultValue)
   const items = menuItems || []
+
+  // defaultValue가 변경될 때 searchValue 업데이트
+  useEffect(() => {
+    setSearchValue(defaultValue)
+  }, [defaultValue])
 
   const getDisplayText = () => {
     if (!selectedItem) return placeholder
@@ -51,9 +58,6 @@ const SearchHeader = ({
     const clickedItem = items?.find(item => item?.key === e.key)
     if (clickedItem) {
       onSelectionChange?.(clickedItem)
-
-      const label = 'label' in clickedItem ? clickedItem.label : e.key
-      message.info(`선택됨: ${label}`)
     }
   }
 

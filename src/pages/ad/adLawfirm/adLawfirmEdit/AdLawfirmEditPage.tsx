@@ -1,25 +1,34 @@
 import SearchHeader, { SearchHeaderMenuItemType } from '@/components/searchHeader/SearchHeader'
-import { adminMenuItems } from '@/constants/admin'
 import { useCategory } from '@/hooks/queries/useCategory'
 import { useCreateLawfirm, useLawfirm, useUpdateLawfirm } from '@/hooks/queries/useLawfirm'
 import { LawfirmApiRequest } from '@/types/lawfirmTypes'
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, Input, Radio, RadioChangeEvent, Select, Spin, message } from 'antd'
+import { Button, Input, Radio, RadioChangeEvent, Select, Spin, message, Upload } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import styles from './adLawfirmEdit.module.scss'
 import { ROUTE_PATH } from '@/routes/routePath'
+import { adLawfirmMenuItems } from '../adLawfirmLayout/AdLawfirmLayout'
+import { useFileUpload } from '@/hooks/useFileUpload'
 
 const AdLawfirmEditPage = () => {
   const navigate = useNavigate()
   const { lawfirmId } = useParams<{ lawfirmId: string }>()
   const isEditMode = !!lawfirmId
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const logoInputRef = useRef<HTMLInputElement>(null)
+  const { uploadFile, uploadMultipleFiles, isUploading } = useFileUpload()
 
   const { data: categories, isLoading: categoriesLoading } = useCategory()
   const { data: lawfirmData, isLoading: lawfirmLoading } = useLawfirm(isEditMode ? Number(lawfirmId) : 0)
+
+  const getMainCategoryIdBySubcategoryId = (subcategoryId: number) => {
+    return categories?.find(cat => cat.subcategories.some(sub => sub.subcategoryId === subcategoryId))?.categoryId
+  }
+
+  const getMainCategoryId = useMemo(() => {
+    if (!lawfirmData?.lawfirmSubcategoryId) return null
+    return getMainCategoryIdBySubcategoryId(lawfirmData.lawfirmSubcategoryId)
+  }, [categories, lawfirmData])
 
   // 법무법인 생성 훅
   const createLawfirmMutation = useCreateLawfirm({
@@ -43,16 +52,24 @@ const AdLawfirmEditPage = () => {
     },
   })
 
-  const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>(null)
+  const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>({
+    label: '로펌이름',
+    key: 'name',
+  })
   const [formData, setFormData] = useState<LawfirmApiRequest>({
     lawfirmId: 0,
     lawfirmName: '',
     lawfirmEmail: '',
     lawfirmContact: '',
     lawfirmViewCount: 0,
+    lawfirmSubcategoryId: 0,
     lawfirmDirects: [],
     lawfirmImages: [],
   })
+  // 이미지를 로컬에서 관리하기 위한 별도 상태 (id 포함)
+  const [localImages, setLocalImages] = useState<{ id: number; imageUrl: string }[]>([])
+  // 바로가기 링크를 로컬에서 관리하기 위한 별도 상태 (id 포함)
+  const [localDirects, setLocalDirects] = useState<{ id: number; name: string; link: string }[]>([])
 
   const [isMemberType, setIsMemberType] = useState<'member' | 'nonMember'>('member')
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>()
@@ -78,12 +95,17 @@ const AdLawfirmEditPage = () => {
   }
 
   const handleAddLink = () => {
+    const newLink = {
+      id: Date.now(),
+      name: '',
+      link: '',
+    }
+    setLocalDirects(prev => [...prev, newLink])
     setFormData(prev => ({
       ...prev,
       lawfirmDirects: [
         ...prev.lawfirmDirects,
         {
-          id: Date.now(),
           name: '',
           link: '',
         },
@@ -92,36 +114,43 @@ const AdLawfirmEditPage = () => {
   }
 
   const handleRemoveLink = (id: number) => {
-    setFormData(prev => ({
-      ...prev,
-      lawfirmDirects: prev.lawfirmDirects.filter(link => link.id !== id),
-    }))
+    const indexToRemove = localDirects.findIndex(d => d.id === id)
+    if (indexToRemove !== -1) {
+      setLocalDirects(prev => prev.filter(d => d.id !== id))
+      setFormData(prev => ({
+        ...prev,
+        lawfirmDirects: prev.lawfirmDirects.filter((_, index) => index !== indexToRemove),
+      }))
+    }
   }
 
   const handleLinkChange = (id: number, field: 'name' | 'link', value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      lawfirmDirects: prev.lawfirmDirects.map(link => (link.id === id ? { ...link, [field]: value } : link)),
-    }))
-  }
-
-  const handleLogoUpload = () => {
-    logoInputRef.current?.click()
-  }
-
-  const handleLogoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      // 실제 구현에서는 파일 업로드 API를 호출하고 URL을 받아야 함
-      const reader = new FileReader()
-      reader.onload = () => {
-        setFormData(prev => ({
-          ...prev,
-          lawfirmLogoImageUrl: reader.result as string,
-        }))
-      }
-      reader.readAsDataURL(file)
+    const index = localDirects.findIndex(d => d.id === id)
+    if (index !== -1) {
+      setLocalDirects(prev => prev.map(d => (d.id === id ? { ...d, [field]: value } : d)))
+      setFormData(prev => ({
+        ...prev,
+        lawfirmDirects: prev.lawfirmDirects.map((link, i) => (i === index ? { ...link, [field]: value } : link)),
+      }))
     }
+  }
+
+  const handleLogoUpload = async (file: File) => {
+    try {
+      const result = await uploadFile(file, {
+        folder: 'lawfirm/logo',
+        maxSize: 10,
+        allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+      })
+      setFormData(prev => ({
+        ...prev,
+        lawfirmLogoImageUrl: result.fileUrl,
+      }))
+      message.success('로고가 업로드되었습니다.')
+    } catch {
+      message.error('로고 업로드에 실패했습니다.')
+    }
+    return false
   }
 
   const handleLogoRemove = () => {
@@ -131,37 +160,63 @@ const AdLawfirmEditPage = () => {
     }))
   }
 
-  const handleImageUpload = () => {
-    fileInputRef.current?.click()
+  const handleImageUpload = async (file: File) => {
+    try {
+      const result = await uploadFile(file, {
+        folder: 'lawfirm/images',
+        maxSize: 10,
+        allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+      })
+      const newImage = {
+        id: Date.now() + Math.random(),
+        imageUrl: result.fileUrl,
+      }
+      setLocalImages(prev => [...prev, newImage])
+      setFormData(prev => ({
+        ...prev,
+        lawfirmImages: [...prev.lawfirmImages, { imageUrl: result.fileUrl }],
+      }))
+      message.success('이미지가 업로드되었습니다.')
+    } catch {
+      message.error('이미지 업로드에 실패했습니다.')
+    }
+    return false
   }
 
-  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (files) {
-      Array.from(files).forEach(file => {
-        const reader = new FileReader()
-        reader.onload = () => {
-          setFormData(prev => ({
-            ...prev,
-            lawfirmImages: [
-              ...prev.lawfirmImages,
-              {
-                id: Date.now() + Math.random(),
-                imageUrl: reader.result as string,
-              },
-            ],
-          }))
-        }
-        reader.readAsDataURL(file)
+  const handleMultipleImageUpload = async (files: File[]) => {
+    try {
+      const results = await uploadMultipleFiles(files, {
+        folder: 'lawfirm/images',
+        maxSize: 10,
+        allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
       })
+      const newLocalImages = results.map(result => ({
+        id: Date.now() + Math.random(),
+        imageUrl: result.fileUrl,
+      }))
+      const newFormImages = results.map(result => ({
+        imageUrl: result.fileUrl,
+      }))
+      setLocalImages(prev => [...prev, ...newLocalImages])
+      setFormData(prev => ({
+        ...prev,
+        lawfirmImages: [...prev.lawfirmImages, ...newFormImages],
+      }))
+      message.success(`${files.length}개의 이미지가 업로드되었습니다.`)
+    } catch {
+      message.error('이미지 업로드에 실패했습니다.')
     }
   }
 
   const handleImageRemove = (id: number) => {
-    setFormData(prev => ({
-      ...prev,
-      lawfirmImages: prev.lawfirmImages.filter(img => img.id !== id),
-    }))
+    const imageToRemove = localImages.find(img => img.id === id)
+    if (imageToRemove) {
+      setLocalImages(prev => prev.filter(img => img.id !== id))
+      setFormData(prev => ({
+        ...prev,
+        lawfirmImages: prev.lawfirmImages.filter(img => img.imageUrl !== imageToRemove.imageUrl),
+      }))
+    }
   }
 
   const validateForm = () => {
@@ -202,13 +257,15 @@ const AdLawfirmEditPage = () => {
   const handleSubmit = async () => {
     if (!validateForm()) return
 
-    // 선택적 필드는 빈 값일 때 제거
+    // LawfirmApiRequest 타입에 맞게 데이터 구성
     const submitData: LawfirmApiRequest = {
       lawfirmId: formData.lawfirmId,
       lawfirmName: formData.lawfirmName,
       lawfirmEmail: formData.lawfirmEmail,
       lawfirmContact: formData.lawfirmContact,
       lawfirmViewCount: formData.lawfirmViewCount,
+      lawfirmSubcategoryId: selectedSubCategory,
+      lawfirmCategoryId: selectedCategory,
       lawfirmDirects: formData.lawfirmDirects,
       lawfirmImages: formData.lawfirmImages,
     }
@@ -233,14 +290,6 @@ const AdLawfirmEditPage = () => {
       submitData.lawfirmBlogUrl = formData.lawfirmBlogUrl.trim()
     }
 
-    // 카테고리 정보 추가
-    if (selectedCategory) {
-      submitData.lawfirmCategoryId = selectedCategory
-    }
-    if (selectedSubCategory) {
-      submitData.lawfirmSubcategoryId = selectedSubCategory
-    }
-
     try {
       if (isEditMode && lawfirmId) {
         // 수정 API 호출
@@ -260,24 +309,58 @@ const AdLawfirmEditPage = () => {
   // 수정 모드일 때 데이터 로드
   useEffect(() => {
     if (isEditMode && lawfirmData) {
+      // 로컬 바로가기 링크 상태 초기화
+      setLocalDirects(
+        (lawfirmData.lawfirmDirects || []).map(direct => ({
+          id: direct.id,
+          name: direct.name,
+          link: direct.link,
+        }))
+      )
+
+      // 로컬 이미지 상태 초기화
+      setLocalImages(
+        (lawfirmData.lawfirmImages || []).map(img => ({
+          id: img.id,
+          imageUrl: img.imageUrl,
+        }))
+      )
+
+      // Lawfirm 타입의 데이터를 LawfirmApiRequest 형식으로 변환
+      const convertedDirects = (lawfirmData.lawfirmDirects || []).map(direct => ({
+        name: direct.name,
+        link: direct.link,
+      }))
+      const convertedImages = (lawfirmData.lawfirmImages || []).map(img => ({
+        imageUrl: img.imageUrl,
+      }))
+
       setFormData({
         lawfirmId: lawfirmData.lawfirmId,
         lawfirmName: lawfirmData.lawfirmName,
         lawfirmEmail: lawfirmData.lawfirmEmail,
         lawfirmContact: lawfirmData.lawfirmContact,
-        lawfirmAddress: lawfirmData.lawfirmAddress || '',
-        lawfirmGreetingTitle: lawfirmData.lawfirmGreetingTitle || '',
-        lawfirmGreetingContent: lawfirmData.lawfirmGreetingContent || '',
-        lawfirmHomepageUrl: lawfirmData.lawfirmHomepageUrl || '',
-        lawfirmLogoImageUrl: lawfirmData.lawfirmLogoImageUrl || '',
-        lawfirmBlogUrl: lawfirmData.lawfirmBlogUrl || '',
+        lawfirmAddress: lawfirmData.lawfirmAddress || undefined,
+        lawfirmGreetingTitle: lawfirmData.lawfirmGreetingTitle || undefined,
+        lawfirmGreetingContent: lawfirmData.lawfirmGreetingContent || undefined,
+        lawfirmHomepageUrl: lawfirmData.lawfirmHomepageUrl || undefined,
+        lawfirmLogoImageUrl: lawfirmData.lawfirmLogoImageUrl || undefined,
+        lawfirmBlogUrl: lawfirmData.lawfirmBlogUrl || undefined,
         lawfirmViewCount: lawfirmData.lawfirmViewCount,
-        lawfirmDirects: lawfirmData.lawfirmDirects || [],
-        lawfirmImages: lawfirmData.lawfirmImages || [],
+        lawfirmSubcategoryId: lawfirmData.lawfirmSubcategoryId,
+        lawfirmCategoryId: selectedCategory,
+        lawfirmDirects: convertedDirects,
+        lawfirmImages: convertedImages,
       })
-      // TODO: 카테고리 설정 로직 추가 필요
+      // 카테고리 설정
+      if (getMainCategoryId) {
+        setSelectedCategory(getMainCategoryId)
+      }
+      if (lawfirmData.lawfirmSubcategoryId) {
+        setSelectedSubCategory(lawfirmData.lawfirmSubcategoryId)
+      }
     }
-  }, [isEditMode, lawfirmData])
+  }, [isEditMode, lawfirmData, getMainCategoryId])
 
   // 카테고리 변경 시 서브카테고리 초기화
   const handleCategoryChange = (categoryId: number | undefined) => {
@@ -293,14 +376,25 @@ const AdLawfirmEditPage = () => {
     )
   }
 
+  const onSearch = (value: string) => {
+    // 검색어와 검색 타입과 함께 리스트 페이지로 이동
+    if (value.trim()) {
+      const searchType = (selectedItem?.key as string) || 'name'
+      navigate(`${ROUTE_PATH.AD_LAWFIRM}?search=${encodeURIComponent(value)}&searchType=${searchType}`)
+    } else {
+      navigate(ROUTE_PATH.AD_LAWFIRM)
+    }
+  }
+
   return (
     <div>
       <SearchHeader
-        menuItems={adminMenuItems}
+        menuItems={adLawfirmMenuItems}
         bordered={false}
         title={isEditMode ? '로펌 광고 수정 화면입니다.' : '로펌 광고 등록 화면입니다.'}
         selectedItem={selectedItem}
         onSelectionChange={handleSelectionChange}
+        onSearch={onSearch}
       />
       <section className={styles['ad-lawfirm-edit-page']}>
         <header className={styles['ad-lawfirm-edit-page__header']}>
@@ -497,7 +591,7 @@ const AdLawfirmEditPage = () => {
               <label className={styles.label}>바로가기 링크</label>
             </div>
             <div className={styles.inputCol}>
-              {formData.lawfirmDirects.map(link => (
+              {localDirects.map(link => (
                 <div key={link.id} className={styles.linkItem}>
                   <Input
                     placeholder='바로가기 이름을 입력해 주세요'
@@ -533,25 +627,25 @@ const AdLawfirmEditPage = () => {
                   <div className={styles.uploadHint}>
                     로고 등록시 주의사항
                     <br />
-                    • 가로픽셀 로고는 실물 원본 형항교 적용되 아야겉을 등록해주세요.
-                    <br />• 가로 회식의 사민/시아르는 500 x 500 입니다.
+                    • 가로픽셀 로고는 실물 원본 형태로 적용되어야 할 로고를 등록해주세요.
+                    <br />• 권장 이미지 사이즈는 500 x 500 입니다.
                   </div>
                 </div>
-                <input
-                  ref={logoInputRef}
-                  type='file'
-                  style={{ display: 'none' }}
-                  accept='image/*'
-                  onChange={handleLogoFileChange}
-                />
                 {formData.lawfirmLogoImageUrl ? (
                   <div className={styles.imageList}>
                     <div className={styles.imageItem}>
                       <img src={formData.lawfirmLogoImageUrl} alt='로고' />
                       <div className={styles.imageActions}>
-                        <Button size='small' onClick={handleLogoUpload}>
-                          로고등록
-                        </Button>
+                        <Upload
+                          beforeUpload={handleLogoUpload}
+                          showUploadList={false}
+                          accept='image/*'
+                          disabled={isUploading}
+                        >
+                          <Button size='small' loading={isUploading}>
+                            로고 변경
+                          </Button>
+                        </Upload>
                         <Button size='small' danger onClick={handleLogoRemove}>
                           로고삭제
                         </Button>
@@ -559,11 +653,19 @@ const AdLawfirmEditPage = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className={styles.uploadBox} onClick={handleLogoUpload}>
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: 24, color: '#d9d9d9' }}>LOGO</div>
+                  <Upload
+                    beforeUpload={handleLogoUpload}
+                    showUploadList={false}
+                    accept='image/*'
+                    disabled={isUploading}
+                  >
+                    <div className={styles.uploadBox}>
+                      <div style={{ textAlign: 'center' }}>
+                        <UploadOutlined style={{ fontSize: 24, color: '#d9d9d9' }} />
+                        <div style={{ marginTop: 8, fontSize: 12, color: '#8c8c8c' }}>로고 업로드</div>
+                      </div>
                     </div>
-                  </div>
+                  </Upload>
                 )}
               </div>
             </div>
@@ -580,18 +682,11 @@ const AdLawfirmEditPage = () => {
                   <div className={styles.uploadHint}>
                     사진 등록시 주의사항
                     <br />• 사진은 최대 20장까지 등록 가능합니다.
+                    <br />• 여러 장을 한번에 선택하여 업로드할 수 있습니다.
                   </div>
                 </div>
-                <input
-                  ref={fileInputRef}
-                  type='file'
-                  style={{ display: 'none' }}
-                  accept='image/*'
-                  multiple
-                  onChange={handleImageFileChange}
-                />
                 <div className={styles.imageList}>
-                  {formData.lawfirmImages.map(image => (
+                  {localImages.map(image => (
                     <div key={image.id} className={styles.imageItem}>
                       <img src={image.imageUrl} alt='업로드된 이미지' />
                       <div className={styles.imageActions}>
@@ -601,18 +696,46 @@ const AdLawfirmEditPage = () => {
                       </div>
                     </div>
                   ))}
-                  {formData.lawfirmImages.length < 20 && (
-                    <div className={styles.uploadBox} onClick={handleImageUpload}>
-                      <div style={{ textAlign: 'center' }}>
-                        <UploadOutlined style={{ fontSize: 24, color: '#d9d9d9' }} />
-                        <div style={{ marginTop: 8, fontSize: 12, color: '#8c8c8c' }}>사진 업로드</div>
+                  {localImages.length < 20 && (
+                    <Upload
+                      beforeUpload={file => {
+                        handleImageUpload(file)
+                        return false
+                      }}
+                      showUploadList={false}
+                      accept='image/*'
+                      disabled={isUploading}
+                    >
+                      <div className={styles.uploadBox}>
+                        <div style={{ textAlign: 'center' }}>
+                          <UploadOutlined style={{ fontSize: 24, color: '#d9d9d9' }} />
+                          <div style={{ marginTop: 8, fontSize: 12, color: '#8c8c8c' }}>사진 업로드</div>
+                        </div>
                       </div>
-                    </div>
+                    </Upload>
                   )}
                 </div>
-                <Button icon={<UploadOutlined />} onClick={handleImageUpload}>
-                  사진등록
-                </Button>
+                <Upload
+                  beforeUpload={(file, fileList) => {
+                    const remainingSlots = 20 - localImages.length
+                    const filesToUpload = fileList.slice(0, remainingSlots)
+                    if (filesToUpload.length > 0) {
+                      handleMultipleImageUpload(filesToUpload)
+                    }
+                    if (fileList.length > remainingSlots) {
+                      message.warning(`최대 20장까지만 등록 가능합니다. ${remainingSlots}장만 업로드됩니다.`)
+                    }
+                    return false
+                  }}
+                  showUploadList={false}
+                  accept='image/*'
+                  multiple
+                  disabled={isUploading || localImages.length >= 20}
+                >
+                  <Button icon={<UploadOutlined />} loading={isUploading} disabled={localImages.length >= 20}>
+                    여러 사진 한번에 등록 ({localImages.length}/20)
+                  </Button>
+                </Upload>
               </div>
             </div>
           </div>

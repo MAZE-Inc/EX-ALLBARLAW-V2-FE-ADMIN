@@ -231,12 +231,22 @@ export type LawyerSearchRequest = {
   searchType?: 'lawyerName' | 'lawfirmName'
 }
 
+export type LawyerSearchResult = {
+  lawyerId: number
+  lawyerName: string
+  lawyerProfileImage: string | null
+  lawyerLawfirmName: string | null
+  lawyerDescription: string | null
+  lawyerCreatedAt: string
+}
+
 export type LawyerSearchResponse = {
   lawyerSearchResults: {
     lawyerId: number
     lawyerName: string
     lawyerProfileImage: string | null
     lawyerLawfirmName: string | null
+    lawyerDescription: string | null
     lawyerCreatedAt: string
   }[]
 }
@@ -288,4 +298,22 @@ export type LawyerActivity = {
   lawyerActivityCategoryName: string
   lawyerActivityContent: string
   lawyerActivityDisplayOrder: number
+}
+
+export type AdLawyer = {
+  lawyerAdId: number
+  lawyerAdLawyerId: number
+  lawyerAdLawyerName: string
+  lawyerAdLawyerProfileImage: string | null
+  lawyerAdLawyerDescription: string
+  lawyerAdLawyerTags: Tag[]
+  lawyerAdStartedAt: string
+  lawyerAdFinishedAt: string
+  lawyerAdCreatedAt: string
+}
+
+export type AdLawyerUpdateRequest = {
+  lawyerAdLawyerId: number
+  lawyerAdStartedAt: string | Date
+  lawyerAdFinishedAt: string | Date
 }

@@ -6,6 +6,7 @@ import {
   LawyerListRequest,
   LawyerSearchRequest,
   LawyerActivity,
+  AdLawyerUpdateRequest,
 } from '@/types/lawyerTypes'
 import { QUERY_KEY } from '@/constants/query'
 
@@ -88,6 +89,50 @@ export const useLawyerActivityUpdate = (lawyerId: number, onSuccess: () => void,
     mutationFn: (data: LawyerActivity[]) => lawyerService.updateLawyerActivity(lawyerId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LAWYER_ACTIVITY, lawyerId] })
+      onSuccess()
+    },
+    onError: () => {
+      onError()
+    },
+  })
+}
+
+export const useAdLawyerList = (searchQuery?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.AD_LAWYER_LIST, searchQuery],
+    queryFn: () => lawyerService.getAdLawyerList({ searchQuery }),
+  })
+}
+
+export const useAdLawyerDetail = (lawyerAdId: number, enabled: boolean = true) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.AD_LAWYER_DETAIL, lawyerAdId],
+    queryFn: () => lawyerService.getAdLawyerDetail(lawyerAdId),
+    enabled: enabled && !!lawyerAdId,
+  })
+}
+
+export const useAdLawyerCreate = (onSuccess: () => void, onError: () => void) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: AdLawyerUpdateRequest) => lawyerService.createAdLawyer(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.AD_LAWYER_LIST] })
+      onSuccess()
+    },
+    onError: () => {
+      onError()
+    },
+  })
+}
+
+export const useAdLawyerUpdate = (lawyerAdId: number, onSuccess: () => void, onError: () => void) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: AdLawyerUpdateRequest) => lawyerService.updateAdLawyer(lawyerAdId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.AD_LAWYER_DETAIL, lawyerAdId] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.AD_LAWYER_LIST] })
       onSuccess()
     },
     onError: () => {

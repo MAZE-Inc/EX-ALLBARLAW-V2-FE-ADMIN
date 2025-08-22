@@ -23,9 +23,21 @@ export type Lawfirm = {
 
   lawfirmCreatedAt: '2025-08-20T03:18:32.340Z'
   lawfirmUpdatedAt: '2025-08-20T03:18:32.340Z'
+  lawfirmSubcategoryId: number
 }
 
-export type CreateLawfirmRequest = Omit<Lawfirm, 'lawfirmCreatedAt' | 'lawfirmUpdatedAt'>
+export type RequestLawfirm = Omit<
+  Lawfirm,
+  'lawfirmCreatedAt' | 'lawfirmUpdatedAt' | 'lawfirmDirects' | 'lawfirmImages'
+> & {
+  lawfirmDirects: {
+    name: string
+    link: string
+  }[]
+  lawfirmImages: {
+    imageUrl: string
+  }[]
+}
 
 // API 요청용 타입 (선택적 필드는 undefined 허용)
 export type LawfirmApiRequest = {
@@ -43,12 +55,10 @@ export type LawfirmApiRequest = {
   lawfirmCategoryId?: number
   lawfirmSubcategoryId?: number
   lawfirmDirects: {
-    id: number
     name: string
     link: string
   }[]
   lawfirmImages: {
-    id: number
     imageUrl: string
   }[]
 }
@@ -62,7 +72,7 @@ export type LawfirmList = {
 
 export type LawfirmListRequest = {
   lawfirmPage?: number
-  searchQuery?: number
+  searchQuery?: string
   lawfirmSearchType?: 'name' | 'greeting'
   lawfirmOrderBy?: 'name' | 'createdAt' | 'viewCount'
   lawfirmSort?: 'asc' | 'desc'

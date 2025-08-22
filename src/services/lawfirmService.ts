@@ -1,5 +1,5 @@
 import instance from '@/lib/axios'
-import { LawfirmApiRequest, Lawfirm, LawfirmList, LawfirmListRequest } from '@/types/lawfirmTypes'
+import { Lawfirm, LawfirmApiRequest, LawfirmList, LawfirmListRequest } from '@/types/lawfirmTypes'
 
 export const lawfirmService = {
   getLawfirmList: async (request: LawfirmListRequest) => {

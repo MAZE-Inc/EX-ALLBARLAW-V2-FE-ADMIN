@@ -4,8 +4,8 @@ import NotFound from '../pages/NotFound'
 import MainLayout from '../pages/layout/mainLayout/MainLayout'
 import { ROUTE_PATH } from './routePath'
 import {
-  AdBannerPage,
-  AdLawyerPage,
+  AdBannerLayout,
+  AdLawyerListPage,
   AdminManagementPage,
   AdminRegisterPage,
   CategoryManagementPage,
@@ -48,12 +48,19 @@ import {
   AdLawfirmLayout,
   AdLawfirmListPage,
   AdLawfirmEditPage,
+  AdLawyerEditPage,
+  MainBannerListPage,
+  CategoryBannerListPage,
+  SubCategoryBannerListPage,
 } from '@/pages'
 import LoginPage from '@/pages/login/LoginPage'
 import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
 import MemberLayout from '@/pages/member/memberLayout/MemberLayout'
 import ProtectedRoute from './ProtectedRoute'
 import PublicOnlyRoute from './PublicOnlyRoute'
+import MainBannerEditPage from '@/pages/ad/adBanner/mainBannerEdit/MainBannerEditPage'
+import CategoryBannerEditPage from '@/pages/ad/adBanner/categoryBannerEdit/CategoryBannerEditPage'
+import SubCategoryBannerEditPage from '@/pages/ad/adBanner/subCategoryBannerEdit/SubCategoryBannerEditPage'
 
 const router = createBrowserRouter([
   {
@@ -302,11 +309,57 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.AD_LAWYER,
-        element: <AdLawyerPage />,
+        element: <AdLawyerListPage />,
+      },
+      {
+        path: ROUTE_PATH.AD_LAWYER_CREATE,
+        element: <AdLawyerEditPage />,
+      },
+      {
+        path: `${ROUTE_PATH.AD_LAWYER}/edit/:lawyerAdId`,
+        element: <AdLawyerEditPage />,
       },
       {
         path: ROUTE_PATH.AD_BANNER,
-        element: <AdBannerPage />,
+        element: <AdBannerLayout />,
+        children: [
+          {
+            path: '',
+            element: <MainBannerListPage />,
+          },
+          {
+            path: 'main-banner/create',
+            element: <MainBannerEditPage />,
+          },
+          {
+            path: 'main-banner/:mainBannerId',
+            element: <MainBannerEditPage />,
+          },
+          {
+            path: ROUTE_PATH.AD_BANNER_CATEGORY,
+            element: <CategoryBannerListPage />,
+          },
+          {
+            path: 'category-banner/create',
+            element: <CategoryBannerEditPage />,
+          },
+          {
+            path: 'category-banner/:categoryBannerId',
+            element: <CategoryBannerEditPage />,
+          },
+          {
+            path: ROUTE_PATH.AD_BANNER_SUB_CATEGORY,
+            element: <SubCategoryBannerListPage />,
+          },
+          {
+            path: 'sub-category-banner/create',
+            element: <SubCategoryBannerEditPage />,
+          },
+          {
+            path: 'sub-category-banner/:subCategoryBannerId',
+            element: <SubCategoryBannerEditPage />,
+          },
+        ],
       },
       {
         path: ROUTE_PATH.STATISTICS_LIST,

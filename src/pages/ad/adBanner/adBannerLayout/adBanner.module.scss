@@ -1,0 +1,100 @@
+.adBannerPage {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background-color: #fff;
+    // border-bottom: 1px solid #f0f0f0;
+
+    &-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #262626;
+      margin: 0;
+    }
+
+    &-actions {
+      display: flex;
+      gap: 8px;
+
+      :global {
+        .ant-btn {
+          min-width: 80px;
+        }
+
+        .ant-btn-primary {
+          background-color: $color-green-02;
+          border-color: $color-green-02;
+
+          &:hover:not(:disabled) {
+            background-color: $color-green-02;
+            border-color: $color-green-02;
+            opacity: 0.9;
+          }
+        }
+      }
+    }
+  }
+
+  &__main {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+  }
+
+  &__tabs {
+    background-color: #fff;
+    padding: 0;
+    border-radius: 4px;
+
+    :global {
+      .ant-tabs-nav {
+        // padding: 0 24px;
+        margin-bottom: 0;
+
+        &::before {
+          border-bottom: 1px solid #f0f0f0;
+        }
+      }
+
+      .ant-tabs-tab {
+        font-size: 14px;
+        padding: 12px 0;
+
+        &:hover {
+          color: $color-green-02;
+        }
+
+        &.ant-tabs-tab-active {
+          .ant-tabs-tab-btn {
+            color: $color-green-02;
+            font-weight: 500;
+          }
+        }
+      }
+
+      .ant-tabs-ink-bar {
+        background-color: $color-green-02;
+      }
+
+      // .ant-tabs-content-holder {
+      //   padding: 0;
+      // }
+    }
+  }
+
+  .tabContent {
+    min-height: 400px;
+
+    p {
+      color: #8c8c8c;
+      text-align: center;
+      padding: 40px 0;
+    }
+  }
+}

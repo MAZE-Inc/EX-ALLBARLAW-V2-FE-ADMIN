@@ -46,7 +46,12 @@ export const ROUTE_PATH = {
   AD_LAWFIRM_CREATE: '/ad-lawfirm/create',
 
   AD_LAWYER: '/ad-lawyer',
+  AD_LAWYER_CREATE: '/ad-lawyer/create',
   AD_BANNER: '/ad-banner',
+
+  AD_BANNER_MAIN: '/ad-banner/main',
+  AD_BANNER_CATEGORY: '/ad-banner/category',
+  AD_BANNER_SUB_CATEGORY: '/ad-banner/sub-category',
 
   // 통계
   STATISTICS_LIST: '/statistics-list',

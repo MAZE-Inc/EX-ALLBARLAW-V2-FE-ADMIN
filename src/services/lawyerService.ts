@@ -1,5 +1,7 @@
 import instance from '@/lib/axios'
 import {
+  AdLawyer,
+  AdLawyerUpdateRequest,
   LawyerActivity,
   LawyerBasicInfo,
   LawyerCareer,
@@ -73,6 +75,43 @@ export const lawyerService = {
       lawyerActivities: data,
     }
     const response = await instance.put(`/lawyer/profile/${lawyerId}/activity`, requestBody)
+    return response.data
+  },
+  getAdLawyerList: async ({ searchQuery }: { searchQuery?: string }) => {
+    const params = new URLSearchParams()
+    if (searchQuery) params.append('searchQuery', searchQuery)
+
+    const url = `/lawyer-ads?${params.toString()}`
+
+    const response = await instance.get<AdLawyer[]>(url)
+    return response.data
+  },
+  getAdLawyerDetail: async (lawyerAdId: number) => {
+    const response = await instance.get<AdLawyer>(`/lawyer-ads/${lawyerAdId}`)
+    return response.data
+  },
+  createAdLawyer: async (data: AdLawyerUpdateRequest) => {
+    // Ensure dates are Date objects for the API
+    const requestData = {
+      ...data,
+      lawyerAdStartedAt:
+        data.lawyerAdStartedAt instanceof Date ? data.lawyerAdStartedAt : new Date(data.lawyerAdStartedAt),
+      lawyerAdFinishedAt:
+        data.lawyerAdFinishedAt instanceof Date ? data.lawyerAdFinishedAt : new Date(data.lawyerAdFinishedAt),
+    }
+    const response = await instance.post('/lawyer-ads', requestData)
+    return response.data
+  },
+  updateAdLawyer: async (lawyerAdId: number, data: AdLawyerUpdateRequest) => {
+    // Ensure dates are Date objects for the API
+    const requestData = {
+      ...data,
+      lawyerAdStartedAt:
+        data.lawyerAdStartedAt instanceof Date ? data.lawyerAdStartedAt : new Date(data.lawyerAdStartedAt),
+      lawyerAdFinishedAt:
+        data.lawyerAdFinishedAt instanceof Date ? data.lawyerAdFinishedAt : new Date(data.lawyerAdFinishedAt),
+    }
+    const response = await instance.put(`/lawyer-ads/${lawyerAdId}`, requestData)
     return response.data
   },
 }
