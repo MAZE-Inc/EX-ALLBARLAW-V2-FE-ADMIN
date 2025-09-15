@@ -2,7 +2,12 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tansta
 import { contentService } from '@/services/contentService'
 import { QUERY_KEY } from '@/constants/query'
 import { BlogDetailRequest, BlogListRequest, CreateBlogRequest } from '@/types/blogTypes'
-import { CreateVideoRequest, VideoDetailRequest, VideoListRequest } from '@/types/videoTypes'
+import {
+  CreateVideoRequest,
+  GetVideoChannelInfoResponse,
+  VideoDetailRequest,
+  VideoListRequest,
+} from '@/types/videoTypes'
 import { KnowledgeListRequest, KnowledgeDetailRequest } from '@/types/knowledgeType'
 
 export const useBlogList = (request: BlogListRequest) => {
@@ -156,6 +161,22 @@ export const useCreateVideo = ({ onSuccess, onError }: { onSuccess: () => void; 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.VIDEO_LIST] })
       onSuccess()
+    },
+    onError,
+  })
+}
+
+export const useGetVideoChannelInfo = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: (data: GetVideoChannelInfoResponse) => void
+  onError: () => void
+}) => {
+  return useMutation({
+    mutationFn: (request: { channelUrl: string }) => contentService.getVideoChannelInfo(request),
+    onSuccess: (data: GetVideoChannelInfoResponse) => {
+      onSuccess(data)
     },
     onError,
   })

@@ -88,3 +88,11 @@ export type CreateVideoResponse = {
   videoCaseUpdatedAt: string
   videoCaseTags: string[]
 }
+
+export type GetVideoChannelInfoResponse = {
+  channelName: string
+  channelDescription: string
+  handleName: string
+  subscriberCount: number
+  channelThumbnail: string
+}

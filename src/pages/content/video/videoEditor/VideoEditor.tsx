@@ -2,20 +2,26 @@ import { Button, Input, Modal, Space, Table, message } from 'antd'
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useLawyerSearch } from '@/hooks/queries/useLawyer'
-import { useCreateVideo } from '@/hooks/queries/useContent'
+import { useCreateVideo, useGetVideoChannelInfo } from '@/hooks/queries/useContent'
+import { useVideoAiSummary } from '@/hooks/queries/useAiSummary'
 import styles from './VideoEditor.module.scss'
+import { GetVideoChannelInfoResponse } from '@/types/videoTypes'
 
 const VideoEditor = () => {
   const navigate = useNavigate()
   const { subCategoryId } = useParams()
   const [formData, setFormData] = useState({
-    videoUrl: '',
-    subcategoryId: subCategoryId || '',
-    title: '',
-    channelTitle: '',
-    summaryContent: '',
-    keywords: '',
-    lawyer: null as any,
+    subcategoryId: subCategoryId ? Number(subCategoryId) : 0,
+    videoCaseTitle: '',
+    videoCaseSummaryContent: '',
+    videoCaseSource: '',
+    videoCaseThumbnail: '',
+    videoCaseChannelDescription: '',
+    videoCaseChannelThumbnail: '',
+    videoCaseHandleName: '',
+    videoCaseChannelName: '',
+    videoCaseTags: [] as string[],
+    videoCaseLawyerId: 0,
   })
   const [lawyerSearchName, setLawyerSearchName] = useState('')
   const [isLawyerModalOpen, setIsLawyerModalOpen] = useState(false)
@@ -23,6 +29,51 @@ const VideoEditor = () => {
   const [modalSearchQuery, setModalSearchQuery] = useState('')
   const [searchTrigger, setSearchTrigger] = useState({ query: '', trigger: 0 })
   const [isChannelInfoFetched, setIsChannelInfoFetched] = useState(false)
+  const [subscriberCount, setSubscriberCount] = useState(0)
+  const [shouldFetchSummary, setShouldFetchSummary] = useState(false)
+  const [summaryUrl, setSummaryUrl] = useState('')
+
+  const { mutate: channelInfo } = useGetVideoChannelInfo({
+    onSuccess: (data: GetVideoChannelInfoResponse) => {
+      setFormData(prev => ({
+        ...prev,
+        videoCaseChannelName: data.channelName,
+        videoCaseHandleName: data.handleName,
+        videoCaseChannelDescription: data.channelDescription,
+        videoCaseChannelThumbnail: data.channelThumbnail,
+      }))
+      setSubscriberCount(data.subscriberCount)
+      setIsChannelInfoFetched(true)
+    },
+    onError: () => {
+      message.error('채널 정보 불러오기에 실패했습니다. 다시 시도해주세요.')
+    },
+  })
+
+  // AI Summary hook
+  const {
+    data: summaryData,
+    isLoading: isSummaryLoading,
+    refetch: refetchSummary,
+  } = useVideoAiSummary(
+    { url: summaryUrl },
+    {
+      enabled: false, // 수동으로 refetch할 것이므로 기본적으로 비활성화
+    }
+  )
+
+  // AI 요약 데이터 받아온 후 처리
+  useEffect(() => {
+    if (summaryData && shouldFetchSummary) {
+      setFormData(prev => ({
+        ...prev,
+        videoCaseSummaryContent: summaryData.text,
+        videoCaseTags: summaryData.tags || [],
+      }))
+      message.success('AI 요약이 완료되었습니다.')
+      setShouldFetchSummary(false)
+    }
+  }, [summaryData, shouldFetchSummary])
 
   // React Query hook for lawyer search
   const { data: searchData, isLoading } = useLawyerSearch({
@@ -45,7 +96,7 @@ const VideoEditor = () => {
     if (subCategoryId) {
       setFormData(prev => ({
         ...prev,
-        subcategoryId: subCategoryId,
+        subcategoryId: Number(subCategoryId),
       }))
     }
   }, [subCategoryId])
@@ -77,7 +128,8 @@ const VideoEditor = () => {
     if (selected) {
       setFormData(prev => ({
         ...prev,
-        lawyer: selected,
+        videoCaseLawyerId: selected.lawyerId,
+        selectedLawyer: selected, // 표시용으로 변호사 정보 저장
       }))
       setIsLawyerModalOpen(false)
       setSelectedLawyerId(null)
@@ -93,49 +145,44 @@ const VideoEditor = () => {
   }
 
   const handleFetchChannelInfo = () => {
-    if (!formData.videoUrl) {
+    if (!formData.videoCaseSource) {
       message.warning('유튜브 채널 정보를 입력해주세요.')
       return
     }
 
-    // Mock channel info fetch
-    // In real implementation, this would fetch data from YouTube API
-    setFormData(prev => ({
-      ...prev,
-      title: '유튜브 채널이름',
-      channelTitle: '@채널명',
-    }))
-    setIsChannelInfoFetched(true)
+    channelInfo({ channelUrl: formData.videoCaseSource })
+  }
 
-    // Auto-populate mock data for demonstration
+  const handleAiSummary = async () => {
+    if (!formData.videoCaseSource) {
+      message.warning('먼저 유튜브 URL을 입력해주세요.')
+      return
+    }
+
+    setShouldFetchSummary(true)
+    setSummaryUrl(formData.videoCaseSource)
+
+    // URL이 설정된 후 refetch 실행
     setTimeout(() => {
-      setFormData(prev => ({
-        ...prev,
-        summaryContent: `채널 명: 유튜브 채널이름
-구독자 수: 124,567명
-핸들 명: @채널명
-채널 설명: 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다.`,
-      }))
-    }, 500)
-
-    message.success('채널 정보를 불러왔습니다.')
+      refetchSummary()
+    }, 100)
   }
 
   const handleSave = () => {
     // Validation
-    if (!formData.videoUrl) {
+    if (!formData.videoCaseSource) {
       message.warning('유튜브 채널 정보를 입력해주세요.')
       return
     }
-    if (!formData.title) {
+    if (!formData.videoCaseTitle) {
       message.warning('영상 제목을 입력해주세요.')
       return
     }
-    if (!formData.summaryContent) {
+    if (!formData.videoCaseSummaryContent) {
       message.warning('유튜브 영상정보를 입력해주세요.')
       return
     }
-    if (!formData.lawyer) {
+    if (!formData.videoCaseLawyerId) {
       message.warning('변호사를 선택해주세요.')
       return
     }
@@ -144,30 +191,8 @@ const VideoEditor = () => {
       return
     }
 
-    // Prepare tags array from keywords string
-    const tagsArray = formData.keywords
-      ? formData.keywords
-          .split(',')
-          .map(tag => tag.trim())
-          .filter(tag => tag.length > 0)
-      : []
-
-    // Create video request
-    const createVideoRequest = {
-      subcategoryId: Number(formData.subcategoryId),
-      videoCaseTitle: formData.title,
-      videoCaseSummaryContent: formData.summaryContent,
-      videoCaseSource: formData.videoUrl,
-      videoCaseThumbnail: '', // Would be extracted from YouTube
-      videoCaseChannelDescription: formData.summaryContent,
-      videoCaseChannelThumbnail: '', // Would be extracted from YouTube
-      videoCaseHandleName: formData.channelTitle || '',
-      videoCaseChannelName: formData.title,
-      videoCaseTags: tagsArray,
-      videoCaseLawyerId: formData.lawyer.lawyerId,
-    }
-
-    createVideoMutation.mutate(createVideoRequest)
+    // formData를 그대로 전달
+    createVideoMutation.mutate(formData)
   }
 
   const handleCancel = () => {
@@ -178,10 +203,10 @@ const VideoEditor = () => {
   const isFormValid = () => {
     return !!(
       (
-        formData.videoUrl &&
-        formData.title &&
-        formData.summaryContent &&
-        formData.lawyer &&
+        formData.videoCaseSource &&
+        formData.videoCaseTitle &&
+        formData.videoCaseSummaryContent &&
+        formData.videoCaseLawyerId &&
         formData.subcategoryId &&
         isChannelInfoFetched
       ) // YouTube channel info must be fetched
@@ -203,8 +228,8 @@ const VideoEditor = () => {
             <Input
               placeholder='유튜브 채널 홈화면의 경로를 입력해주세요.'
               size='large'
-              value={formData.videoUrl}
-              onChange={e => handleInputChange('videoUrl', e.target.value)}
+              value={formData.videoCaseSource}
+              onChange={e => handleInputChange('videoCaseSource', e.target.value)}
             />
           </div>
         </div>
@@ -216,23 +241,44 @@ const VideoEditor = () => {
             size='large'
             className={styles.fetchButton}
             onClick={handleFetchChannelInfo}
-            disabled={!formData.videoUrl}
+            disabled={!formData.videoCaseSource}
           >
             유튜브채널정보불러오기
           </Button>
-          {isChannelInfoFetched && (
+          {formData.videoCaseChannelName && (
             <div className={styles.channelInfoList}>
               <ul>
-                <li>채널 명: 유튜브 채널이름</li>
-                <li>구독자 수: 124,567명</li>
-                <li>핸들 명: @채널명</li>
-                <li>
-                  채널 설명: 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널 설명을 모두 보여줍니다. 채널
-                  설명을 모두 보여줍니다.
-                </li>
+                <li>채널 명: {formData.videoCaseChannelName}</li>
+                <li>구독자 수: {subscriberCount}명</li>
+                <li>핸들 명: @{formData.videoCaseHandleName}</li>
+                <li>채널 설명: {formData.videoCaseChannelDescription}</li>
               </ul>
             </div>
           )}
+        </div>
+
+        {/* 유튜브 영상정보 (URL) */}
+        <div className={styles.formRow}>
+          <div className={styles.labelCol}>
+            <label className={styles.label}>유튜브 영상정보</label>
+          </div>
+          <div className={styles.inputCol} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <Input
+              placeholder='유튜브 URL을 입력해주세요.'
+              size='large'
+              value={formData.videoCaseSource}
+              onChange={e => handleInputChange('videoCaseSource', e.target.value)}
+            />
+            <Button
+              type='primary'
+              size='large'
+              onClick={handleAiSummary}
+              loading={isSummaryLoading}
+              disabled={!formData.videoCaseSource}
+            >
+              AI요약하기
+            </Button>
+          </div>
         </div>
 
         {/* 영상 제목 */}
@@ -244,23 +290,23 @@ const VideoEditor = () => {
             <Input
               placeholder='제목을 입력해주세요.'
               size='large'
-              value={formData.title}
-              onChange={e => handleInputChange('title', e.target.value)}
+              value={formData.videoCaseTitle}
+              onChange={e => handleInputChange('videoCaseTitle', e.target.value)}
             />
           </div>
         </div>
 
-        {/* 유튜브 영상정보 */}
+        {/* 영상 내용 */}
         <div className={styles.formRow}>
           <div className={styles.labelCol}>
-            <label className={styles.label}>유튜브 영상정보</label>
+            <label className={styles.label}>영상 내용</label>
           </div>
           <div className={styles.inputCol}>
-            <Input
-              placeholder='유튜브 영상정보를 입력해주세요.'
-              size='large'
-              value={formData.summaryContent}
-              onChange={e => handleInputChange('summaryContent', e.target.value)}
+            <Input.TextArea
+              placeholder='영상 내용을 입력해주세요.'
+              rows={4}
+              value={formData.videoCaseSummaryContent}
+              onChange={e => handleInputChange('videoCaseSummaryContent', e.target.value)}
             />
           </div>
         </div>
@@ -274,8 +320,14 @@ const VideoEditor = () => {
             <Input
               placeholder='키워드/태그를 입력해주세요. 최대 10개까지 등록 가능합니다.'
               size='large'
-              value={formData.keywords}
-              onChange={e => handleInputChange('keywords', e.target.value)}
+              value={formData.videoCaseTags.join(', ')}
+              onChange={e => {
+                const tags = e.target.value
+                  .split(',')
+                  .map(tag => tag.trim())
+                  .filter(tag => tag.length > 0)
+                handleInputChange('videoCaseTags', tags)
+              }}
             />
           </div>
         </div>
@@ -300,30 +352,6 @@ const VideoEditor = () => {
                   검색하기
                 </Button>
               </div>
-
-              {formData.lawyer && (
-                <div className={styles.lawyerInfo}>
-                  <div className={styles.lawyerCard}>
-                    <img
-                      src={formData.lawyer.lawyerProfileImage || '/default-profile.png'}
-                      alt={formData.lawyer.lawyerName}
-                      className={styles.lawyerImage}
-                    />
-                    <div className={styles.lawyerDetails}>
-                      <ul>
-                        <li>로펌 사무실: {formData.lawyer.lawyerLawfirmName || '법무법인 일신 강남분사무소'}</li>
-                        <li>변호사 이름: {formData.lawyer.lawyerName || '박성현 변호사'}</li>
-                        <li>생년월일/성별: {formData.lawyer.birthDate || '1970년 3월 30일'}</li>
-                        <li>휴대폰 번호: {formData.lawyer.phone || '010-1234-5678'}</li>
-                        <li>주요분야: {formData.lawyer.specialties || '대분류 > 소분류'}</li>
-                      </ul>
-                      <Button type='primary' size='large' className={styles.confirmButton}>
-                        변호사정보 바로가기
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
