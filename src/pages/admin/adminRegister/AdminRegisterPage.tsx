@@ -6,6 +6,7 @@ import { message, Button } from 'antd'
 import styles from './adminRegisterPage.module.scss'
 import { useCreateAdmin } from '@/hooks/mutations/useCreateAdmin'
 import { useUpdateAdmin } from '@/hooks/queries/useAdmin'
+import { errorHandle } from '@/utils/errorHandle'
 
 const AdminRegisterPage = () => {
   const navigate = useNavigate()
@@ -25,17 +26,22 @@ const AdminRegisterPage = () => {
     subMenuIds: [] as number[],
   })
 
-  const { mutate: createAdmin } = useCreateAdmin()
+  const { mutate: createAdmin } = useCreateAdmin({
+    onError: (error: any) => {
+      const code = error.response.data.code
+      message.error(errorHandle(code))
+    },
+  })
   const { mutate: updateAdmin } = useUpdateAdmin(Number(adminId))
 
   // 수정 모드일 때 데이터 불러오기
   useEffect(() => {
     if (isEditMode && location.state?.adminData) {
       const adminData = location.state.adminData
-      
+
       // adminSubMenus에서 subMenuId 배열 추출
       const extractedSubMenuIds = adminData.adminSubMenus?.map((subMenu: any) => subMenu.subMenuId) || []
-      
+
       setFormData({
         accountType: adminData.adminAccountTypeId === 1 ? '1' : '2',
         account: adminData.adminAccount || '',
@@ -53,6 +59,12 @@ const AdminRegisterPage = () => {
     // 유효성 검사
     if (!formData.account || !formData.email || !formData.name) {
       message.error('필수 필드를 입력해주세요.')
+      return
+    }
+
+    // 권한 체크
+    if (!formData.subMenuIds || formData.subMenuIds.length === 0) {
+      message.error('권한 설정이 필요합니다.')
       return
     }
 

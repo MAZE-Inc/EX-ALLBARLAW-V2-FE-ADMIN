@@ -166,18 +166,8 @@ export const useCreateVideo = ({ onSuccess, onError }: { onSuccess: () => void; 
   })
 }
 
-export const useGetVideoChannelInfo = ({
-  onSuccess,
-  onError,
-}: {
-  onSuccess: (data: GetVideoChannelInfoResponse) => void
-  onError: () => void
-}) => {
+export const useGetVideoChannelInfo = () => {
   return useMutation({
-    mutationFn: (request: { channelUrl: string }) => contentService.getVideoChannelInfo(request),
-    onSuccess: (data: GetVideoChannelInfoResponse) => {
-      onSuccess(data)
-    },
-    onError,
+    mutationFn: (request: { videoUrl: string }) => contentService.getVideoChannelInfo(request),
   })
 }

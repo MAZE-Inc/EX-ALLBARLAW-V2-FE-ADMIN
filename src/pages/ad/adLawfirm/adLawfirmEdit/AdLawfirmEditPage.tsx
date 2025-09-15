@@ -18,6 +18,30 @@ const AdLawfirmEditPage = () => {
   const isEditMode = !!lawfirmId
   const { uploadFile, uploadMultipleFiles, isUploading } = useFileUpload()
 
+  // URL 유효성 검증 함수
+  const isValidUrl = (url: string): boolean => {
+    try {
+      // 빈 문자열은 허용
+      if (!url) return true
+
+      // 상대 경로는 허용
+      if (url.startsWith('/')) return true
+
+      // 절대 URL 검증
+      const urlObj = new URL(url)
+
+      // http, https 프로토콜만 허용
+      if (!['http:', 'https:'].includes(urlObj.protocol)) return false
+
+      // localhost는 거부
+      if (urlObj.hostname === 'localhost' || urlObj.hostname === '127.0.0.1') return false
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
   const { data: categories, isLoading: categoriesLoading } = useCategory()
   const { data: lawfirmData, isLoading: lawfirmLoading } = useLawfirm(isEditMode ? Number(lawfirmId) : 0)
 
@@ -70,6 +94,8 @@ const AdLawfirmEditPage = () => {
   const [localImages, setLocalImages] = useState<{ id: number; imageUrl: string }[]>([])
   // 바로가기 링크를 로컬에서 관리하기 위한 별도 상태 (id 포함)
   const [localDirects, setLocalDirects] = useState<{ id: number; name: string; link: string }[]>([])
+  // URL 유효성 상태
+  const [urlErrors, setUrlErrors] = useState<{ [key: number]: string }>({})
 
   const [isMemberType, setIsMemberType] = useState<'member' | 'nonMember'>('member')
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>()
@@ -125,6 +151,22 @@ const AdLawfirmEditPage = () => {
   }
 
   const handleLinkChange = (id: number, field: 'name' | 'link', value: string) => {
+    // link 필드일 때 URL 유효성 검증
+    if (field === 'link') {
+      if (!isValidUrl(value)) {
+        setUrlErrors(prev => ({
+          ...prev,
+          [id]: '유효한 URL 형식을 입력해주세요. (https://example.com 또는 /path)',
+        }))
+      } else {
+        setUrlErrors(prev => {
+          const newErrors = { ...prev }
+          delete newErrors[id]
+          return newErrors
+        })
+      }
+    }
+
     const index = localDirects.findIndex(d => d.id === id)
     if (index !== -1) {
       setLocalDirects(prev => prev.map(d => (d.id === id ? { ...d, [field]: value } : d)))
@@ -256,6 +298,12 @@ const AdLawfirmEditPage = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) return
+
+    // URL 유효성 검사
+    if (Object.keys(urlErrors).length > 0) {
+      message.warning('유효하지 않은 URL이 있습니다. 확인 후 다시 시도해주세요.')
+      return
+    }
 
     // LawfirmApiRequest 타입에 맞게 데이터 구성
     const submitData: LawfirmApiRequest = {
@@ -599,12 +647,19 @@ const AdLawfirmEditPage = () => {
                     onChange={e => handleLinkChange(link.id, 'name', e.target.value)}
                     style={{ width: 250 }}
                   />
-                  <Input
-                    placeholder='바로가기 링크를 입력해 주세요'
-                    value={link.link}
-                    onChange={e => handleLinkChange(link.id, 'link', e.target.value)}
-                    style={{ flex: 1 }}
-                  />
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    <Input
+                      placeholder='바로가기 링크를 입력해 주세요'
+                      value={link.link}
+                      onChange={e => handleLinkChange(link.id, 'link', e.target.value)}
+                      status={urlErrors[link.id] ? 'error' : ''}
+                    />
+                    {urlErrors[link.id] && (
+                      <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>
+                        {urlErrors[link.id]}
+                      </div>
+                    )}
+                  </div>
                   <Button danger size='small' onClick={() => handleRemoveLink(link.id)}>
                     삭제
                   </Button>
