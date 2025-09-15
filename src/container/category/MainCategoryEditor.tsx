@@ -115,20 +115,30 @@ const MainCategoryEditor: React.FC<MainCategoryEditorProps> = ({ title, open, on
         message.success('대분류가 성공적으로 수정되었습니다.')
       } else {
         // 생성 모드
-        await createCategoryMutation.mutateAsync({
+        const response = await createCategoryMutation.mutateAsync({
           categoryName: categoryName,
           categoryImageUrl: offImageUrl,        // OFF 이미지가 기본 이미지
           categoryClickedImageUrl: onImageUrl,  // ON 이미지가 클릭된 이미지
         })
         message.success('대분류가 성공적으로 등록되었습니다.')
+
+        // 성공 시 부모 컴포넌트의 onSubmit 호출 (생성된 카테고리 ID 포함)
+        onSubmit({
+          name: categoryName,
+          onImage: onImageFile,
+          offImage: offImageFile,
+          categoryId: response.data.categoryId, // 새로 생성된 카테고리 ID 추가
+        })
       }
-      
-      // 성공 시 부모 컴포넌트의 onSubmit 호출
-      onSubmit({
-        name: categoryName,
-        onImage: onImageFile,
-        offImage: offImageFile,
-      })
+
+      // 수정 모드일 때는 ID 없이 호출
+      if (isEditMode) {
+        onSubmit({
+          name: categoryName,
+          onImage: onImageFile,
+          offImage: offImageFile,
+        })
+      }
       
       // 초기화
       setCategoryName('')
