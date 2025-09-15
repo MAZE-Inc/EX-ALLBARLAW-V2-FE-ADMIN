@@ -4,7 +4,6 @@ import { QUERY_KEY } from '@/constants/query'
 import { BlogDetailRequest, BlogListRequest, CreateBlogRequest } from '@/types/blogTypes'
 import {
   CreateVideoRequest,
-  GetVideoChannelInfoResponse,
   VideoDetailRequest,
   VideoListRequest,
 } from '@/types/videoTypes'
