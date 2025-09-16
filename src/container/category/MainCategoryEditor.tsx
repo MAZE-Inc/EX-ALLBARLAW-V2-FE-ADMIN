@@ -9,9 +9,9 @@ interface MainCategoryEditorProps {
   title: string
   open: boolean
   onCancel: () => void
-  onSubmit: (data: { name: string; onImage: File | null; offImage: File | null }) => void
+  onSubmit: (data: { name: string; onImage: File | null; offImage: File | null; categoryId?: number }) => void
   defaultValues?: {
-    id?: number  // 카테고리 ID 추가 (수정 시 필요)
+    id?: number // 카테고리 ID 추가 (수정 시 필요)
     name?: string
     onImage?: string
     offImage?: string
@@ -26,7 +26,7 @@ const MainCategoryEditor: React.FC<MainCategoryEditorProps> = ({ title, open, on
   const [offImagePreview, setOffImagePreview] = useState<string>('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const isEditMode = title.includes('수정') || title.includes('edit')
-  
+
   const { uploadFile } = useFileUpload()
   const createCategoryMutation = useCreateCategory()
   const updateCategoryMutation = useUpdateCategory()
@@ -52,7 +52,7 @@ const MainCategoryEditor: React.FC<MainCategoryEditorProps> = ({ title, open, on
       message.warning('ON 이미지와 OFF 이미지를 모두 등록해주세요.')
       return
     }
-    
+
     if (isEditMode && !defaultValues?.id) {
       message.error('카테고리 ID가 없습니다.')
       return
@@ -60,14 +60,14 @@ const MainCategoryEditor: React.FC<MainCategoryEditorProps> = ({ title, open, on
 
     try {
       setIsSubmitting(true)
-      
+
       let onImageUrl = defaultValues?.onImage || ''
       let offImageUrl = defaultValues?.offImage || ''
-      
+
       // 새 이미지가 있으면 업로드
       if (onImageFile || offImageFile) {
         const uploadPromises = []
-        
+
         if (onImageFile) {
           uploadPromises.push(
             uploadFile(onImageFile, {
@@ -77,7 +77,7 @@ const MainCategoryEditor: React.FC<MainCategoryEditorProps> = ({ title, open, on
             })
           )
         }
-        
+
         if (offImageFile) {
           uploadPromises.push(
             uploadFile(offImageFile, {
@@ -87,9 +87,9 @@ const MainCategoryEditor: React.FC<MainCategoryEditorProps> = ({ title, open, on
             })
           )
         }
-        
+
         const uploadResults = await Promise.all(uploadPromises)
-        
+
         // 업로드 결과 처리
         if (onImageFile && uploadResults[0]) {
           onImageUrl = uploadResults[0].fileUrl
@@ -108,28 +108,38 @@ const MainCategoryEditor: React.FC<MainCategoryEditorProps> = ({ title, open, on
           categoryId: defaultValues!.id!,
           category: {
             categoryName: categoryName,
-            categoryImageUrl: offImageUrl,        // OFF 이미지가 기본 이미지
-            categoryClickedImageUrl: onImageUrl,  // ON 이미지가 클릭된 이미지
+            categoryImageUrl: offImageUrl, // OFF 이미지가 기본 이미지
+            categoryClickedImageUrl: onImageUrl, // ON 이미지가 클릭된 이미지
           },
         })
         message.success('대분류가 성공적으로 수정되었습니다.')
       } else {
         // 생성 모드
-        await createCategoryMutation.mutateAsync({
+        const response = await createCategoryMutation.mutateAsync({
           categoryName: categoryName,
-          categoryImageUrl: offImageUrl,        // OFF 이미지가 기본 이미지
-          categoryClickedImageUrl: onImageUrl,  // ON 이미지가 클릭된 이미지
+          categoryImageUrl: offImageUrl, // OFF 이미지가 기본 이미지
+          categoryClickedImageUrl: onImageUrl, // ON 이미지가 클릭된 이미지
         })
         message.success('대분류가 성공적으로 등록되었습니다.')
+
+        // 성공 시 부모 컴포넌트의 onSubmit 호출 (생성된 카테고리 ID 포함)
+        onSubmit({
+          name: categoryName,
+          onImage: onImageFile,
+          offImage: offImageFile,
+          categoryId: response.data.categoryId, // 새로 생성된 카테고리 ID 추가
+        })
       }
-      
-      // 성공 시 부모 컴포넌트의 onSubmit 호출
-      onSubmit({
-        name: categoryName,
-        onImage: onImageFile,
-        offImage: offImageFile,
-      })
-      
+
+      // 수정 모드일 때는 ID 없이 호출
+      if (isEditMode) {
+        onSubmit({
+          name: categoryName,
+          onImage: onImageFile,
+          offImage: offImageFile,
+        })
+      }
+
       // 초기화
       setCategoryName('')
       setOnImageFile(null)

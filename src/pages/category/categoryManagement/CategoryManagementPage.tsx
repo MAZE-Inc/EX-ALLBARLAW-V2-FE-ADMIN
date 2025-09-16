@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { Button, Spin, Alert } from 'antd'
 import { DownloadOutlined } from '@ant-design/icons'
 import styles from '@/pages/category/categoryManagement/categoryManagement.module.scss'
@@ -15,6 +15,7 @@ const CategoryManagementPage: React.FC = () => {
   // React Query로 실제 데이터 가져오기
   const { data: categoryData, isLoading, error } = useCategory()
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
+  const [pendingCategoryId, setPendingCategoryId] = useState<number | null>(null)
   const { exportCategories } = useExcelExport()
 
   // 서버 데이터를 컴포넌트 형식으로 변환 (categoryDisplayOrder 순서대로 정렬)
@@ -72,9 +73,11 @@ const CategoryManagementPage: React.FC = () => {
     handleMainCategoryDelete,
     handleSubCategoryOrderChange,
     handleSubCategoryDelete,
+    resetSelection,
+    setMainCategorySelection,
   } = useCategoryManagement({
     initialMainData: mainData,
-    initialSubData: subData,
+    initialSubData: selectedCategoryId ? subData : [], // selectedCategoryId가 없으면 빈 배열 전달
   })
 
   // 대분류 클릭 시 선택된 카테고리 ID 업데이트
@@ -83,6 +86,26 @@ const CategoryManagementPage: React.FC = () => {
     setSelectedCategoryId(categoryId)
     originalHandleMainCategoryClick(record, categoryId)
   }
+
+  // 새로 생성된 카테고리 자동 선택 처리
+  useEffect(() => {
+    if (pendingCategoryId && categoryData) {
+      const newCategory = categoryData.find(cat => cat.categoryId === pendingCategoryId)
+      if (newCategory) {
+        // 소분류 데이터 초기화
+        resetSelection()
+
+        // 카테고리 ID 설정
+        setSelectedCategoryId(pendingCategoryId)
+
+        // 선택된 대분류 이름 설정
+        setMainCategorySelection(newCategory.categoryName)
+
+        // pending 상태 초기화
+        setPendingCategoryId(null)
+      }
+    }
+  }, [categoryData, pendingCategoryId, setMainCategorySelection, resetSelection])
 
   const {
     isSubCategoryModalOpen,
@@ -94,13 +117,23 @@ const CategoryManagementPage: React.FC = () => {
     handleMainCategoryAdd,
     handleMainCategoryDoubleClick,
     handleMainCategoryEditorCancel,
-    handleMainCategoryEditorSubmit,
+    handleMainCategoryEditorSubmit: originalHandleMainCategoryEditorSubmit,
     handleSubCategoryAdd,
     handleSubCategoryClick,
     handleSubCategoryDoubleClick,
     handleSubCategoryModalCancel,
     handleSubCategoryModalSubmit,
   } = useModalHandlers({ selectedCategoryId })
+
+  // 대분류 등록/수정 시 선택된 카테고리 초기화 처리
+  const handleMainCategoryEditorSubmit = async (data: any) => {
+    // 대분류 추가 모드일 때 새로 생성된 카테고리 선택
+    if (mainCategoryEditorMode === 'add' && data.categoryId) {
+      // 새로 생성된 카테고리 ID를 pending 상태로 저장
+      setPendingCategoryId(data.categoryId)
+    }
+    originalHandleMainCategoryEditorSubmit(data)
+  }
 
   // 로딩 상태
   if (isLoading) {
@@ -131,7 +164,7 @@ const CategoryManagementPage: React.FC = () => {
   return (
     <main className={styles.categoryManagement}>
       <header>
-        <Button 
+        <Button
           className={styles.categoryManagement__button}
           icon={<DownloadOutlined />}
           onClick={() => exportCategories(categoryData)}
@@ -183,7 +216,7 @@ const CategoryManagementPage: React.FC = () => {
         defaultValues={
           mainCategoryEditorMode === 'edit' && selectedMainCategoryData
             ? {
-                id: parseInt(selectedMainCategoryData.key),  // 카테고리 ID 추가
+                id: parseInt(selectedMainCategoryData.key), // 카테고리 ID 추가
                 name: selectedMainCategoryData.mainCategory,
                 onImage: selectedMainCategoryData.icons[0] || '',
                 offImage: selectedMainCategoryData.icons[1] || '',

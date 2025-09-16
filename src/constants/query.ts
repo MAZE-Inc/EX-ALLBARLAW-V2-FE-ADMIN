@@ -68,4 +68,9 @@ export const QUERY_KEY = {
   AD_MAIN_BANNER_DETAIL: 'adMainBannerDetail',
   AD_CATEGORY_BANNER_DETAIL: 'adCategoryBannerDetail',
   AD_SUB_CATEGORY_BANNER_DETAIL: 'adSubCategoryBannerDetail',
+
+  // AI
+  VIDEO_AI_SUMMARY: 'videoAiSummary',
+  BLOG_AI_SUMMARY: 'blogAiSummary',
+  KNOWLEDGE_AI_TITLE: 'knowledgeAiTitle',
 } as const

@@ -76,7 +76,12 @@ export const useCategoryManagement = ({
 
   const handleMainCategoryClick = (record: MainCategoryData, _index: number) => {
     setSelectedMainCategory(record.mainCategory)
-    // TODO: 선택된 대분류에 해당하는 소분류 데이터를 서버에서 가져오기
+    // 선택된 대분류에 해당하는 소분류 데이터는 이미 initialSubData로 전달됨
+  }
+
+  // 선택된 대분류 이름을 외부에서 설정할 수 있는 함수
+  const setMainCategorySelection = (categoryName: string) => {
+    setSelectedMainCategory(categoryName)
   }
 
   const handleMainCategoryDelete = (record: MainCategoryData) => {
@@ -167,6 +172,12 @@ export const useCategoryManagement = ({
     })
   }
 
+  // 선택 상태 초기화 함수
+  const resetSelection = () => {
+    setSelectedMainCategory('')
+    setSubData([])
+  }
+
   return {
     // 상태
     mainData,
@@ -179,5 +190,7 @@ export const useCategoryManagement = ({
     handleMainCategoryDelete,
     handleSubCategoryOrderChange,
     handleSubCategoryDelete,
+    resetSelection,
+    setMainCategorySelection,
   }
 }

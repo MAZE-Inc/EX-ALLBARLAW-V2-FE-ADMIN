@@ -16,6 +16,7 @@ import {
 import {
   CreateVideoRequest,
   CreateVideoResponse,
+  GetVideoChannelInfoResponse,
   VideoDetailRequest,
   VideoDetailResponse,
   VideoListRequest,
@@ -161,6 +162,10 @@ export const contentService = {
     }
 
     const response = await instance.post<CreateVideoResponse>(`/video-cases/subcategory/${subcategoryId}`, payload)
+    return response.data
+  },
+  getVideoChannelInfo: async (request: { channelUrl: string }) => {
+    const response = await instance.post<GetVideoChannelInfoResponse>(`/video-cases/youtube/channel/fetch`, request)
     return response.data
   },
 }
