@@ -1,10 +1,11 @@
-import { Button, Input, Modal, Space, Table, Upload, message } from 'antd'
+import { Button, Input, Modal, Space, Table, Upload, message, Select } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useLawyerSearch } from '@/hooks/queries/useLawyer'
 import { useCreateBlog } from '@/hooks/queries/useContent'
 import { useFileUpload } from '@/hooks/useFileUpload'
+import { useCategory } from '@/hooks/queries/useCategory'
 import styles from './BlogEditor.module.scss'
 
 const { TextArea } = Input
@@ -12,6 +13,8 @@ const { TextArea } = Input
 const BlogEditor = () => {
   const navigate = useNavigate()
   const { subCategoryId } = useParams()
+  const { data: categoryList } = useCategory()
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined)
   const [formData, setFormData] = useState({
     blogUrl: '',
     subcategoryId: subCategoryId || '',
@@ -49,13 +52,20 @@ const BlogEditor = () => {
   })
 
   useEffect(() => {
-    if (subCategoryId) {
+    if (subCategoryId && categoryList) {
+      // 서브카테고리 ID가 있으면 해당하는 카테고리 찾아서 설정
+      const parentCategory = categoryList.find(cat =>
+        cat.subcategories.some(sub => sub.subcategoryId === Number(subCategoryId))
+      )
+      if (parentCategory) {
+        setSelectedCategoryId(parentCategory.categoryId)
+      }
       setFormData(prev => ({
         ...prev,
         subcategoryId: subCategoryId,
       }))
     }
-  }, [subCategoryId])
+  }, [subCategoryId, categoryList])
 
   useEffect(() => {
     // If there's an existing thumbnail URL, set up the file list for display
@@ -121,7 +131,7 @@ const BlogEditor = () => {
 
     // Mock AI summary
     message.loading('AI 요약 중...', 1.5)
-    
+
     setTimeout(() => {
       setFormData(prev => ({
         ...prev,
@@ -207,7 +217,7 @@ const BlogEditor = () => {
       return
     }
     if (!formData.subcategoryId) {
-      message.warning('서브카테고리가 선택되지 않았습니다.')
+      message.warning('카테고리를 선택해주세요.')
       return
     }
 
@@ -256,6 +266,52 @@ const BlogEditor = () => {
         <span>♦</span> 법률정보 글 입력
       </h1>
       <section className={styles.blogEditor__form}>
+        {/* 카테고리 선택 */}
+        <div className={styles.formRow}>
+          <div className={styles.labelCol}>
+            <label className={styles.label}>카테고리 선택</label>
+          </div>
+          <div className={styles.inputCol}>
+            <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+              <Select
+                placeholder='대분류 선택'
+                value={selectedCategoryId}
+                onChange={value => {
+                  setSelectedCategoryId(value)
+                  // 대분류 변경 시 서브카테고리 초기화
+                  setFormData(prev => ({ ...prev, subcategoryId: '' }))
+                }}
+                style={{ width: 200 }}
+                size='large'
+              >
+                {categoryList?.map(cat => (
+                  <Select.Option key={cat.categoryId} value={cat.categoryId}>
+                    {cat.categoryName}
+                  </Select.Option>
+                ))}
+              </Select>
+              <Select
+                placeholder='소분류 선택'
+                value={formData.subcategoryId ? Number(formData.subcategoryId) : undefined}
+                onChange={value => {
+                  handleInputChange('subcategoryId', value?.toString() || '')
+                }}
+                disabled={!selectedCategoryId}
+                style={{ width: 200 }}
+                size='large'
+              >
+                {categoryList
+                  ?.find(cat => cat.categoryId === selectedCategoryId)
+                  ?.subcategories?.map(sub => (
+                    <Select.Option key={sub.subcategoryId} value={sub.subcategoryId}>
+                      {sub.subcategoryName}
+                    </Select.Option>
+                  ))}
+              </Select>
+            </div>
+          </div>
+        </div>
+
         {/* 블로그 주소 */}
         <div className={styles.formRow}>
           <div className={styles.labelCol}>
@@ -273,10 +329,10 @@ const BlogEditor = () => {
 
         {/* AI요약하기 버튼 (별도 섹션) */}
         <div className={styles.aiSummarySection}>
-          <Button 
-            type='primary' 
-            size='large' 
-            className={styles.aiButton} 
+          <Button
+            type='primary'
+            size='large'
+            className={styles.aiButton}
             onClick={handleAISummary}
             disabled={!formData.blogUrl}
           >
@@ -415,10 +471,10 @@ const BlogEditor = () => {
           <Button size='large' onClick={handleCancel}>
             취소
           </Button>
-          <Button 
-            type='primary' 
-            size='large' 
-            onClick={handleSave} 
+          <Button
+            type='primary'
+            size='large'
+            onClick={handleSave}
             loading={createBlogMutation.isPending}
             disabled={!isFormValid()}
           >

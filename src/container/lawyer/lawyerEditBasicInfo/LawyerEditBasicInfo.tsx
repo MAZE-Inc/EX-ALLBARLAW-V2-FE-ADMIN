@@ -91,7 +91,7 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
       .split(',')
       .map(tag => tag.trim())
       .filter(tag => tag.length > 0)
-    
+
     if (tagArray.length < 2) {
       newErrors.tags = '최소 2개 이상의 태그를 입력해주세요.'
     } else if (tagArray.length > 4) {
@@ -172,7 +172,7 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
         })
         setProfileImages(images)
       }
-      
+
       setIsDataInitialized(true)
     }
   }, [lawyerBasicInfo, categoryList, isDataInitialized])
@@ -311,7 +311,7 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
                 const isPreviousFilled = index === 0 || profileImages[index - 1] !== null
                 // 현재 슬롯이 활성화되어야 하는지 확인
                 const isEnabled = isPreviousFilled && !file
-                
+
                 return (
                   <div key={index} className={styles.imageSlot}>
                     {file ? (
@@ -378,7 +378,9 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
                 style={{ resize: 'none', borderColor: errors.greeting ? '#ff4d4f' : undefined }}
                 status={errors.greeting ? 'error' : undefined}
               />
-              {errors.greeting && <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.greeting}</div>}
+              {errors.greeting && (
+                <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.greeting}</div>
+              )}
             </div>
           </div>
         </div>
@@ -396,7 +398,9 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
                 onChange={e => handleInputChange('lawyerName', e.target.value)}
                 status={errors.lawyerName ? 'error' : undefined}
               />
-              {errors.lawyerName && <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.lawyerName}</div>}
+              {errors.lawyerName && (
+                <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.lawyerName}</div>
+              )}
             </div>
           </div>
         </div>
@@ -475,7 +479,9 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
                 onChange={e => handleInputChange('phoneNumber', e.target.value)}
                 status={errors.phoneNumber ? 'error' : undefined}
               />
-              {errors.phoneNumber && <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.phoneNumber}</div>}
+              {errors.phoneNumber && (
+                <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.phoneNumber}</div>
+              )}
             </div>
           </div>
         </div>
@@ -518,7 +524,9 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
                 onChange={e => handleInputChange('lawfirmName', e.target.value)}
                 status={errors.lawfirmName ? 'error' : undefined}
               />
-              {errors.lawfirmName && <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.lawfirmName}</div>}
+              {errors.lawfirmName && (
+                <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.lawfirmName}</div>
+              )}
             </div>
           </div>
         </div>
@@ -540,7 +548,9 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
                   status={errors.address ? 'error' : undefined}
                 />
               </div>
-              {errors.address && <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.address}</div>}
+              {errors.address && (
+                <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.address}</div>
+              )}
               <Input
                 placeholder='상세주소를 모두 입력해 주세요'
                 style={{ marginTop: 8 }}
@@ -548,7 +558,9 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
                 onChange={e => handleInputChange('addressDetail', e.target.value)}
                 status={errors.addressDetail ? 'error' : undefined}
               />
-              {errors.addressDetail && <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.addressDetail}</div>}
+              {errors.addressDetail && (
+                <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.addressDetail}</div>
+              )}
               <div style={{ marginTop: 8 }}>
                 <span className={styles.link}>주소 등록</span>
                 <span className={styles.helperText}>가능합니다.</span>
@@ -570,7 +582,9 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
                 onChange={e => handleInputChange('officePhone', e.target.value)}
                 status={errors.officePhone ? 'error' : undefined}
               />
-              {errors.officePhone && <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.officePhone}</div>}
+              {errors.officePhone && (
+                <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.officePhone}</div>
+              )}
               <div className={styles.flexRow} style={{ marginTop: 8 }}>
                 <span className={styles.link}>사무실 번호 등록이</span>
                 <span className={styles.helperText}>가능합니다.</span>
@@ -635,7 +649,9 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
                   </Button>
                 )}
               </div>
-              {errors.categories && <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.categories}</div>}
+              {errors.categories && (
+                <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.categories}</div>
+              )}
               <div style={{ marginTop: 8 }}>
                 <span className={styles.link}>최소 1개 이상의 주요분야를 선택해주세요.</span>
               </div>

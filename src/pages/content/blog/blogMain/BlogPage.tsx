@@ -24,11 +24,12 @@ const BlogPage = () => {
   }
 
   const handleRegisterBlog = () => {
-    if (!selectedSubcategory) {
-      message.warning('서브카테고리를 선택해주세요.')
-      return
+    // 서브카테고리가 선택되어 있으면 해당 경로로, 없으면 edit 경로로 이동
+    if (selectedSubcategory) {
+      navigate(`${selectedSubcategory}/edit`)
+    } else {
+      navigate('edit')
     }
-    navigate(`${selectedSubcategory}/edit`)
   }
 
   return (
