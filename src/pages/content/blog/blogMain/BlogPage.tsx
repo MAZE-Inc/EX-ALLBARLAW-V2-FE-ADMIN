@@ -1,6 +1,6 @@
 import CategorySidebar from '@/components/categorySidebar/CategorySidebar'
 import { useCategory } from '@/hooks/queries/useCategory'
-import { Button, message } from 'antd'
+import { Button } from 'antd'
 import { useState } from 'react'
 import styles from './blogPage.module.scss'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'

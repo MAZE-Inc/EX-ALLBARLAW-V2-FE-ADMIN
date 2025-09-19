@@ -1,15 +1,18 @@
-import { Button, Input, Modal, Space, Table, message } from 'antd'
+import { Button, Input, Modal, Space, Table, message, Select } from 'antd'
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useLawyerSearch } from '@/hooks/queries/useLawyer'
 import { useCreateVideo, useGetVideoChannelInfo } from '@/hooks/queries/useContent'
 import { useVideoAiSummary } from '@/hooks/queries/useAiSummary'
+import { useCategory } from '@/hooks/queries/useCategory'
 import styles from './VideoEditor.module.scss'
 import { GetVideoChannelInfoResponse } from '@/types/videoTypes'
 
 const VideoEditor = () => {
   const navigate = useNavigate()
   const { subCategoryId } = useParams()
+  const { data: categoryList } = useCategory()
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined)
   const [formData, setFormData] = useState({
     subcategoryId: subCategoryId ? Number(subCategoryId) : 0,
     videoCaseTitle: '',
@@ -93,13 +96,20 @@ const VideoEditor = () => {
   })
 
   useEffect(() => {
-    if (subCategoryId) {
+    if (subCategoryId && categoryList) {
+      // 서브카테고리 ID가 있으면 해당하는 카테고리 찾아서 설정
+      const parentCategory = categoryList.find(cat =>
+        cat.subcategories.some(sub => sub.subcategoryId === Number(subCategoryId))
+      )
+      if (parentCategory) {
+        setSelectedCategoryId(parentCategory.categoryId)
+      }
       setFormData(prev => ({
         ...prev,
         subcategoryId: Number(subCategoryId),
       }))
     }
-  }, [subCategoryId])
+  }, [subCategoryId, categoryList])
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({
@@ -187,7 +197,7 @@ const VideoEditor = () => {
       return
     }
     if (!formData.subcategoryId) {
-      message.warning('서브카테고리가 선택되지 않았습니다.')
+      message.warning('카테고리를 선택해주세요.')
       return
     }
 
@@ -219,6 +229,52 @@ const VideoEditor = () => {
         <span>♦</span> 영상정보입력
       </h1>
       <section className={styles.videoEditor__form}>
+        {/* 카테고리 선택 */}
+        <div className={styles.formRow}>
+          <div className={styles.labelCol}>
+            <label className={styles.label}>카테고리 선택</label>
+          </div>
+          <div className={styles.inputCol}>
+            <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+              <Select
+                placeholder='대분류 선택'
+                value={selectedCategoryId}
+                onChange={value => {
+                  setSelectedCategoryId(value)
+                  // 대분류 변경 시 서브카테고리 초기화
+                  setFormData(prev => ({ ...prev, subcategoryId: 0 }))
+                }}
+                style={{ width: 200 }}
+                size='large'
+              >
+                {categoryList?.map(cat => (
+                  <Select.Option key={cat.categoryId} value={cat.categoryId}>
+                    {cat.categoryName}
+                  </Select.Option>
+                ))}
+              </Select>
+              <Select
+                placeholder='소분류 선택'
+                value={formData.subcategoryId || undefined}
+                onChange={value => {
+                  handleInputChange('subcategoryId', value || 0)
+                }}
+                disabled={!selectedCategoryId}
+                style={{ width: 200 }}
+                size='large'
+              >
+                {categoryList
+                  ?.find(cat => cat.categoryId === selectedCategoryId)
+                  ?.subcategories?.map(sub => (
+                    <Select.Option key={sub.subcategoryId} value={sub.subcategoryId}>
+                      {sub.subcategoryName}
+                    </Select.Option>
+                  ))}
+              </Select>
+            </div>
+          </div>
+        </div>
+
         {/* 유튜브 채널 정보 */}
         <div className={styles.formRow}>
           <div className={styles.labelCol}>

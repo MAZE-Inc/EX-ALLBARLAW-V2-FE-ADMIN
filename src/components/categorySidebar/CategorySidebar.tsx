@@ -37,8 +37,11 @@ const CategoryItem = ({
       <div className={styles['category-list-header']}>
         <h3
           className={`${styles.categoryName} ${isActive ? styles.active : ''}`}
-          onClick={alwaysExpanded ? undefined : onClick}
-          style={{ cursor: alwaysExpanded ? 'default' : 'pointer' }}
+          onClick={alwaysExpanded || isActive ? undefined : onClick}
+          style={{
+            cursor: alwaysExpanded ? 'default' : 'pointer',
+            color: isActive ? COLOR.GREEN_01 : COLOR.TEXT_INDEX,
+          }}
         >
           {category.categoryName}
         </h3>
@@ -51,7 +54,7 @@ const CategoryItem = ({
               key={subcategory.subcategoryId}
               className={styles['subcategory-item']}
               style={{
-                backgroundColor: selectedSubcategory === subcategory.subcategoryId ? COLOR.GREEN_01 : 'transparent',
+                backgroundColor: selectedSubcategory === subcategory.subcategoryId ? COLOR.GRAY_01 : 'transparent',
               }}
               onClick={() => onSubcategoryClick(subcategory.subcategoryId)}
             >
