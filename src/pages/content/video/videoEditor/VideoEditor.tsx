@@ -299,7 +299,7 @@ const VideoEditor = () => {
             onClick={handleFetchChannelInfo}
             disabled={!formData.videoCaseSource}
           >
-            유튜브채널정보불러오기
+            유튜브 채널정보 불러오기
           </Button>
           {formData.videoCaseChannelName && (
             <div className={styles.channelInfoList}>
