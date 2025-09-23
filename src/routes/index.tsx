@@ -161,6 +161,10 @@ const router = createBrowserRouter([
                 path: ':subCategoryId/edit',
                 element: <BlogEditor />,
               },
+              {
+                path: 'edit',
+                element: <BlogEditor />,
+              },
             ],
           },
           {
@@ -181,6 +185,10 @@ const router = createBrowserRouter([
               },
               {
                 path: ':subCategoryId/edit',
+                element: <VideoEditor />,
+              },
+              {
+                path: 'edit',
                 element: <VideoEditor />,
               },
             ],

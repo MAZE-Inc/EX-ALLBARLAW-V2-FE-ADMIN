@@ -35,7 +35,8 @@ export const useCategoryManagement = ({
   }, [initialMainData])
 
   useEffect(() => {
-    if (initialSubData && initialSubData.length > 0) {
+    // initialSubData가 undefined가 아니면 설정 (빈 배열도 포함)
+    if (initialSubData !== undefined) {
       setSubData(initialSubData)
     }
   }, [initialSubData])

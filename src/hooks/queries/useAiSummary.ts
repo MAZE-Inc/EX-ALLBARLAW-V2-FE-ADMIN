@@ -10,17 +10,9 @@ export const useBlogAiSummary = (
   return useQuery({
     queryKey: [QUERY_KEY.BLOG_AI_SUMMARY, request.url, request.category],
     queryFn: async () => {
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 60000) // 30초 타임아웃
-
-      try {
-        const response = await aiSummaryService.getBlogAiSummary(request)
-        clearTimeout(timeoutId)
-        return response
-      } catch (error) {
-        clearTimeout(timeoutId)
-        throw error
-      }
+      // 블로그 AI 요약도 시간이 오래 걸릴 수 있으므로 타임아웃 제거
+      const response = await aiSummaryService.getBlogAiSummary(request)
+      return response
     },
     retry: 1, // 한 번만 재시도
     staleTime: 5 * 60 * 1000, // 5분간 fresh 상태 유지
@@ -36,17 +28,9 @@ export const useVideoAiSummary = (
   return useQuery({
     queryKey: [QUERY_KEY.VIDEO_AI_SUMMARY, request.url],
     queryFn: async () => {
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 60000) // 30초 타임아웃
-
-      try {
-        const response = await aiSummaryService.getVideoAiSummary(request)
-        clearTimeout(timeoutId)
-        return response
-      } catch (error) {
-        clearTimeout(timeoutId)
-        throw error
-      }
+      // 비디오 AI 요약은 시간이 오래 걸릴 수 있으므로 타임아웃 제거
+      const response = await aiSummaryService.getVideoAiSummary(request)
+      return response
     },
     retry: 1, // 한 번만 재시도
     staleTime: 5 * 60 * 1000, // 5분간 fresh 상태 유지

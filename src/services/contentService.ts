@@ -21,6 +21,8 @@ import {
   VideoDetailResponse,
   VideoListRequest,
   VideoListResponse,
+  YoutubeVideoInfoRequest,
+  YoutubeVideoInfoResponse,
 } from '@/types/videoTypes'
 import axios from 'axios'
 
@@ -166,6 +168,10 @@ export const contentService = {
   },
   getVideoChannelInfo: async (request: { channelUrl: string }) => {
     const response = await instance.post<GetVideoChannelInfoResponse>(`/video-cases/youtube/channel/fetch`, request)
+    return response.data
+  },
+  getYoutubeVideoInfo: async (request: YoutubeVideoInfoRequest) => {
+    const response = await instance.post<YoutubeVideoInfoResponse>(`/video-cases/youtube/video/fetch`, request)
     return response.data
   },
 }

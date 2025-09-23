@@ -2,6 +2,7 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tansta
 import { lawfirmService } from '@/services/lawfirmService'
 import { LawfirmApiRequest, LawfirmListRequest } from '@/types/lawfirmTypes'
 import { QUERY_KEY } from '@/constants/query'
+import { AxiosError } from 'axios'
 
 interface UseLawfirmInfiniteScrollProps {
   searchQuery?: string
@@ -56,7 +57,13 @@ export const useLawfirm = (lawfirmId: number) => {
   })
 }
 
-export const useCreateLawfirm = ({ onSuccess, onError }: { onSuccess?: () => void; onError?: () => void } = {}) => {
+export const useCreateLawfirm = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?: () => void
+  onError?: (error: AxiosError) => void
+}) => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: lawfirmService.createLawfirm,
@@ -64,13 +71,16 @@ export const useCreateLawfirm = ({ onSuccess, onError }: { onSuccess?: () => voi
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LAWFIRM_LIST] })
       onSuccess?.()
     },
-    onError: () => {
-      onError?.()
+    onError: (error: AxiosError) => {
+      onError?.(error)
     },
   })
 }
 
-export const useUpdateLawfirm = ({ onSuccess, onError }: { onSuccess?: () => void; onError?: () => void } = {}) => {
+export const useUpdateLawfirm = ({
+  onSuccess,
+  onError,
+}: { onSuccess?: () => void; onError?: (error: AxiosError) => void } = {}) => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ lawfirmId, request }: { lawfirmId: number; request: LawfirmApiRequest }) =>
@@ -80,8 +90,8 @@ export const useUpdateLawfirm = ({ onSuccess, onError }: { onSuccess?: () => voi
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LAWFIRM_DETAIL, variables.lawfirmId] })
       onSuccess?.()
     },
-    onError: () => {
-      onError?.()
+    onError: (error: AxiosError) => {
+      onError?.(error)
     },
   })
 }

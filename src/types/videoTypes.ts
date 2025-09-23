@@ -96,3 +96,12 @@ export type GetVideoChannelInfoResponse = {
   subscriberCount: number
   channelThumbnail: string
 }
+
+export type YoutubeVideoInfoRequest = {
+  videoUrl: string
+}
+
+export type YoutubeVideoInfoResponse = {
+  thumbnail: string
+  title: string
+}

@@ -1,16 +1,20 @@
 import CategorySidebar from '@/components/categorySidebar/CategorySidebar'
 import { useCategory } from '@/hooks/queries/useCategory'
-import { Button, message } from 'antd'
+import { Button } from 'antd'
 import { useState } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import styles from './videoPage.module.scss'
 
 const VideoPage = () => {
   const { data: categoryList } = useCategory()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [selectedMainCategory, setSelectedMainCategory] = useState<number | null>(null)
   const [selectedSubcategory, setSelectedSubcategory] = useState<number | null>(null)
+
+  // VideoEditor 페이지인지 확인
+  const isVideoEditorPage = location.pathname.includes('/edit')
 
   const handleMainCategoryClick = (categoryId: number) => {
     setSelectedMainCategory(categoryId)
@@ -23,17 +27,22 @@ const VideoPage = () => {
   }
 
   const handleRegisterVideo = () => {
-    if (!selectedSubcategory) {
-      message.warning('서브카테고리를 선택해주세요.')
-      return
+    // 서브카테고리가 선택되어 있으면 해당 경로로, 없으면 edit 경로로 이동
+    if (selectedSubcategory) {
+      navigate(`${selectedSubcategory}/edit`)
+    } else {
+      navigate('edit')
     }
-    navigate(`${selectedSubcategory}/edit`)
   }
 
   return (
     <main className={styles['video-page']}>
       <header className={styles['video-page__header']}>
-        <Button type='primary' onClick={handleRegisterVideo}>영상정보 글 등록</Button>
+        {!isVideoEditorPage && (
+          <Button type='primary' onClick={handleRegisterVideo}>
+            영상정보 글 등록
+          </Button>
+        )}
       </header>
       <section className={styles['video-page__content']}>
         <CategorySidebar
