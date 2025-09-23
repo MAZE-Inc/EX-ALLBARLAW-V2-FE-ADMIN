@@ -7,6 +7,8 @@ import {
   GetVideoChannelInfoResponse,
   VideoDetailRequest,
   VideoListRequest,
+  YoutubeVideoInfoRequest,
+  YoutubeVideoInfoResponse,
 } from '@/types/videoTypes'
 import { KnowledgeListRequest, KnowledgeDetailRequest } from '@/types/knowledgeType'
 
@@ -178,6 +180,20 @@ export const useGetVideoChannelInfo = ({
     onSuccess: (data: GetVideoChannelInfoResponse) => {
       onSuccess(data)
     },
+    onError,
+  })
+}
+
+export const useGetYoutubeVideoInfo = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: (data: YoutubeVideoInfoResponse) => void
+  onError: () => void
+}) => {
+  return useMutation({
+    mutationFn: (request: YoutubeVideoInfoRequest) => contentService.getYoutubeVideoInfo(request),
+    onSuccess,
     onError,
   })
 }

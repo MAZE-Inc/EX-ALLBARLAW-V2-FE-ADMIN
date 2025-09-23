@@ -1,13 +1,14 @@
 import { Button, Input, Modal, Space, Table, message, Select } from 'antd'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useCreateVideo } from '@/hooks/queries/useContent'
+import { useCreateVideo, useGetYoutubeVideoInfo } from '@/hooks/queries/useContent'
 import { useVideoForm } from '@/hooks/useVideoForm'
 import { useLawyerSelection } from '@/hooks/useLawyerSelection'
 import { useChannelInfo } from '@/hooks/useChannelInfo'
 import { useVideoAiSummaryLogic } from '@/hooks/useVideoAiSummary'
 import { useCategorySelection } from '@/hooks/useCategorySelection'
 import styles from './VideoEditor.module.scss'
+import { YoutubeVideoInfoResponse } from '@/types/videoTypes'
 
 const VideoEditor = () => {
   const navigate = useNavigate()
@@ -20,6 +21,18 @@ const VideoEditor = () => {
   const lawyerSelection = useLawyerSelection()
   const channelInfo = useChannelInfo()
   const aiSummary = useVideoAiSummaryLogic()
+  const { mutate: getYoutubeVideoInfo, isPending: isYoutubeVideoInfoLoading } = useGetYoutubeVideoInfo({
+    onSuccess: (data: YoutubeVideoInfoResponse) => {
+      setFormData(prev => ({
+        ...prev,
+        videoCaseTitle: data.title,
+        videoCaseThumbnail: data.thumbnail,
+      }))
+    },
+    onError: () => {
+      message.error('유튜브 영상정보 불러오기에 실패했습니다. 다시 시도해주세요.')
+    },
+  })
 
   // 채널 정보 업데이트
   useEffect(() => {
@@ -211,13 +224,18 @@ const VideoEditor = () => {
               placeholder='유튜브 URL을 입력해주세요.'
               size='large'
               value={formData.videoCaseSource}
+              disabled={aiSummary.isSummaryLoading}
               onChange={e => handleInputChange('videoCaseSource', e.target.value)}
             />
             <Button
               type='primary'
               size='large'
-              onClick={() => aiSummary.handleAiSummary(formData.videoCaseSource)}
-              loading={aiSummary.isSummaryLoading}
+              onClick={() => {
+                // 유튜브 영상정보와 AI 요약을 동시에 실행
+                getYoutubeVideoInfo({ videoUrl: formData.videoCaseSource })
+                aiSummary.handleAiSummary(formData.videoCaseSource)
+              }}
+              loading={aiSummary.isSummaryLoading || isYoutubeVideoInfoLoading}
               disabled={!formData.videoCaseSource}
             >
               AI요약하기
@@ -232,10 +250,15 @@ const VideoEditor = () => {
           </div>
           <div className={styles.inputCol}>
             <Input
-              placeholder='제목을 입력해주세요.'
+              placeholder={
+                isYoutubeVideoInfoLoading || aiSummary.isSummaryLoading
+                  ? 'AI 요약중입니다...'
+                  : '제목을 입력해주세요.'
+              }
               size='large'
               value={formData.videoCaseTitle}
               onChange={e => handleInputChange('videoCaseTitle', e.target.value)}
+              disabled={isYoutubeVideoInfoLoading || aiSummary.isSummaryLoading}
             />
           </div>
         </div>
@@ -247,10 +270,15 @@ const VideoEditor = () => {
           </div>
           <div className={styles.inputCol}>
             <Input.TextArea
-              placeholder='영상 내용을 입력해주세요.'
+              placeholder={
+                isYoutubeVideoInfoLoading || aiSummary.isSummaryLoading
+                  ? 'AI 요약중입니다...'
+                  : '영상 내용을 입력해주세요.'
+              }
               rows={4}
               value={formData.videoCaseSummaryContent}
               onChange={e => handleInputChange('videoCaseSummaryContent', e.target.value)}
+              disabled={isYoutubeVideoInfoLoading || aiSummary.isSummaryLoading}
             />
           </div>
         </div>
@@ -262,7 +290,11 @@ const VideoEditor = () => {
           </div>
           <div className={styles.inputCol}>
             <Input
-              placeholder='키워드/태그를 입력해주세요. 최대 10개까지 등록 가능합니다.'
+              placeholder={
+                isYoutubeVideoInfoLoading || aiSummary.isSummaryLoading
+                  ? 'AI 요약중입니다...'
+                  : '키워드/태그를 입력해주세요. 최대 10개까지 등록 가능합니다.'
+              }
               size='large'
               value={formData.videoCaseTags.join(', ')}
               onChange={e => {
@@ -272,6 +304,7 @@ const VideoEditor = () => {
                   .filter(tag => tag.length > 0)
                 handleInputChange('videoCaseTags', tags)
               }}
+              disabled={isYoutubeVideoInfoLoading || aiSummary.isSummaryLoading}
             />
           </div>
         </div>
