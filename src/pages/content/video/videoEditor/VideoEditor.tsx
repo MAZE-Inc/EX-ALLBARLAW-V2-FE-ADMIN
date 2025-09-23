@@ -1,88 +1,51 @@
 import { Button, Input, Modal, Space, Table, message, Select } from 'antd'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useLawyerSearch } from '@/hooks/queries/useLawyer'
-import { useCreateVideo, useGetVideoChannelInfo } from '@/hooks/queries/useContent'
-import { useVideoAiSummary } from '@/hooks/queries/useAiSummary'
-import { useCategory } from '@/hooks/queries/useCategory'
+import { useCreateVideo } from '@/hooks/queries/useContent'
+import { useVideoForm } from '@/hooks/useVideoForm'
+import { useLawyerSelection } from '@/hooks/useLawyerSelection'
+import { useChannelInfo } from '@/hooks/useChannelInfo'
+import { useVideoAiSummaryLogic } from '@/hooks/useVideoAiSummary'
+import { useCategorySelection } from '@/hooks/useCategorySelection'
 import styles from './VideoEditor.module.scss'
-import { GetVideoChannelInfoResponse } from '@/types/videoTypes'
 
 const VideoEditor = () => {
   const navigate = useNavigate()
   const { subCategoryId } = useParams()
-  const { data: categoryList } = useCategory()
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined)
-  const [formData, setFormData] = useState({
-    subcategoryId: subCategoryId ? Number(subCategoryId) : 0,
-    videoCaseTitle: '',
-    videoCaseSummaryContent: '',
-    videoCaseSource: '',
-    videoCaseThumbnail: '',
-    videoCaseChannelDescription: '',
-    videoCaseChannelThumbnail: '',
-    videoCaseHandleName: '',
-    videoCaseChannelName: '',
-    videoCaseTags: [] as string[],
-    videoCaseLawyerId: 0,
-  })
-  const [lawyerSearchName, setLawyerSearchName] = useState('')
-  const [isLawyerModalOpen, setIsLawyerModalOpen] = useState(false)
-  const [_selectedLawyerId, setSelectedLawyerId] = useState<number | null>(null)
-  const [modalSearchQuery, setModalSearchQuery] = useState('')
-  const [searchTrigger, setSearchTrigger] = useState({ query: '', trigger: 0 })
-  const [isChannelInfoFetched, setIsChannelInfoFetched] = useState(false)
-  const [subscriberCount, setSubscriberCount] = useState(0)
-  const [shouldFetchSummary, setShouldFetchSummary] = useState(false)
-  const [summaryUrl, setSummaryUrl] = useState('')
+  const [channelUrl, setChannelUrl] = useState('')
 
-  const { mutate: channelInfo } = useGetVideoChannelInfo({
-    onSuccess: (data: GetVideoChannelInfoResponse) => {
-      setFormData(prev => ({
-        ...prev,
-        videoCaseChannelName: data.channelName,
-        videoCaseHandleName: data.handleName,
-        videoCaseChannelDescription: data.channelDescription,
-        videoCaseChannelThumbnail: data.channelThumbnail,
-      }))
-      setSubscriberCount(data.subscriberCount)
-      setIsChannelInfoFetched(true)
-    },
-    onError: () => {
-      message.error('채널 정보 불러오기에 실패했습니다. 다시 시도해주세요.')
-    },
-  })
+  // 커스텀 훅들
+  const { formData, setFormData, handleInputChange, isFormValid } = useVideoForm(subCategoryId)
+  const { categoryList, selectedCategoryId, setSelectedCategoryId } = useCategorySelection(subCategoryId)
+  const lawyerSelection = useLawyerSelection()
+  const channelInfo = useChannelInfo()
+  const aiSummary = useVideoAiSummaryLogic()
 
-  // AI Summary hook
-  const {
-    data: summaryData,
-    isLoading: isSummaryLoading,
-    refetch: refetchSummary,
-  } = useVideoAiSummary(
-    { url: summaryUrl },
-    {
-      enabled: false, // 수동으로 refetch할 것이므로 기본적으로 비활성화
-    }
-  )
-
-  // AI 요약 데이터 받아온 후 처리
+  // 채널 정보 업데이트
   useEffect(() => {
-    if (summaryData && shouldFetchSummary) {
+    if (channelInfo.channelData) {
       setFormData(prev => ({
         ...prev,
-        videoCaseSummaryContent: summaryData.text,
-        videoCaseTags: summaryData.tags || [],
+        videoCaseChannelName: channelInfo.channelData?.channelName || '',
+        videoCaseHandleName: channelInfo.channelData?.handleName || '',
+        videoCaseChannelDescription: channelInfo.channelData?.channelDescription || '',
+        videoCaseChannelThumbnail: channelInfo.channelData?.channelThumbnail || '',
+      }))
+    }
+  }, [channelInfo.channelData, setFormData])
+
+  // AI 요약 데이터 업데이트
+  useEffect(() => {
+    if (aiSummary.summaryData && aiSummary.shouldFetchSummary) {
+      setFormData(prev => ({
+        ...prev,
+        videoCaseSummaryContent: aiSummary.summaryData.text,
+        videoCaseTags: aiSummary.summaryData.tags || [],
       }))
       message.success('AI 요약이 완료되었습니다.')
-      setShouldFetchSummary(false)
+      aiSummary.resetSummaryFlag()
     }
-  }, [summaryData, shouldFetchSummary])
-
-  // React Query hook for lawyer search
-  const { data: searchData, isLoading } = useLawyerSearch({
-    searchQuery: searchTrigger.query,
-    searchType: 'lawyerName',
-  })
+  }, [aiSummary.summaryData, aiSummary.shouldFetchSummary, setFormData, aiSummary])
 
   // Create video mutation
   const createVideoMutation = useCreateVideo({
@@ -95,87 +58,25 @@ const VideoEditor = () => {
     },
   })
 
+  // 서브카테고리 ID 업데이트
   useEffect(() => {
-    if (subCategoryId && categoryList) {
-      // 서브카테고리 ID가 있으면 해당하는 카테고리 찾아서 설정
-      const parentCategory = categoryList.find(cat =>
-        cat.subcategories.some(sub => sub.subcategoryId === Number(subCategoryId))
-      )
-      if (parentCategory) {
-        setSelectedCategoryId(parentCategory.categoryId)
-      }
+    if (subCategoryId) {
       setFormData(prev => ({
         ...prev,
         subcategoryId: Number(subCategoryId),
       }))
     }
-  }, [subCategoryId, categoryList])
+  }, [subCategoryId, setFormData])
 
-  const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value,
-    }))
-  }
-
-  const handleSelectLawyer = () => {
-    if (lawyerSearchName.trim()) {
-      setModalSearchQuery(lawyerSearchName)
-      setSearchTrigger({ query: lawyerSearchName, trigger: Date.now() })
-      setIsLawyerModalOpen(true)
-    }
-  }
-
-  const handleModalSearch = () => {
-    if (modalSearchQuery.trim()) {
-      setSearchTrigger({ query: modalSearchQuery, trigger: Date.now() })
-    }
-  }
-
+  // 변호사 선택 핸들러
   const handleLawyerSelect = (lawyerId: number) => {
-    const lawyers = searchData?.lawyerSearchResults || []
-    const selected = lawyers.find(lawyer => lawyer.lawyerId === lawyerId)
-    if (selected) {
+    lawyerSelection.handleLawyerSelect(lawyerId, selected => {
       setFormData(prev => ({
         ...prev,
         videoCaseLawyerId: selected.lawyerId,
-        selectedLawyer: selected, // 표시용으로 변호사 정보 저장
+        selectedLawyer: selected,
       }))
-      setIsLawyerModalOpen(false)
-      setSelectedLawyerId(null)
-      setModalSearchQuery('')
-      message.success('변호사가 선택되었습니다.')
-    }
-  }
-
-  const handleModalCancel = () => {
-    setIsLawyerModalOpen(false)
-    setSelectedLawyerId(null)
-    setModalSearchQuery('')
-  }
-
-  const handleFetchChannelInfo = () => {
-    if (!formData.videoCaseSource) {
-      message.warning('유튜브 채널 정보를 입력해주세요.')
-      return
-    }
-
-    channelInfo({ channelUrl: formData.videoCaseSource })
-  }
-
-  const handleAiSummary = async () => {
-    if (!formData.videoCaseSource) {
-      message.warning('먼저 유튜브 URL을 입력해주세요.')
-      return
-    }
-
-    setShouldFetchSummary(true)
-    setSummaryUrl(formData.videoCaseSource)
-
-    // URL이 설정된 후 refetch 실행
-    setTimeout(() => {
-      refetchSummary()
-    }, 100)
+    })
   }
 
   const handleSave = () => {
@@ -207,20 +108,6 @@ const VideoEditor = () => {
 
   const handleCancel = () => {
     navigate(-1)
-  }
-
-  // Check if all required fields are filled
-  const isFormValid = () => {
-    return !!(
-      (
-        formData.videoCaseSource &&
-        formData.videoCaseTitle &&
-        formData.videoCaseSummaryContent &&
-        formData.videoCaseLawyerId &&
-        formData.subcategoryId &&
-        isChannelInfoFetched
-      ) // YouTube channel info must be fetched
-    )
   }
 
   return (
@@ -284,8 +171,8 @@ const VideoEditor = () => {
             <Input
               placeholder='유튜브 채널 홈화면의 경로를 입력해주세요.'
               size='large'
-              value={formData.videoCaseSource}
-              onChange={e => handleInputChange('videoCaseSource', e.target.value)}
+              value={channelUrl}
+              onChange={e => setChannelUrl(e.target.value)}
             />
           </div>
         </div>
@@ -296,8 +183,9 @@ const VideoEditor = () => {
             type='primary'
             size='large'
             className={styles.fetchButton}
-            onClick={handleFetchChannelInfo}
-            disabled={!formData.videoCaseSource}
+            onClick={() => channelInfo.handleFetchChannelInfo(channelUrl)}
+            disabled={!channelUrl || channelInfo.isChannelLoading}
+            loading={channelInfo.isChannelLoading}
           >
             유튜브 채널정보 불러오기
           </Button>
@@ -305,8 +193,8 @@ const VideoEditor = () => {
             <div className={styles.channelInfoList}>
               <ul>
                 <li>채널 명: {formData.videoCaseChannelName}</li>
-                <li>구독자 수: {subscriberCount}명</li>
-                <li>핸들 명: @{formData.videoCaseHandleName}</li>
+                <li>구독자 수: {channelInfo.subscriberCount}명</li>
+                <li>핸들 명: {formData.videoCaseHandleName}</li>
                 <li>채널 설명: {formData.videoCaseChannelDescription}</li>
               </ul>
             </div>
@@ -328,8 +216,8 @@ const VideoEditor = () => {
             <Button
               type='primary'
               size='large'
-              onClick={handleAiSummary}
-              loading={isSummaryLoading}
+              onClick={() => aiSummary.handleAiSummary(formData.videoCaseSource)}
+              loading={aiSummary.isSummaryLoading}
               disabled={!formData.videoCaseSource}
             >
               AI요약하기
@@ -399,12 +287,16 @@ const VideoEditor = () => {
                 <Input
                   placeholder='변호사 이름'
                   size='large'
-                  value={lawyerSearchName}
-                  onChange={e => setLawyerSearchName(e.target.value)}
-                  onPressEnter={handleSelectLawyer}
+                  value={lawyerSelection.lawyerSearchName}
+                  onChange={e => lawyerSelection.setLawyerSearchName(e.target.value)}
+                  onPressEnter={lawyerSelection.handleSelectLawyer}
                   className={styles.lawyerInput}
                 />
-                <Button size='large' onClick={handleSelectLawyer} disabled={!lawyerSearchName.trim()}>
+                <Button
+                  size='large'
+                  onClick={lawyerSelection.handleSelectLawyer}
+                  disabled={!lawyerSelection.lawyerSearchName.trim()}
+                >
                   검색하기
                 </Button>
               </div>
@@ -424,7 +316,7 @@ const VideoEditor = () => {
             size='large'
             onClick={handleSave}
             loading={createVideoMutation.isPending}
-            disabled={!isFormValid()}
+            disabled={!isFormValid(channelInfo.isChannelInfoFetched)}
           >
             저장
           </Button>
@@ -432,29 +324,37 @@ const VideoEditor = () => {
       </div>
 
       {/* 변호사 검색 모달 */}
-      <Modal title='변호사 이름 검색' open={isLawyerModalOpen} onCancel={handleModalCancel} width={900} footer={null}>
+      <Modal
+        title='변호사 이름 검색'
+        open={lawyerSelection.isLawyerModalOpen}
+        onCancel={lawyerSelection.handleModalCancel}
+        width={900}
+        footer={null}
+      >
         <div style={{ marginBottom: 16 }}>
           <Space.Compact style={{ width: '100%' }}>
             <Input
               placeholder='변호사 이름을 검색해주세요'
-              value={modalSearchQuery}
-              onChange={e => setModalSearchQuery(e.target.value)}
-              onPressEnter={handleModalSearch}
+              value={lawyerSelection.modalSearchQuery}
+              onChange={e => lawyerSelection.setModalSearchQuery(e.target.value)}
+              onPressEnter={lawyerSelection.handleModalSearch}
               size='large'
               style={{ flex: 1 }}
             />
-            <Button type='primary' size='large' onClick={handleModalSearch} style={{ width: 100 }}>
+            <Button type='primary' size='large' onClick={lawyerSelection.handleModalSearch} style={{ width: 100 }}>
               검색
             </Button>
           </Space.Compact>
         </div>
 
         <Table
-          dataSource={searchData?.lawyerSearchResults || []}
+          dataSource={lawyerSelection.searchData?.lawyerSearchResults || []}
           rowKey='lawyerId'
-          loading={isLoading}
+          loading={lawyerSelection.isLoading}
           pagination={false}
-          locale={{ emptyText: modalSearchQuery ? '검색 결과가 없습니다.' : '변호사 이름을 검색해주세요.' }}
+          locale={{
+            emptyText: lawyerSelection.modalSearchQuery ? '검색 결과가 없습니다.' : '변호사 이름을 검색해주세요.',
+          }}
           columns={[
             {
               title: '변호사 사진',
