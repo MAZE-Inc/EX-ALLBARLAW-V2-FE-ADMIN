@@ -22,24 +22,34 @@ const AdLawfirmEditPage = () => {
 
   // URL 유효성 검증 함수
   const isValidUrl = (url: string): boolean => {
+    // 빈 문자열은 허용
+    if (!url) return true
+
+    // 상대 경로는 허용
+    if (url.startsWith('/')) return true
+
+    // http:// 또는 https:// 로 시작하는지 확인
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      return false
+    }
+
+    // URL 파싱 시도
     try {
-      // 빈 문자열은 허용
-      if (!url) return true
-
-      // 상대 경로는 허용
-      if (url.startsWith('/')) return true
-
-      // 절대 URL 검증
       const urlObj = new URL(url)
 
-      // http, https 프로토콜만 허용
-      if (!['http:', 'https:'].includes(urlObj.protocol)) return false
-
       // localhost는 거부
-      if (urlObj.hostname === 'localhost' || urlObj.hostname === '127.0.0.1') return false
+      if (urlObj.hostname === 'localhost' || urlObj.hostname === '127.0.0.1') {
+        return false
+      }
+
+      // 도메인이 있는지 확인 (http:// 다음에 도메인이 있어야 함)
+      if (!urlObj.hostname || urlObj.hostname.length === 0) {
+        return false
+      }
 
       return true
     } catch {
+      // URL 파싱 실패 (아직 완전한 URL이 아님)
       return false
     }
   }
@@ -74,8 +84,9 @@ const AdLawfirmEditPage = () => {
       message.success('법무법인 정보가 수정되었습니다.')
       navigate(ROUTE_PATH.AD_LAWFIRM)
     },
-    onError: () => {
-      message.error('법무법인 수정 중 오류가 발생했습니다.')
+    onError: error => {
+      const code = ((error as AxiosError).response?.data as { code: number }).code
+      message.error(errorHandle(code))
     },
   })
 
@@ -156,12 +167,43 @@ const AdLawfirmEditPage = () => {
   const handleLinkChange = (id: number, field: 'name' | 'link', value: string) => {
     // link 필드일 때 URL 유효성 검증
     if (field === 'link') {
-      if (!isValidUrl(value)) {
-        setUrlErrors(prev => ({
-          ...prev,
-          [id]: '유효한 URL 형식을 입력해주세요. (https://example.com 또는 /path)',
-        }))
+      if (value.trim()) {
+        // 입력이 어느정도 완성된 경우에만 검증
+        // http:// 또는 https:// 로 시작하고 도메인이 있거나, / 로 시작하는 경우
+        const hasProtocol = value.startsWith('http://') || value.startsWith('https://')
+        const isRelativePath = value.startsWith('/')
+        const seemsComplete = hasProtocol ? value.replace(/^https?:\/\//, '').includes('.') : false
+
+        if ((hasProtocol && seemsComplete) || isRelativePath) {
+          // 완전한 URL로 보이면 검증
+          if (!isValidUrl(value)) {
+            setUrlErrors(prev => ({
+              ...prev,
+              [id]: '유효한 URL 형식을 입력해주세요. (http://example.com, https://example.com 또는 /path)',
+            }))
+          } else {
+            setUrlErrors(prev => {
+              const newErrors = { ...prev }
+              delete newErrors[id]
+              return newErrors
+            })
+          }
+        } else if (hasProtocol && !seemsComplete) {
+          // http:// 또는 https:// 로 시작하지만 아직 도메인을 입력 중
+          setUrlErrors(prev => {
+            const newErrors = { ...prev }
+            delete newErrors[id]
+            return newErrors
+          })
+        } else if (!hasProtocol && !isRelativePath) {
+          // 프로토콜이 없고 상대경로도 아닌 경우
+          setUrlErrors(prev => ({
+            ...prev,
+            [id]: 'URL은 http://, https:// 또는 / 로 시작해야 합니다.',
+          }))
+        }
       } else {
+        // 빈 값인 경우 에러 제거
         setUrlErrors(prev => {
           const newErrors = { ...prev }
           delete newErrors[id]
@@ -279,14 +321,12 @@ const AdLawfirmEditPage = () => {
       return false
     }
 
-    // URL 형식 검증 (선택사항이지만 입력된 경우만) - 한글 도메인 지원
-    const urlRegex =
-      /^(https?:\/\/)?(www\.)?[a-z0-9가-힣]+([-.]{1}[a-z0-9가-힣]+)*\.[a-z가-힣]{2,}(:[0-9]{1,5})?(\/.*)?$/i
-    if (formData.lawfirmHomepageUrl && !urlRegex.test(formData.lawfirmHomepageUrl)) {
+    // URL 형식 검증 (선택사항이지만 입력된 경우만)
+    if (formData.lawfirmHomepageUrl && !isValidUrl(formData.lawfirmHomepageUrl)) {
       message.error('올바른 홈페이지 URL 형식을 입력해주세요.')
       return false
     }
-    if (formData.lawfirmBlogUrl && !urlRegex.test(formData.lawfirmBlogUrl)) {
+    if (formData.lawfirmBlogUrl && !isValidUrl(formData.lawfirmBlogUrl)) {
       message.error('올바른 블로그 URL 형식을 입력해주세요.')
       return false
     }
@@ -315,10 +355,18 @@ const AdLawfirmEditPage = () => {
       lawfirmEmail: formData.lawfirmEmail,
       lawfirmContact: formData.lawfirmContact,
       lawfirmViewCount: formData.lawfirmViewCount,
-      lawfirmSubcategoryId: selectedSubCategory,
-      lawfirmCategoryId: selectedCategory,
       lawfirmDirects: formData.lawfirmDirects,
       lawfirmImages: formData.lawfirmImages,
+    }
+
+    // 서브카테고리가 선택된 경우에만 추가
+    if (selectedSubCategory) {
+      submitData.lawfirmSubcategoryId = selectedSubCategory
+    }
+
+    // 카테고리가 선택된 경우에만 추가
+    if (selectedCategory) {
+      submitData.lawfirmCategoryId = selectedCategory
     }
 
     // 선택적 필드는 값이 있을 때만 추가
@@ -399,7 +447,6 @@ const AdLawfirmEditPage = () => {
         lawfirmBlogUrl: lawfirmData.lawfirmBlogUrl || undefined,
         lawfirmViewCount: lawfirmData.lawfirmViewCount,
         lawfirmSubcategoryId: lawfirmData.lawfirmSubcategoryId,
-        lawfirmCategoryId: selectedCategory,
         lawfirmDirects: convertedDirects,
         lawfirmImages: convertedImages,
       })
@@ -643,29 +690,32 @@ const AdLawfirmEditPage = () => {
             </div>
             <div className={styles.inputCol}>
               {localDirects.map(link => (
-                <div key={link.id} className={styles.linkItem}>
-                  <Input
-                    placeholder='바로가기 이름을 입력해 주세요'
-                    value={link.name}
-                    onChange={e => handleLinkChange(link.id, 'name', e.target.value)}
-                    style={{ width: 250 }}
-                  />
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <>
+                  <div key={link.id} className={styles.linkItem}>
                     <Input
-                      placeholder='바로가기 링크를 입력해 주세요'
-                      value={link.link}
-                      onChange={e => handleLinkChange(link.id, 'link', e.target.value)}
-                      status={urlErrors[link.id] ? 'error' : ''}
+                      placeholder='바로가기 이름을 입력해 주세요'
+                      value={link.name}
+                      onChange={e => handleLinkChange(link.id, 'name', e.target.value)}
+                      style={{ width: 250 }}
                     />
-                    {urlErrors[link.id] && (
-                      <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{urlErrors[link.id]}</div>
-                    )}
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                      <Input
+                        placeholder='바로가기 링크를 입력해 주세요'
+                        value={link.link}
+                        onChange={e => handleLinkChange(link.id, 'link', e.target.value)}
+                        status={urlErrors[link.id] ? 'error' : ''}
+                      />
+                    </div>
+                    <Button danger size='small' onClick={() => handleRemoveLink(link.id)}>
+                      삭제
+                    </Button>
                   </div>
-                  <Button danger size='small' onClick={() => handleRemoveLink(link.id)}>
-                    삭제
-                  </Button>
-                </div>
+                  {urlErrors[link.id] && (
+                    <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{urlErrors[link.id]}</div>
+                  )}
+                </>
               ))}
+
               <Button icon={<PlusOutlined />} onClick={handleAddLink}>
                 추가
               </Button>

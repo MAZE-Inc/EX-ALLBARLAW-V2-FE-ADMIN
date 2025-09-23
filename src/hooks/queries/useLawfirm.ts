@@ -77,7 +77,10 @@ export const useCreateLawfirm = ({
   })
 }
 
-export const useUpdateLawfirm = ({ onSuccess, onError }: { onSuccess?: () => void; onError?: () => void } = {}) => {
+export const useUpdateLawfirm = ({
+  onSuccess,
+  onError,
+}: { onSuccess?: () => void; onError?: (error: AxiosError) => void } = {}) => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ lawfirmId, request }: { lawfirmId: number; request: LawfirmApiRequest }) =>
@@ -87,8 +90,8 @@ export const useUpdateLawfirm = ({ onSuccess, onError }: { onSuccess?: () => voi
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LAWFIRM_DETAIL, variables.lawfirmId] })
       onSuccess?.()
     },
-    onError: () => {
-      onError?.()
+    onError: (error: AxiosError) => {
+      onError?.(error)
     },
   })
 }
