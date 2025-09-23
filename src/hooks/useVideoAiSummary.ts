@@ -1,11 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { message } from 'antd'
 import { useVideoAiSummary } from '@/hooks/queries/useAiSummary'
-
-interface AiSummaryData {
-  text: string
-  tags: string[]
-}
 
 export const useVideoAiSummaryLogic = () => {
   const [shouldFetchSummary, setShouldFetchSummary] = useState(false)
