@@ -1,7 +1,9 @@
-import { Button, Input, Modal, Space, Table, Upload, message, Select } from 'antd'
+import { Button, Input, Modal, Space, Table, Upload, message, Select, Tag } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
+import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { ROUTE_PATH } from '@/routes/routePath'
 import { useLawyerSearch } from '@/hooks/queries/useLawyer'
 import { useCreateBlog } from '@/hooks/queries/useContent'
 import { useFileUpload } from '@/hooks/useFileUpload'
@@ -9,6 +11,12 @@ import { useCategory } from '@/hooks/queries/useCategory'
 import styles from './BlogEditor.module.scss'
 
 const { TextArea } = Input
+
+const TagRender = (props: CustomTagProps) => (
+  <Tag closable={props.closable} onClose={props.onClose} style={{ marginRight: 8, marginBottom: 4 }}>
+    #{props.label}
+  </Tag>
+)
 
 const BlogEditor = () => {
   const navigate = useNavigate()
@@ -20,7 +28,7 @@ const BlogEditor = () => {
     subcategoryId: subCategoryId || '',
     title: '',
     content: '',
-    keywords: '',
+    keywords: [] as string[],
     lawyer: null as any,
     thumbnail: '',
   })
@@ -44,7 +52,7 @@ const BlogEditor = () => {
   const createBlogMutation = useCreateBlog({
     onSuccess: () => {
       message.success('블로그가 성공적으로 등록되었습니다.')
-      navigate(-1)
+      navigate(`${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_BLOG}`)
     },
     onError: () => {
       message.error('블로그 등록에 실패했습니다. 다시 시도해주세요.')
@@ -162,7 +170,7 @@ const BlogEditor = () => {
 - 등기 이전 절차 확인
 - 세금 정산 내역 검토
 - 명도 시기 및 방법 확정`,
-        keywords: '부동산매매, 등기부등본, 근저당권, 전세권, 가압류, 계약서작성, 특약사항, 하자담보책임',
+        keywords: ['부동산매매', '등기부등본', '근저당권', '전세권', '가압류', '계약서작성', '특약사항', '하자담보책임'],
       }))
       message.success('AI 요약이 완료되었습니다.')
     }, 1500)
@@ -221,13 +229,8 @@ const BlogEditor = () => {
       return
     }
 
-    // Prepare tags array from keywords string
-    const tagsArray = formData.keywords
-      ? formData.keywords
-          .split(',')
-          .map(tag => tag.trim())
-          .filter(tag => tag.length > 0)
-      : []
+    // Use keywords array directly
+    const tagsArray = formData.keywords || []
 
     // Create blog request
     const createBlogRequest = {
@@ -246,6 +249,18 @@ const BlogEditor = () => {
 
   const handleCancel = () => {
     navigate(-1)
+  }
+
+  // 태그 변경 핸들러
+  const handleTagsChange = (values: string[]) => {
+    if (values.length <= 10) {
+      // 새로운 태그들을 정리 (공백 제거, 중복 제거)
+      const cleanedTags = values.map(tag => tag.trim()).filter(tag => tag.length > 0)
+      const uniqueTags = Array.from(new Set(cleanedTags))
+      handleInputChange('keywords', uniqueTags)
+    } else {
+      message.warning('최대 10개까지 등록 가능합니다.')
+    }
   }
 
   // Check if all required fields are filled
@@ -399,17 +414,25 @@ const BlogEditor = () => {
           </div>
         </div>
 
-        {/* 키워드/태그(콤마로 구분) */}
+        {/* 키워드/태그 */}
         <div className={styles.formRow}>
           <div className={styles.labelCol}>
-            <label className={styles.label}>키워드/태그(콤마로 구분)</label>
+            <label className={styles.label}>키워드/태그</label>
           </div>
           <div className={styles.inputCol}>
-            <Input
-              placeholder='AI요약과 동시에 키워드/태그가 입력되어 집니다. 최대 10개까지 등록 가능합니다.'
+            <Select
+              mode='tags'
               size='large'
+              placeholder={`키워드를 입력하고 엔터를 누르세요 (${formData.keywords.length}/10)`}
               value={formData.keywords}
-              onChange={e => handleInputChange('keywords', e.target.value)}
+              onChange={handleTagsChange}
+              disabled={false}
+              style={{ width: '100%' }}
+              suffixIcon={null}
+              tagRender={TagRender}
+              dropdownStyle={{ display: 'none' }}
+              notFoundContent={null}
+              open={false}
             />
           </div>
         </div>
