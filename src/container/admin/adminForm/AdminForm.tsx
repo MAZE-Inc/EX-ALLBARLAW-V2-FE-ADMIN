@@ -32,25 +32,26 @@ const AdminForm = ({ formData, onChange, isEditMode }: AdminFormProps) => {
   // validation 규칙 정의
   const validationRules: ValidationRules = useMemo(
     () => ({
-      account: commonValidators.account,
-      email: commonValidators.email,
-      name: (value: string) => {
-        if (!value) return '계정이름을 입력해주세요.'
-        if (value.length < 2) return '계정이름은 2자 이상이어야 합니다.'
-        if (value.length > 50) return '계정이름은 50자 이하여야 합니다.'
+      account: (value: unknown) => commonValidators.account(value as string),
+      email: (value: unknown) => commonValidators.email(value as string),
+      name: (value: unknown) => {
+        const strValue = value as string
+        if (!strValue) return '계정이름을 입력해주세요.'
+        if (strValue.length < 2) return '계정이름은 2자 이상이어야 합니다.'
+        if (strValue.length > 50) return '계정이름은 50자 이하여야 합니다.'
         return undefined
       },
-      password: commonValidators.password(isEditMode),
-      passwordConfirm: commonValidators.passwordConfirm(isEditMode),
+      password: (value: unknown) => commonValidators.password(isEditMode)(value as string),
+      passwordConfirm: (value: unknown, formData?: unknown) =>
+        commonValidators.passwordConfirm(isEditMode)(value as string, formData as typeof formData),
     }),
     [isEditMode]
   )
 
-  const { errors, touched, handleFieldChange, handleFieldBlur, getFieldError, hasFieldError, setErrors } =
-    useFormValidation({
-      rules: validationRules,
-      isEditMode,
-    })
+  const { touched, handleFieldChange, handleFieldBlur, getFieldError, hasFieldError, setErrors } = useFormValidation({
+    rules: validationRules,
+    isEditMode,
+  })
 
   // 비밀번호 변경시 비밀번호 확인 재검증
   useEffect(() => {
@@ -59,7 +60,7 @@ const AdminForm = ({ formData, onChange, isEditMode }: AdminFormProps) => {
       setErrors(prev => ({ ...prev, passwordConfirm: confirmError }))
     }
   }, [formData.password, formData.passwordConfirm, validationRules, touched, setErrors])
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (field: string, value: unknown) => {
     const newFormData = {
       ...formData,
       [field]: value,
@@ -209,7 +210,9 @@ const AdminForm = ({ formData, onChange, isEditMode }: AdminFormProps) => {
               status={hasFieldError('passwordConfirm') ? 'error' : ''}
             />
             {getFieldError('passwordConfirm') && (
-              <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('passwordConfirm')}</div>
+              <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>
+                {getFieldError('passwordConfirm')}
+              </div>
             )}
           </div>
         </div>

@@ -5,7 +5,7 @@ export interface ValidationErrors {
 }
 
 export interface ValidationRules {
-  [field: string]: (value: any, formData?: any) => string | undefined
+  [field: string]: (value: unknown, formData?: unknown) => string | undefined
 }
 
 interface UseFormValidationOptions {
@@ -13,12 +13,12 @@ interface UseFormValidationOptions {
   isEditMode?: boolean
 }
 
-export const useFormValidation = ({ rules, isEditMode = false }: UseFormValidationOptions) => {
+export const useFormValidation = ({ rules }: UseFormValidationOptions) => {
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [touched, setTouched] = useState<Set<string>>(new Set())
 
   const validateField = useCallback(
-    (field: string, value: any, formData?: any) => {
+    (field: string, value: unknown, formData?: unknown) => {
       if (rules[field]) {
         return rules[field](value, formData)
       }
@@ -28,7 +28,7 @@ export const useFormValidation = ({ rules, isEditMode = false }: UseFormValidati
   )
 
   const validateAllFields = useCallback(
-    (formData: any) => {
+    (formData: Record<string, unknown>) => {
       const newErrors: ValidationErrors = {}
       let hasError = false
 
@@ -47,7 +47,7 @@ export const useFormValidation = ({ rules, isEditMode = false }: UseFormValidati
   )
 
   const handleFieldChange = useCallback(
-    (field: string, value: any, formData?: any) => {
+    (field: string, value: unknown, formData?: unknown) => {
       if (touched.has(field)) {
         const error = validateField(field, value, formData)
         setErrors(prev => ({ ...prev, [field]: error }))
@@ -57,7 +57,7 @@ export const useFormValidation = ({ rules, isEditMode = false }: UseFormValidati
   )
 
   const handleFieldBlur = useCallback(
-    (field: string, value: any, formData?: any) => {
+    (field: string, value: unknown, formData?: unknown) => {
       setTouched(prev => new Set(prev).add(field))
       const error = validateField(field, value, formData)
       setErrors(prev => ({ ...prev, [field]: error }))
@@ -137,15 +137,16 @@ export const commonValidators = {
     return undefined
   },
 
-  passwordConfirm: (isEditMode: boolean = false) => (value: string, formData: any) => {
+  passwordConfirm: (isEditMode: boolean = false) => (value: string, formData: unknown) => {
     // 수정 모드에서 비밀번호가 비어있으면 확인도 비어있어도 됨
-    if (isEditMode && !formData?.password && !value) return undefined
+    const data = formData as { password?: string }
+    if (isEditMode && !data?.password && !value) return undefined
     if (!value) return '비밀번호 확인을 입력해주세요.'
-    if (value !== formData?.password) return '비밀번호가 일치하지 않습니다.'
+    if (value !== data?.password) return '비밀번호가 일치하지 않습니다.'
     return undefined
   },
 
-  required: (fieldName: string) => (value: any) => {
+  required: (fieldName: string) => (value: unknown) => {
     if (!value || (typeof value === 'string' && !value.trim())) {
       return `${fieldName}을(를) 입력해주세요.`
     }
