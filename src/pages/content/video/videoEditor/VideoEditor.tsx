@@ -1,14 +1,22 @@
-import { Button, Input, Modal, Space, Table, message, Select } from 'antd'
+import { Button, Input, Modal, Space, Table, message, Select, Tag } from 'antd'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { ROUTE_PATH } from '@/routes/routePath'
 import { useCreateVideo, useGetYoutubeVideoInfo } from '@/hooks/queries/useContent'
 import { useVideoForm } from '@/hooks/useVideoForm'
 import { useLawyerSelection } from '@/hooks/useLawyerSelection'
 import { useChannelInfo } from '@/hooks/useChannelInfo'
 import { useVideoAiSummaryLogic } from '@/hooks/useVideoAiSummary'
 import { useCategorySelection } from '@/hooks/useCategorySelection'
+import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import styles from './VideoEditor.module.scss'
 import { YoutubeVideoInfoResponse } from '@/types/videoTypes'
+
+const TagRender = (props: CustomTagProps) => (
+  <Tag closable={props.closable} onClose={props.onClose} style={{ marginRight: 8, marginBottom: 4 }}>
+    #{props.label}
+  </Tag>
+)
 
 const VideoEditor = () => {
   const navigate = useNavigate()
@@ -50,10 +58,15 @@ const VideoEditor = () => {
   // AI 요약 데이터 업데이트
   useEffect(() => {
     if (aiSummary.summaryData && aiSummary.shouldFetchSummary) {
+      // 태그에서 # 기호 제거
+      const cleanedTags = (aiSummary.summaryData.tags || []).map((tag: string) =>
+        tag.startsWith('#') ? tag.substring(1) : tag
+      )
+
       setFormData(prev => ({
         ...prev,
         videoCaseSummaryContent: aiSummary.summaryData.text,
-        videoCaseTags: aiSummary.summaryData.tags || [],
+        videoCaseTags: cleanedTags,
       }))
       message.success('AI 요약이 완료되었습니다.')
       aiSummary.resetSummaryFlag()
@@ -64,7 +77,7 @@ const VideoEditor = () => {
   const createVideoMutation = useCreateVideo({
     onSuccess: () => {
       message.success('영상정보가 성공적으로 등록되었습니다.')
-      navigate(-1)
+      navigate(`${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_VIDEO}`)
     },
     onError: () => {
       message.error('영상정보 등록에 실패했습니다. 다시 시도해주세요.')
@@ -121,6 +134,18 @@ const VideoEditor = () => {
 
   const handleCancel = () => {
     navigate(-1)
+  }
+
+  // 태그 변경 핸들러
+  const handleTagsChange = (values: string[]) => {
+    if (values.length <= 10) {
+      // 새로운 태그들을 정리 (공백 제거, 중복 제거)
+      const cleanedTags = values.map(tag => tag.trim()).filter(tag => tag.length > 0)
+      const uniqueTags = Array.from(new Set(cleanedTags))
+      handleInputChange('videoCaseTags', uniqueTags)
+    } else {
+      message.warning('최대 10개까지 등록 가능합니다.')
+    }
   }
 
   return (
@@ -251,9 +276,7 @@ const VideoEditor = () => {
           <div className={styles.inputCol}>
             <Input
               placeholder={
-                isYoutubeVideoInfoLoading || aiSummary.isSummaryLoading
-                  ? 'AI 요약중입니다...'
-                  : '제목을 입력해주세요.'
+                isYoutubeVideoInfoLoading || aiSummary.isSummaryLoading ? 'AI 요약중입니다...' : '제목을 입력해주세요.'
               }
               size='large'
               value={formData.videoCaseTitle}
@@ -283,28 +306,29 @@ const VideoEditor = () => {
           </div>
         </div>
 
-        {/* 키워드/태그(콤마로 구분) */}
+        {/* 키워드/태그 */}
         <div className={styles.formRow}>
           <div className={styles.labelCol}>
-            <label className={styles.label}>키워드/태그(콤마로 구분)</label>
+            <label className={styles.label}>키워드/태그</label>
           </div>
           <div className={styles.inputCol}>
-            <Input
+            <Select
+              mode='tags'
+              size='large'
               placeholder={
                 isYoutubeVideoInfoLoading || aiSummary.isSummaryLoading
                   ? 'AI 요약중입니다...'
-                  : '키워드/태그를 입력해주세요. 최대 10개까지 등록 가능합니다.'
+                  : `키워드를 입력하고 엔터를 누르세요 (${formData.videoCaseTags.length}/10)`
               }
-              size='large'
-              value={formData.videoCaseTags.join(', ')}
-              onChange={e => {
-                const tags = e.target.value
-                  .split(',')
-                  .map(tag => tag.trim())
-                  .filter(tag => tag.length > 0)
-                handleInputChange('videoCaseTags', tags)
-              }}
+              value={formData.videoCaseTags}
+              onChange={handleTagsChange}
               disabled={isYoutubeVideoInfoLoading || aiSummary.isSummaryLoading}
+              style={{ width: '100%' }}
+              suffixIcon={null} // 화살표 아이콘 숨기기
+              tagRender={TagRender}
+              dropdownStyle={{ display: 'none' }} // 드롭다운 숨기기
+              notFoundContent={null}
+              open={false} // 드롭다운 항상 닫기
             />
           </div>
         </div>
