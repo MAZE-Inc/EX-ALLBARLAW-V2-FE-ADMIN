@@ -11,6 +11,8 @@ import styles from './adLawfirmEdit.module.scss'
 import { ROUTE_PATH } from '@/routes/routePath'
 import { adLawfirmMenuItems } from '../adLawfirmLayout/AdLawfirmLayout'
 import { useFileUpload } from '@/hooks/useFileUpload'
+import { AxiosError } from 'axios'
+import { errorHandle } from '@/utils/errorHandle'
 
 const AdLawfirmEditPage = () => {
   const navigate = useNavigate()
@@ -60,8 +62,9 @@ const AdLawfirmEditPage = () => {
       message.success('법무법인이 등록되었습니다.')
       navigate(ROUTE_PATH.AD_LAWFIRM)
     },
-    onError: () => {
-      message.error('법무법인 등록 중 오류가 발생했습니다.')
+    onError: error => {
+      const code = ((error as AxiosError).response?.data as { code: number }).code
+      message.error(errorHandle(code))
     },
   })
 
@@ -655,9 +658,7 @@ const AdLawfirmEditPage = () => {
                       status={urlErrors[link.id] ? 'error' : ''}
                     />
                     {urlErrors[link.id] && (
-                      <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>
-                        {urlErrors[link.id]}
-                      </div>
+                      <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{urlErrors[link.id]}</div>
                     )}
                   </div>
                   <Button danger size='small' onClick={() => handleRemoveLink(link.id)}>
