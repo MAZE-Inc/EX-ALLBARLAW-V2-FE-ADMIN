@@ -1,6 +1,8 @@
 import { Input, Space, Radio } from 'antd'
 import styles from './admin-form.module.scss'
 import { ADMIN_PERMISSION_IDS } from '@/constants/adminPermission'
+import { useFormValidation, commonValidators, ValidationRules } from '@/hooks/useFormValidation'
+import { useMemo, useEffect } from 'react'
 
 interface AdminFormProps {
   formData: {
@@ -26,12 +28,49 @@ interface AdminFormProps {
   isEditMode?: boolean
 }
 
-const AdminForm = ({ formData, onChange }: AdminFormProps) => {
+const AdminForm = ({ formData, onChange, isEditMode }: AdminFormProps) => {
+  // validation 규칙 정의
+  const validationRules: ValidationRules = useMemo(
+    () => ({
+      account: commonValidators.account,
+      email: commonValidators.email,
+      name: (value: string) => {
+        if (!value) return '계정이름을 입력해주세요.'
+        if (value.length < 2) return '계정이름은 2자 이상이어야 합니다.'
+        if (value.length > 50) return '계정이름은 50자 이하여야 합니다.'
+        return undefined
+      },
+      password: commonValidators.password(isEditMode),
+      passwordConfirm: commonValidators.passwordConfirm(isEditMode),
+    }),
+    [isEditMode]
+  )
+
+  const { errors, touched, handleFieldChange, handleFieldBlur, getFieldError, hasFieldError, setErrors } =
+    useFormValidation({
+      rules: validationRules,
+      isEditMode,
+    })
+
+  // 비밀번호 변경시 비밀번호 확인 재검증
+  useEffect(() => {
+    if (formData.passwordConfirm && touched.has('passwordConfirm')) {
+      const confirmError = validationRules.passwordConfirm(formData.passwordConfirm, formData)
+      setErrors(prev => ({ ...prev, passwordConfirm: confirmError }))
+    }
+  }, [formData.password, formData.passwordConfirm, validationRules, touched, setErrors])
   const handleChange = (field: string, value: any) => {
-    onChange({
+    const newFormData = {
       ...formData,
       [field]: value,
-    })
+    }
+    onChange(newFormData)
+    handleFieldChange(field, value, newFormData)
+  }
+
+  const handleBlur = (field: string) => {
+    const value = formData[field as keyof typeof formData]
+    handleFieldBlur(field, value, formData)
   }
 
   const handlePermissionChange = (permissionId: number, checked: boolean) => {
@@ -77,12 +116,17 @@ const AdminForm = ({ formData, onChange }: AdminFormProps) => {
           </div>
           <div className={styles.inputCol}>
             <Input
-              placeholder='아이디를 입력하세요'
+              placeholder='아이디를 입력하세요 (4-20자, 영문/숫자/언더스코어)'
               value={formData.account}
               onChange={e => handleChange('account', e.target.value)}
+              onBlur={() => handleBlur('account')}
               size='large'
               className={styles.input}
+              status={hasFieldError('account') ? 'error' : ''}
             />
+            {getFieldError('account') && (
+              <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('account')}</div>
+            )}
           </div>
         </div>
 
@@ -92,12 +136,17 @@ const AdminForm = ({ formData, onChange }: AdminFormProps) => {
           </div>
           <div className={styles.inputCol}>
             <Input
-              placeholder='이메일을 입력하세요'
+              placeholder='이메일을 입력하세요 (example@domain.com)'
               value={formData.email}
               onChange={e => handleChange('email', e.target.value)}
+              onBlur={() => handleBlur('email')}
               size='large'
               className={styles.input}
+              status={hasFieldError('email') ? 'error' : ''}
             />
+            {getFieldError('email') && (
+              <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('email')}</div>
+            )}
           </div>
         </div>
 
@@ -107,12 +156,17 @@ const AdminForm = ({ formData, onChange }: AdminFormProps) => {
           </div>
           <div className={styles.inputCol}>
             <Input
-              placeholder='계정이름을 입력하세요'
+              placeholder='계정이름을 입력하세요 (2-50자)'
               value={formData.name}
               onChange={e => handleChange('name', e.target.value)}
+              onBlur={() => handleBlur('name')}
               size='large'
               className={styles.input}
+              status={hasFieldError('name') ? 'error' : ''}
             />
+            {getFieldError('name') && (
+              <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('name')}</div>
+            )}
           </div>
         </div>
 
@@ -122,12 +176,21 @@ const AdminForm = ({ formData, onChange }: AdminFormProps) => {
           </div>
           <div className={styles.inputCol}>
             <Input.Password
-              placeholder='비밀번호를 입력하세요'
+              placeholder={
+                isEditMode
+                  ? '변경할 비밀번호를 입력하세요 (변경하지 않으려면 비워두세요)'
+                  : '비밀번호를 입력하세요 (8-20자, 대소문자/숫자/특수문자 포함)'
+              }
               value={formData.password}
               onChange={e => handleChange('password', e.target.value)}
+              onBlur={() => handleBlur('password')}
               size='large'
               className={styles.input}
+              status={hasFieldError('password') ? 'error' : ''}
             />
+            {getFieldError('password') && (
+              <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('password')}</div>
+            )}
           </div>
         </div>
 
@@ -140,9 +203,14 @@ const AdminForm = ({ formData, onChange }: AdminFormProps) => {
               placeholder='비밀번호를 다시 입력하세요'
               value={formData.passwordConfirm}
               onChange={e => handleChange('passwordConfirm', e.target.value)}
+              onBlur={() => handleBlur('passwordConfirm')}
               size='large'
               className={styles.input}
+              status={hasFieldError('passwordConfirm') ? 'error' : ''}
             />
+            {getFieldError('passwordConfirm') && (
+              <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('passwordConfirm')}</div>
+            )}
           </div>
         </div>
 

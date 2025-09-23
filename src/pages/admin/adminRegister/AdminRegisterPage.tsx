@@ -56,9 +56,33 @@ const AdminRegisterPage = () => {
   }, [isEditMode, location.state])
 
   const handleSave = async () => {
-    // 유효성 검사
+    // 필수 필드 검사
     if (!formData.account || !formData.email || !formData.name) {
       message.error('필수 필드를 입력해주세요.')
+      return
+    }
+
+    // 아이디 유효성 검사
+    if (formData.account.length < 4 || formData.account.length > 20) {
+      message.error('아이디는 4자 이상 20자 이하여야 합니다.')
+      return
+    }
+    const accountRegex = /^[a-zA-Z0-9_]+$/
+    if (!accountRegex.test(formData.account)) {
+      message.error('아이디는 영문, 숫자, 언더스코어만 사용 가능합니다.')
+      return
+    }
+
+    // 이메일 유효성 검사
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.email)) {
+      message.error('올바른 이메일 형식이 아닙니다.')
+      return
+    }
+
+    // 계정이름 유효성 검사
+    if (formData.name.length < 2 || formData.name.length > 50) {
+      message.error('계정이름은 2자 이상 50자 이하여야 합니다.')
       return
     }
 
@@ -68,16 +92,31 @@ const AdminRegisterPage = () => {
       return
     }
 
-    // 등록 모드에서만 비밀번호 필수
-    if (!isEditMode && (!formData.password || !formData.passwordConfirm)) {
-      message.error('비밀번호를 입력해주세요.')
-      return
-    }
+    // 비밀번호 유효성 검사
+    if (!isEditMode || formData.password) {
+      // 등록 모드이거나 수정 모드에서 비밀번호를 입력한 경우
+      if (!isEditMode && !formData.password) {
+        message.error('비밀번호를 입력해주세요.')
+        return
+      }
 
-    // 비밀번호가 입력된 경우 일치 여부 확인
-    if (formData.password && formData.password !== formData.passwordConfirm) {
-      message.error('비밀번호가 일치하지 않습니다.')
-      return
+      if (formData.password) {
+        if (formData.password.length < 8 || formData.password.length > 20) {
+          message.error('비밀번호는 8자 이상 20자 이하여야 합니다.')
+          return
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/
+        if (!passwordRegex.test(formData.password)) {
+          message.error('비밀번호는 대문자, 소문자, 숫자, 특수문자를 각각 하나 이상 포함해야 합니다.')
+          return
+        }
+
+        if (formData.password !== formData.passwordConfirm) {
+          message.error('비밀번호가 일치하지 않습니다.')
+          return
+        }
+      }
     }
 
     try {
