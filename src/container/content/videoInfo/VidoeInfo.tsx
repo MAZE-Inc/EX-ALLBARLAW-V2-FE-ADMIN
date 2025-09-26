@@ -40,7 +40,7 @@ const VidoeInfo = ({
           <div>
             <h3 className={styles['channel-name']}>{channelName}</h3>
             <span>
-              @{handleName}
+              {handleName}
               <span style={{ marginLeft: 18 }}>구독자:{formatSubscriberCount(subscriberCount)}명</span>
             </span>
           </div>
