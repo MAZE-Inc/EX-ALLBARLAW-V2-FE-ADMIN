@@ -26,6 +26,64 @@ const AdminRegisterPage = () => {
     subMenuIds: [] as number[],
   })
 
+  // 실시간 유효성 검사를 위한 함수
+  const isFormValid = () => {
+    // 필수 필드 체크
+    if (!formData.account || !formData.email || !formData.name) {
+      return false
+    }
+
+    // 아이디 유효성 검사
+    if (formData.account.length < 4 || formData.account.length > 20) {
+      return false
+    }
+    const accountRegex = /^[a-zA-Z0-9_]+$/
+    if (!accountRegex.test(formData.account)) {
+      return false
+    }
+
+    // 이메일 유효성 검사
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.email)) {
+      return false
+    }
+
+    // 계정이름 유효성 검사
+    if (formData.name.length < 2 || formData.name.length > 50) {
+      return false
+    }
+
+    // 권한 체크
+    if (!formData.subMenuIds || formData.subMenuIds.length === 0) {
+      return false
+    }
+
+    // 비밀번호 유효성 검사
+    if (!isEditMode || formData.password) {
+      // 등록 모드이거나 수정 모드에서 비밀번호를 입력한 경우
+      if (!isEditMode && !formData.password) {
+        return false
+      }
+
+      if (formData.password) {
+        if (formData.password.length < 8 || formData.password.length > 20) {
+          return false
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/
+        if (!passwordRegex.test(formData.password)) {
+          return false
+        }
+
+        if (formData.password !== formData.passwordConfirm) {
+          return false
+        }
+      }
+    }
+
+    return true
+  }
+
   const { mutate: createAdmin } = useCreateAdmin({
     onError: (error: any) => {
       const code = error.response.data.code
@@ -170,7 +228,7 @@ const AdminRegisterPage = () => {
     <div className={styles['admin-register-page']}>
       <div className={styles['admin-register-page__button-container']}>
         <Button onClick={handleCancel}>취소</Button>
-        <Button onClick={handleSave} loading={loading} type='primary'>
+        <Button onClick={handleSave} loading={loading} type='primary' disabled={!isFormValid()}>
           {isEditMode ? '계정 수정' : '신규 계정 등록'}
         </Button>
       </div>

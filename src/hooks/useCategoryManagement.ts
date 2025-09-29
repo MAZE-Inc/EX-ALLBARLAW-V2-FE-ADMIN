@@ -8,6 +8,8 @@ import {
   useUpdateCategoryOrder,
   useUpdateSubCategoryOrder,
 } from '@/hooks/queries/useCategory'
+import { AxiosError } from 'axios'
+import { errorHandle } from '@/utils/errorHandle'
 
 interface UseCategoryManagementProps {
   initialMainData?: MainCategoryData[] // optional로 변경
@@ -88,7 +90,7 @@ export const useCategoryManagement = ({
   const handleMainCategoryDelete = (record: MainCategoryData) => {
     Modal.confirm({
       title: '대분류 삭제',
-      content: `"${record.mainCategory}" 대분류를 삭제하시겠습니까? 이 대분류에 속한 모든 소분류도 함께 삭제됩니다.`,
+      content: `"${record.mainCategory}" 대분류를 삭제하시겠습니까? `,
       okText: '삭제',
       cancelText: '취소',
       okType: 'danger',
@@ -108,8 +110,8 @@ export const useCategoryManagement = ({
 
           message.success(`"${record.mainCategory}" 대분류가 삭제되었습니다.`)
         } catch (error) {
-          console.error('대분류 삭제 실패:', error)
-          message.error('대분류 삭제에 실패했습니다.')
+          const code = ((error as AxiosError).response?.data as { code: number }).code
+          message.error(errorHandle(code))
         }
       },
     })

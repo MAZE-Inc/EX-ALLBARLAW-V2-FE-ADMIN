@@ -1,13 +1,11 @@
 export const errorHandle = (errorCode: number) => {
   switch (errorCode) {
-    case 4901:
-      return '입력값이 올바르지 않습니다. 다시 확인해주세요'
-    case 4903:
-      return '이미 존재하는 값입니다. 다른 값으로 입력해주세요'
     case 4205:
       return '이미 존재하는 아이디입니다. 다른 아이디를 사용해주세요.'
     case 4206:
       return '이미 존재하는 이메일입니다. 다른 이메일을 사용해주세요.'
+    case 4604:
+      return '서브 카테고리가 존재하는 카테고리입니다. 서브카테고리를 삭제 후 다시 시도해주세요.'
     case 4851:
       return '로펌명은 필수 입력 항목입니다. 로펌명을 입력해주세요.'
     case 4852:
@@ -42,6 +40,11 @@ export const errorHandle = (errorCode: number) => {
       return '사진이 등록되지 않았습니다. 사진을 등록해주세요'
     case 4867:
       return '사진이 정상적으로 등록되지 않았습니다. 삭제 후 다시 업로드해주세요.'
+    case 4901:
+      return '입력값이 올바르지 않습니다. 다시 확인해주세요'
+    case 4903:
+      return '이미 존재하는 값입니다. 다른 값으로 입력해주세요'
+
     default:
       return '알 수 없는 오류가 발생했습니다, 다시 시도해주세요'
   }
