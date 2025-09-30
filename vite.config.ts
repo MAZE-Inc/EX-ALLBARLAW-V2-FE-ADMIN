@@ -4,6 +4,9 @@ import svgr from 'vite-plugin-svgr'
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    port: 5174, // 원하는 포트 번호로 변경하세요.
+  },
   plugins: [svgr(), react()],
   resolve: {
     alias: [{ find: '@', replacement: '/src' }],

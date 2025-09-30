@@ -48,12 +48,11 @@ export const useFormValidation = ({ rules }: UseFormValidationOptions) => {
 
   const handleFieldChange = useCallback(
     (field: string, value: unknown, formData?: unknown) => {
-      if (touched.has(field)) {
-        const error = validateField(field, value, formData)
-        setErrors(prev => ({ ...prev, [field]: error }))
-      }
+      // touched 확인을 제거하고 항상 검증
+      const error = validateField(field, value, formData)
+      setErrors(prev => ({ ...prev, [field]: error }))
     },
-    [touched, validateField]
+    [validateField]
   )
 
   const handleFieldBlur = useCallback(

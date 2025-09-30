@@ -48,25 +48,40 @@ const AdminForm = ({ formData, onChange, isEditMode }: AdminFormProps) => {
     [isEditMode]
   )
 
-  const { touched, handleFieldChange, handleFieldBlur, getFieldError, hasFieldError, setErrors } = useFormValidation({
+  const { touched, handleFieldChange, handleFieldBlur, getFieldError, hasFieldError, setErrors, setTouched } = useFormValidation({
     rules: validationRules,
     isEditMode,
   })
 
   // 비밀번호 변경시 비밀번호 확인 재검증
   useEffect(() => {
+    // 수정 모드에서 비밀번호가 비어있으면 검증하지 않음
+    if (isEditMode && !formData.password && !formData.passwordConfirm) {
+      setErrors(prev => ({ ...prev, passwordConfirm: undefined }))
+      return
+    }
+
     if (formData.passwordConfirm && touched.has('passwordConfirm')) {
       const confirmError = validationRules.passwordConfirm(formData.passwordConfirm, formData)
       setErrors(prev => ({ ...prev, passwordConfirm: confirmError }))
     }
-  }, [formData.password, formData.passwordConfirm, validationRules, touched, setErrors])
+  }, [formData.password, formData.passwordConfirm, validationRules, touched, setErrors, isEditMode])
   const handleChange = (field: string, value: unknown) => {
     const newFormData = {
       ...formData,
       [field]: value,
     }
     onChange(newFormData)
-    handleFieldChange(field, value, newFormData)
+
+    // 수정 모드에서 비밀번호 필드가 비어있으면 touched로 표시하지 않음
+    if (isEditMode && (field === 'password' || field === 'passwordConfirm') && !value) {
+      // 비밀번호 필드가 비어있으면 에러를 제거
+      setErrors(prev => ({ ...prev, [field]: undefined }))
+    } else {
+      // 필드를 touched로 표시하여 실시간 검증 활성화
+      setTouched(prev => new Set(prev).add(field))
+      handleFieldChange(field, value, newFormData)
+    }
   }
 
   const handleBlur = (field: string) => {
@@ -116,18 +131,20 @@ const AdminForm = ({ formData, onChange, isEditMode }: AdminFormProps) => {
             <label className={styles.label}>아이디</label>
           </div>
           <div className={styles.inputCol}>
-            <Input
-              placeholder='아이디를 입력하세요 (4-20자, 영문/숫자/언더스코어)'
-              value={formData.account}
-              onChange={e => handleChange('account', e.target.value)}
-              onBlur={() => handleBlur('account')}
-              size='large'
-              className={styles.input}
-              status={hasFieldError('account') ? 'error' : ''}
-            />
-            {getFieldError('account') && (
-              <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('account')}</div>
-            )}
+            <div style={{ width: '100%' }}>
+              <Input
+                placeholder='아이디를 입력하세요 (4-20자, 영문/숫자/언더스코어)'
+                value={formData.account}
+                onChange={e => handleChange('account', e.target.value)}
+                onBlur={() => handleBlur('account')}
+                size='large'
+                className={styles.input}
+                status={hasFieldError('account') ? 'error' : ''}
+              />
+              {getFieldError('account') && (
+                <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('account')}</div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -136,18 +153,20 @@ const AdminForm = ({ formData, onChange, isEditMode }: AdminFormProps) => {
             <label className={styles.label}>이메일 주소</label>
           </div>
           <div className={styles.inputCol}>
-            <Input
-              placeholder='이메일을 입력하세요 (example@domain.com)'
-              value={formData.email}
-              onChange={e => handleChange('email', e.target.value)}
-              onBlur={() => handleBlur('email')}
-              size='large'
-              className={styles.input}
-              status={hasFieldError('email') ? 'error' : ''}
-            />
-            {getFieldError('email') && (
-              <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('email')}</div>
-            )}
+            <div style={{ width: '100%' }}>
+              <Input
+                placeholder='이메일을 입력하세요 (example@domain.com)'
+                value={formData.email}
+                onChange={e => handleChange('email', e.target.value)}
+                onBlur={() => handleBlur('email')}
+                size='large'
+                className={styles.input}
+                status={hasFieldError('email') ? 'error' : ''}
+              />
+              {getFieldError('email') && (
+                <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('email')}</div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -156,18 +175,20 @@ const AdminForm = ({ formData, onChange, isEditMode }: AdminFormProps) => {
             <label className={styles.label}>계정이름</label>
           </div>
           <div className={styles.inputCol}>
-            <Input
-              placeholder='계정이름을 입력하세요 (2-50자)'
-              value={formData.name}
-              onChange={e => handleChange('name', e.target.value)}
-              onBlur={() => handleBlur('name')}
-              size='large'
-              className={styles.input}
-              status={hasFieldError('name') ? 'error' : ''}
-            />
-            {getFieldError('name') && (
-              <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('name')}</div>
-            )}
+            <div style={{ width: '100%' }}>
+              <Input
+                placeholder='계정이름을 입력하세요 (2-50자)'
+                value={formData.name}
+                onChange={e => handleChange('name', e.target.value)}
+                onBlur={() => handleBlur('name')}
+                size='large'
+                className={styles.input}
+                status={hasFieldError('name') ? 'error' : ''}
+              />
+              {getFieldError('name') && (
+                <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('name')}</div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -176,22 +197,24 @@ const AdminForm = ({ formData, onChange, isEditMode }: AdminFormProps) => {
             <label className={styles.label}>비밀번호</label>
           </div>
           <div className={styles.inputCol}>
-            <Input.Password
-              placeholder={
-                isEditMode
-                  ? '변경할 비밀번호를 입력하세요 (변경하지 않으려면 비워두세요)'
-                  : '비밀번호를 입력하세요 (8-20자, 대소문자/숫자/특수문자 포함)'
-              }
-              value={formData.password}
-              onChange={e => handleChange('password', e.target.value)}
-              onBlur={() => handleBlur('password')}
-              size='large'
-              className={styles.input}
-              status={hasFieldError('password') ? 'error' : ''}
-            />
-            {getFieldError('password') && (
-              <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('password')}</div>
-            )}
+            <div style={{ width: '100%' }}>
+              <Input.Password
+                placeholder={
+                  isEditMode
+                    ? '변경할 비밀번호를 입력하세요 (변경하지 않으려면 비워두세요)'
+                    : '비밀번호를 입력하세요 (8-20자, 대소문자/숫자/특수문자 포함)'
+                }
+                value={formData.password}
+                onChange={e => handleChange('password', e.target.value)}
+                onBlur={() => handleBlur('password')}
+                size='large'
+                className={styles.input}
+                status={hasFieldError('password') ? 'error' : ''}
+              />
+              {getFieldError('password') && (
+                <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>{getFieldError('password')}</div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -200,20 +223,22 @@ const AdminForm = ({ formData, onChange, isEditMode }: AdminFormProps) => {
             <label className={styles.label}>비밀번호 확인</label>
           </div>
           <div className={styles.inputCol}>
-            <Input.Password
-              placeholder='비밀번호를 다시 입력하세요'
-              value={formData.passwordConfirm}
-              onChange={e => handleChange('passwordConfirm', e.target.value)}
-              onBlur={() => handleBlur('passwordConfirm')}
-              size='large'
-              className={styles.input}
-              status={hasFieldError('passwordConfirm') ? 'error' : ''}
-            />
-            {getFieldError('passwordConfirm') && (
-              <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>
-                {getFieldError('passwordConfirm')}
-              </div>
-            )}
+            <div style={{ width: '100%' }}>
+              <Input.Password
+                placeholder='비밀번호를 다시 입력하세요'
+                value={formData.passwordConfirm}
+                onChange={e => handleChange('passwordConfirm', e.target.value)}
+                onBlur={() => handleBlur('passwordConfirm')}
+                size='large'
+                className={styles.input}
+                status={hasFieldError('passwordConfirm') ? 'error' : ''}
+              />
+              {getFieldError('passwordConfirm') && (
+                <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>
+                  {getFieldError('passwordConfirm')}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
