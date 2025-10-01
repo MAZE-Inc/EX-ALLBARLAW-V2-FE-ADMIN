@@ -65,3 +65,21 @@
 .ant-picker-dropdown {
   z-index: 9995 !important;
 }
+
+// Table NoData/Empty 컴포넌트 - 모달보다 낮게 설정
+.ant-table-placeholder {
+  position: relative;
+  z-index: 1 !important;
+}
+
+.ant-empty {
+  position: relative;
+  z-index: 1 !important;
+}
+
+// Table wrapper의 empty 상태
+.ant-table-empty {
+  .ant-table-placeholder {
+    z-index: 1 !important;
+  }
+}
