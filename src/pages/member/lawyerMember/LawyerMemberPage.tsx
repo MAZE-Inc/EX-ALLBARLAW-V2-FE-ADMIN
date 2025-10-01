@@ -7,22 +7,15 @@ import { useState } from 'react'
 import { useLawyerInfoList } from '@/hooks/queries/useMember'
 import { Pagination } from '@/components/pagination'
 import { useExcelExport } from '@/hooks/useExcelExport'
+import { laywerInfoOrderby } from '@/types/lawyerTypes'
 
 const LawyerMemberPage = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [activeTab, setActiveTab] = useState<'all' | 'new' | 'approved' | 'pending'>('all')
-  const [orderBy, setOrderBy] = useState<
-    | 'name'
-    | 'createdAt'
-    | 'blogCaseCount'
-    | 'videoCaseCount'
-    | 'chatRoomCount'
-    | 'totalVisitCount'
-    | 'monthlyVisitCount'
-  >('createdAt')
+  const [orderBy, setOrderBy] = useState<laywerInfoOrderby>('createdAt')
   const [sort, setSort] = useState<'asc' | 'desc'>('desc')
   const [selectedLawyers, setSelectedLawyers] = useState<LawyerMember[]>([])
-  
+
   const { exportData } = useExcelExport()
 
   // 실제 데이터 조회
@@ -80,21 +73,21 @@ const LawyerMemberPage = () => {
     if (selectedLawyers.length === 0) {
       return
     }
-    
+
     // 엑셀에 표시할 데이터 형식으로 변환
     const excelData = selectedLawyers.map(lawyer => ({
-      '아이디': lawyer.lawyerAccount || `lawyer${lawyer.lawyerId}`,
+      아이디: lawyer.lawyerAccount || `lawyer${lawyer.lawyerId}`,
       '이메일 주소': lawyer.lawyerEmail,
       '변호사 이름': lawyer.lawyerName,
-      '연락처': lawyer.lawyerContact || '-',
-      '소속': lawyer.lawyerLawfirmName || '-',
+      연락처: lawyer.lawyerContact || '-',
+      소속: lawyer.lawyerLawfirmName || '-',
       '소속 연락처': lawyer.lawyerLawfirmContact,
       '출신 시험': `${lawyer.lawyerBarExamNumber}회`,
       '승인 상태': lawyer.lawyerApprovalStatus,
-      '합격일자': lawyer.lawyerBarExamPassDate || '-',
-      '가입일': lawyer.lawyerCreatedAt,
+      합격일자: lawyer.lawyerBarExamPassDate || '-',
+      가입일: lawyer.lawyerCreatedAt,
     }))
-    
+
     exportData(excelData, '변호사회원목록', '변호사정보')
   }
 

@@ -140,15 +140,11 @@ export const lawyerMemberService = {
   getLawyerInfoList: async (request: LawyerInfoListRequest) => {
     const { lawyerPage, orderBy, sort, state } = request
 
-    console.log('getLawyerInfoList request:', request)
-
     const params = new URLSearchParams()
     if (lawyerPage !== undefined) params.append('lawyerPage', lawyerPage.toString())
     if (orderBy !== undefined) params.append('orderBy', orderBy)
     if (sort !== undefined) params.append('sort', sort)
     if (state !== undefined && state !== 'all') params.append('state', state) // 'all'일 때는 파라미터를 보내지 않음
-
-    console.log('API params:', params.toString())
 
     const response = await instance.get<LawyerInfoListResponse>(`/lawyers/info`, { params })
     return response.data

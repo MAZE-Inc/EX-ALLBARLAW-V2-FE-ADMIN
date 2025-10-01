@@ -169,7 +169,18 @@ export interface LawyerMemberListRequest {
 
 export type ApprovalStatus = 'pending' | 'approved' | 'rejected' | 'all'
 
-export interface LawyerInfoListRequest extends LawyerMemberListRequest {
+export type laywerInfoOrderby =
+  | 'account'
+  | 'email'
+  | 'name'
+  | 'phone'
+  | 'office'
+  | 'exam'
+  | 'approvalStatus'
+  | 'createdAt'
+
+export interface LawyerInfoListRequest extends Omit<LawyerMemberListRequest, 'orderBy'> {
+  orderBy?: laywerInfoOrderby
   state?: 'all' | 'new' | 'pending' | 'approved'
 }
 
@@ -184,6 +195,7 @@ export type LawyerInfoListResponse = {
   lawyerList: [
     {
       lawyerId: number
+      lawyerAccount: string
       lawyerEmail: string
       lawyerName: string
       lawyerContact: string | null

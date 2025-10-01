@@ -59,8 +59,8 @@ const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort, 
   const columns: TableProps<LawyerMember>['columns'] = [
     {
       title: '아이디',
-      dataIndex: 'lawyerId', // lawyerAccount가 API에 없다면 lawyerId 사용
-      render: (id: number) => `lawyer${id}`, // 또는 실제 아이디 필드가 있다면 그것을 사용
+      dataIndex: 'lawyerAccount',
+      render: (account: string | undefined, record: LawyerMember) => account || `lawyer${record.lawyerId}`,
       sorter: true,
       sortOrder: getSortOrder('account'),
       onHeaderCell: () => ({
