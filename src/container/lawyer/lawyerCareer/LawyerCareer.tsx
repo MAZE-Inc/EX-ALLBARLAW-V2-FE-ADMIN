@@ -21,13 +21,18 @@ const LawyerCareer = forwardRef<HTMLElement, LawyerCareerProps>(({ careerHistory
       )
     }
 
-    return items.map((item, index) => {
-      const categoryName =
-        'lawyerCareerCategoryName' in item ? item.lawyerCareerCategoryName : item.lawyerActivityCategoryName
-      const content = 'lawyerCareerContent' in item ? item.lawyerCareerContent : item.lawyerActivityContent
+    return items.map((item: any, index) => {
+      // 서버에서 오는 실제 키값 사용 (categoryName, content)
+      const categoryName = item.categoryName ||
+        ('lawyerCareerCategoryName' in item ? item.lawyerCareerCategoryName :
+         'lawyerActivityCategoryName' in item ? item.lawyerActivityCategoryName : '')
+
+      const content = item.content ||
+        ('lawyerCareerContent' in item ? item.lawyerCareerContent :
+         'lawyerActivityContent' in item ? item.lawyerActivityContent : '')
 
       return (
-        <div className={styles['lawyer-career__item']} key={index}>
+        <div className={styles['lawyer-career__item']} key={item.id || index}>
           <h4 className={styles['lawyer-career__item-title']}>{categoryName}</h4>
           <ul className={styles['lawyer-career__list']}>
             {(content || '').split('\n').map((contentLine: string, idx: number) => (
