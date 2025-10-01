@@ -16,7 +16,7 @@ import {
 import {
   CreateVideoRequest,
   CreateVideoResponse,
-  GetVideoChannelInfoResponse,
+  VideoChannelInfoResponse,
   VideoDetailRequest,
   VideoDetailResponse,
   VideoListRequest,
@@ -148,6 +148,7 @@ export const contentService = {
       videoCaseChannelThumbnail,
       videoCaseHandleName,
       videoCaseChannelName,
+      videoCaseSubscriberCount,
     } = request
 
     const payload = {
@@ -159,6 +160,7 @@ export const contentService = {
       videoCaseChannelThumbnail,
       videoCaseHandleName,
       videoCaseChannelName,
+      videoCaseSubscriberCount,
       videoCaseTags,
       videoCaseLawyerId,
     }
@@ -167,7 +169,7 @@ export const contentService = {
     return response.data
   },
   getVideoChannelInfo: async (request: { channelUrl: string }) => {
-    const response = await instance.post<GetVideoChannelInfoResponse>(`/video-cases/youtube/channel/fetch`, request)
+    const response = await instance.post<VideoChannelInfoResponse>(`/video-cases/youtube/channel/fetch`, request)
     return response.data
   },
   getYoutubeVideoInfo: async (request: YoutubeVideoInfoRequest) => {

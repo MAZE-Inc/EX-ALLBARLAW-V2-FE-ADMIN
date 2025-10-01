@@ -4,7 +4,7 @@ import { QUERY_KEY } from '@/constants/query'
 import { BlogDetailRequest, BlogListRequest, CreateBlogRequest } from '@/types/blogTypes'
 import {
   CreateVideoRequest,
-  GetVideoChannelInfoResponse,
+  VideoChannelInfoResponse,
   VideoDetailRequest,
   VideoListRequest,
   YoutubeVideoInfoRequest,
@@ -172,12 +172,12 @@ export const useGetVideoChannelInfo = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (data: GetVideoChannelInfoResponse) => void
+  onSuccess: (data: VideoChannelInfoResponse) => void
   onError: () => void
 }) => {
   return useMutation({
     mutationFn: (request: { channelUrl: string }) => contentService.getVideoChannelInfo(request),
-    onSuccess: (data: GetVideoChannelInfoResponse) => {
+    onSuccess: (data: VideoChannelInfoResponse) => {
       onSuccess(data)
     },
     onError,

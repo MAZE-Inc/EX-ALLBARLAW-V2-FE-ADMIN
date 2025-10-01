@@ -66,6 +66,7 @@ export type CreateVideoRequest = {
   videoCaseChannelName: string
   videoCaseTags: string[]
   videoCaseLawyerId: number
+  videoCaseSubscriberCount: number
 }
 
 export type CreateVideoResponse = {
@@ -89,7 +90,7 @@ export type CreateVideoResponse = {
   videoCaseTags: string[]
 }
 
-export type GetVideoChannelInfoResponse = {
+export type VideoChannelInfoResponse = {
   channelName: string
   channelDescription: string
   handleName: string

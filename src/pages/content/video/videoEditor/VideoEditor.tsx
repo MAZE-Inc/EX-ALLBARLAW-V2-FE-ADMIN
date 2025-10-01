@@ -47,6 +47,7 @@ const VideoEditor = () => {
     if (channelInfo.channelData) {
       setFormData(prev => ({
         ...prev,
+        videoCaseSubscriberCount: Number(channelInfo.channelData?.subscriberCount) || 0,
         videoCaseChannelName: channelInfo.channelData?.channelName || '',
         videoCaseHandleName: channelInfo.channelData?.handleName || '',
         videoCaseChannelDescription: channelInfo.channelData?.channelDescription || '',

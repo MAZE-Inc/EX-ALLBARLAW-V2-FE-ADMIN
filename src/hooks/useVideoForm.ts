@@ -13,6 +13,7 @@ interface VideoFormData {
   videoCaseTags: string[]
   videoCaseLawyerId: number
   selectedLawyer?: any
+  videoCaseSubscriberCount: number
 }
 
 export const useVideoForm = (subCategoryId?: string) => {
@@ -28,6 +29,7 @@ export const useVideoForm = (subCategoryId?: string) => {
     videoCaseChannelName: '',
     videoCaseTags: [] as string[],
     videoCaseLawyerId: 0,
+    videoCaseSubscriberCount: 0,
   })
 
   const handleInputChange = (field: string, value: any) => {
