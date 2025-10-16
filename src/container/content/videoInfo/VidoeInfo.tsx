@@ -27,7 +27,15 @@ const VidoeInfo = ({
     if (isNaN(numCount) || numCount <= 0) {
       return '0'
     }
-    return numCount.toLocaleString()
+
+    // 1000명 이하는 숫자 그대로 표시
+    if (numCount < 1000) {
+      return numCount.toLocaleString()
+    }
+
+    // 1000명 초과는 만 단위로 소수점 1자리까지 표시
+    const manCount = numCount / 10000
+    return `${manCount.toFixed(1)}만`
   }
 
   return (
