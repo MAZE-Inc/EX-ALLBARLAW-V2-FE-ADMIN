@@ -5,7 +5,7 @@ import styles from './lawyerEdit.module.scss'
 import LawyerEditBasicInfo, { LawyerEditBasicInfoRef } from '@/container/lawyer/lawyerEditBasicInfo/LawyerEditBasicInfo'
 import LawyerEditActivity, { LawyerEditActivityRef } from '@/container/lawyer/lawyerEditActivity/LawyerEditActivity'
 import LawyerEditCareer, { LawyerEditCareerRef } from '@/container/lawyer/lawyerEditCareer/LawyerEditCareer'
-import LawyerEditAchievements from '@/container/lawyer/lawyerEditAchievements/LawyerEditAchievements'
+// import LawyerEditAchievements from '@/container/lawyer/lawyerEditAchievements/LawyerEditAchievements'
 import { useLawyerBasicInfoUpdate, useLawyerCareerUpdate, useLawyerActivityUpdate } from '@/hooks/queries/useLawyer'
 import { LawyerUpdateRequest } from '@/types/lawyerTypes'
 
@@ -67,7 +67,7 @@ const LawyerEditPage = () => {
       key: 'basic',
       children: <LawyerEditBasicInfo ref={basicInfoRef} lawyerId={lawyerId} />,
     },
-    { label: '업적 관리', key: 'achievements', children: <LawyerEditAchievements /> },
+    // { label: '업적 관리', key: 'achievements', children: <LawyerEditAchievements /> },
     { label: '이력 사항', key: 'career', children: <LawyerEditCareer ref={careerRef} lawyerId={lawyerId} /> },
     { label: '활동 사항', key: 'activity', children: <LawyerEditActivity ref={activityRef} lawyerId={lawyerId} /> },
   ]

@@ -11,7 +11,7 @@ import LawyerCareer from '@/container/lawyer/lawyerCareer/LawyerCareer'
 import LawyerBlog from '@/container/lawyer/lawyerBlog/LawyerBlog'
 import LawyerVideo from '@/container/lawyer/lawyerVideo/LawyerVideo'
 import LawyerLegalKnowledge from '@/container/lawyer/lawyerLegalKnowledge/LawyerLegalKnowledge'
-import LawyerAchievements from '@/container/lawyer/lawyerAchievements/LawyerAchievements'
+// import LawyerAchievements from '@/container/lawyer/lawyerAchievements/LawyerAchievements'
 import { COLOR } from '@/styles/abstracts/color'
 
 const LawyerDetailPage = () => {
@@ -57,7 +57,7 @@ const LawyerDetailPage = () => {
             tags={lawyerDetail?.tags ?? []}
           />
           <LawyerActivity statistics={lawyerDetail?.statistics ?? null} createdAt={lawyerDetail?.createdAt ?? ''} />
-          <LawyerAchievements achievements={lawyerDetail?.achievements ?? []} />
+          {/* <LawyerAchievements achievements={lawyerDetail?.achievements ?? []} /> */}
           <section className={styles['lawyer-detail__button-container']}>
             <button className={styles['lawyer-detail__button']} onClick={() => scrollToSection(careerRef)}>
               이력사항 및 활동사항
