@@ -92,7 +92,7 @@ const AccountManagementModal = ({ visible, onClose, accountInfo }: AdminAccountM
 
   return (
     <Modal
-      title='관리자 계정 관리'
+      title='회원 계정 관리'
       open={visible}
       onCancel={onClose}
       onOk={handleSubmit}
