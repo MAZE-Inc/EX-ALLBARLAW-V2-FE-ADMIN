@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { message } from 'antd'
 import { useGetVideoChannelInfo } from '@/hooks/queries/useContent'
-import { GetVideoChannelInfoResponse } from '@/types/videoTypes'
+import { VideoChannelInfoResponse } from '@/types/videoTypes'
 
 interface ChannelInfoData {
   channelName: string
@@ -17,7 +17,7 @@ export const useChannelInfo = () => {
   const [channelData, setChannelData] = useState<ChannelInfoData | null>(null)
 
   const { mutate: fetchChannelInfo, isPending: isChannelLoading } = useGetVideoChannelInfo({
-    onSuccess: (data: GetVideoChannelInfoResponse) => {
+    onSuccess: (data: VideoChannelInfoResponse) => {
       const formattedData: ChannelInfoData = {
         channelName: data.channelName,
         handleName: data.handleName,
