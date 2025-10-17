@@ -13,11 +13,13 @@ interface AdminAccountManagementModalProps {
 const AccountManagementModal = ({ visible, onClose, accountInfo }: AdminAccountManagementModalProps) => {
   const [form] = Form.useForm()
   const [isFormValid, setIsFormValid] = useState(false)
+  const [isActive, setIsActive] = useState(true)
   const { mutate: resetPassword, isPending: isResetPasswordPending } = useResetPassword()
   const { mutate: updateMemberStatus } = useUpdateMemberStatus()
 
   useEffect(() => {
     if (visible && accountInfo) {
+      setIsActive(accountInfo.userIsActive)
       form.setFieldsValue({
         adminIsActive: accountInfo.userIsActive,
         suspendReason: accountInfo.userBanReason || '',
@@ -35,13 +37,18 @@ const AccountManagementModal = ({ visible, onClose, accountInfo }: AdminAccountM
   }
 
   // 계정 사용여부(라디오) 변경 시 인풋 및 값 초기화
-  const handleActiveChange = () => {
+  const handleActiveChange = (e: any) => {
+    const newIsActive = e.target.value
+    setIsActive(newIsActive)
+
     form.setFields([
       {
         name: 'suspendReason',
         errors: [],
       },
     ])
+
+    // "사용"으로 변경 시 suspendReason을 빈 문자열로 설정
     form.setFieldsValue({ suspendReason: '' })
     handleFieldsChange()
   }
@@ -53,7 +60,7 @@ const AccountManagementModal = ({ visible, onClose, accountInfo }: AdminAccountM
       const mutationData = {
         userId: accountInfo.userId,
         isActive: values.adminIsActive,
-        userBanReason: values.suspendReason,
+        userBanReason: values.adminIsActive ? null : values.suspendReason,
       }
 
       updateMemberStatus(mutationData, {
@@ -120,11 +127,16 @@ const AccountManagementModal = ({ visible, onClose, accountInfo }: AdminAccountM
             <tr>
               <td className={styles.label}>계정 정지사유</td>
               <td>
-                <Form.Item name='suspendReason' noStyle rules={[{ required: true, message: '정지사유를 입력하세요.' }]}>
+                <Form.Item
+                  name='suspendReason'
+                  noStyle
+                  rules={[{ required: !isActive, message: '정지사유를 입력하세요.' }]}
+                >
                   <Input.TextArea
                     rows={4}
-                    placeholder='계정 정지 사유를 입력하세요.'
+                    placeholder={isActive ? '' : '계정 정지 사유를 입력하세요.'}
                     className={styles.fixedTextarea}
+                    disabled={isActive}
                   />
                 </Form.Item>
               </td>
