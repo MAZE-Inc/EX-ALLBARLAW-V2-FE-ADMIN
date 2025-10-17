@@ -13,7 +13,7 @@ interface AdminAccountManagementModalProps {
 const AccountManagementModal = ({ visible, onClose, accountInfo }: AdminAccountManagementModalProps) => {
   const [form] = Form.useForm()
   const [isFormValid, setIsFormValid] = useState(false)
-  const { mutate: resetPassword } = useResetPassword()
+  const { mutate: resetPassword, isPending: isResetPasswordPending } = useResetPassword()
   const { mutate: updateMemberStatus } = useUpdateMemberStatus()
 
   useEffect(() => {
@@ -72,7 +72,15 @@ const AccountManagementModal = ({ visible, onClose, accountInfo }: AdminAccountM
   }
 
   const handlePasswordInit = () => {
-    resetPassword(accountInfo.userId)
+    resetPassword(accountInfo.userId, {
+      onSuccess: () => {
+        message.success('등록한 E-mail로 초기화된 비밀번호가 발송되었습니다.')
+      },
+      onError: error => {
+        console.error('Password reset error:', error)
+        message.error('비밀번호 초기화에 실패했습니다.')
+      },
+    })
   }
 
   return (
@@ -124,8 +132,8 @@ const AccountManagementModal = ({ visible, onClose, accountInfo }: AdminAccountM
             <tr>
               <td className={styles.label}>비밀번호 변경</td>
               <td>
-                <Button onClick={handlePasswordInit} className={styles.initBtn}>
-                  초기화
+                <Button onClick={handlePasswordInit} className={styles.initBtn} disabled={isResetPasswordPending}>
+                  {isResetPasswordPending ? '초기화 중...' : '초기화'}
                 </Button>
                 <div className={styles.infoText}>※ 비밀번호 초기화를 할 경우 아이디+연락처 조합으로 초기화 됩니다.</div>
               </td>

@@ -30,9 +30,6 @@ export const useUpdateMemberStatus = () => {
 export const useResetPassword = () => {
   return useMutation({
     mutationFn: (userId: number) => memberService.resetPassword(userId),
-    onSuccess: () => {
-      message.success('비밀번호가 초기화되었습니다.')
-    },
     onError: (error: Error) => {
       console.error('비밀번호 초기화 실패:', error)
       message.error('비밀번호 초기화에 실패했습니다.')
