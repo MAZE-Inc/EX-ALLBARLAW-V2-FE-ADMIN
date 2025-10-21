@@ -48,10 +48,11 @@ const AdminForm = ({ formData, onChange, isEditMode }: AdminFormProps) => {
     [isEditMode]
   )
 
-  const { touched, handleFieldChange, handleFieldBlur, getFieldError, hasFieldError, setErrors, setTouched } = useFormValidation({
-    rules: validationRules,
-    isEditMode,
-  })
+  const { touched, handleFieldChange, handleFieldBlur, getFieldError, hasFieldError, setErrors, setTouched } =
+    useFormValidation({
+      rules: validationRules,
+      isEditMode,
+    })
 
   // 비밀번호 변경시 비밀번호 확인 재검증
   useEffect(() => {

@@ -34,14 +34,14 @@ export const useCategoryManagement = ({
     if (initialMainData && initialMainData.length > 0) {
       setMainData(initialMainData)
     }
-  }, [initialMainData])
+  }, [JSON.stringify(initialMainData)])
 
   useEffect(() => {
     // initialSubData가 undefined가 아니면 설정 (빈 배열도 포함)
     if (initialSubData !== undefined) {
       setSubData(initialSubData)
     }
-  }, [initialSubData])
+  }, [JSON.stringify(initialSubData)])
 
   // 대분류 관련 핸들러
   const handleMainCategoryOrderChange = async (newData: MainCategoryData[]) => {

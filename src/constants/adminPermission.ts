@@ -119,3 +119,24 @@ export const hasGroupAccess = (userPermissions: number[], groupKey: string): boo
 export const hasPermission = (userPermissions: number[], permissionId: number): boolean => {
   return userPermissions.includes(permissionId)
 }
+
+// 권한 ID별 기본 경로 매핑
+export const PERMISSION_ROUTE_MAP: Record<number, string> = {
+  [ADMIN_PERMISSION_IDS.ADMIN_ACCOUNT_LIST]: '/admin-management',
+  [ADMIN_PERMISSION_IDS.ACCOUNT_REGISTER]: '/admin-management/register',
+  [ADMIN_PERMISSION_IDS.CATEGORY_MANAGEMENT]: '/category-management',
+  [ADMIN_PERMISSION_IDS.MEMBER_GENERAL]: '/member-member',
+  [ADMIN_PERMISSION_IDS.MEMBER_LAWYER]: '/member-lawyer',
+  [ADMIN_PERMISSION_IDS.LAWYER_LIST]: '/lawyer-management',
+  [ADMIN_PERMISSION_IDS.CONTENT_BLOG]: '/content/content-blog',
+  [ADMIN_PERMISSION_IDS.CONTENT_VIDEO]: '/content/content-video',
+  [ADMIN_PERMISSION_IDS.CONTENT_KNOWLEDGE]: '/content/content-knowledge',
+  [ADMIN_PERMISSION_IDS.CHAT_LIST]: '/chat-list',
+  [ADMIN_PERMISSION_IDS.BOARD_NOTICE]: '/board-notice',
+  [ADMIN_PERMISSION_IDS.BOARD_FAQ]: '/board-faq',
+  [ADMIN_PERMISSION_IDS.BOARD_DICTIONARY]: '/board-legalDictionary',
+  [ADMIN_PERMISSION_IDS.AD_LAWFIRM]: '/ad-lawfirm',
+  [ADMIN_PERMISSION_IDS.AD_BANNER]: '/ad-banner',
+  [ADMIN_PERMISSION_IDS.AD_LAWYER]: '/ad-lawyer',
+  [ADMIN_PERMISSION_IDS.STATISTICS]: '/statistics-list',
+} as const

@@ -58,6 +58,7 @@ import AdminLayout from '@/pages/admin/adminLayout/AdminLayout'
 import MemberLayout from '@/pages/member/memberLayout/MemberLayout'
 import ProtectedRoute from './ProtectedRoute'
 import PublicOnlyRoute from './PublicOnlyRoute'
+import RootRedirect from './RootRedirect'
 import MainBannerEditPage from '@/pages/ad/adBanner/mainBannerEdit/MainBannerEditPage'
 import CategoryBannerEditPage from '@/pages/ad/adBanner/categoryBannerEdit/CategoryBannerEditPage'
 import SubCategoryBannerEditPage from '@/pages/ad/adBanner/subCategoryBannerEdit/SubCategoryBannerEditPage'
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
     ),
     errorElement: <NotFound />,
     children: [
+      {
+        index: true,
+        element: <RootRedirect />,
+      },
       {
         path: ROUTE_PATH.ADMIN_MANAGEMENT,
         element: <AdminLayout />,
