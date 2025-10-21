@@ -9,6 +9,7 @@ interface SidebarProps {
   collapsed?: boolean
   isTablet?: boolean
   subMenuIds?: number[]
+  selectedKeys?: string[]
 }
 
 const SidebarHeader = () => {
@@ -39,7 +40,7 @@ const SidebarHeader = () => {
   )
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ collapsed = false, isTablet = false, subMenuIds = [] }) => {
+const Sidebar: React.FC<SidebarProps> = ({ collapsed = false, isTablet = false, subMenuIds = [], selectedKeys = [] }) => {
   const navigate = useNavigate()
 
   const onClick: MenuProps['onClick'] = e => {
@@ -88,6 +89,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed = false, isTablet = false, 
         mode='inline'
         items={filteredMenuItems}
         openKeys={alwaysOpenKeys}
+        selectedKeys={selectedKeys}
         onOpenChange={() => {}}
       />
     </div>
