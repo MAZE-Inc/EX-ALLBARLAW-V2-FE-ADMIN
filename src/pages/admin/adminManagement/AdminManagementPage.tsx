@@ -2,26 +2,55 @@ import { Button, ConfigProvider, Tabs, TabsProps } from 'antd'
 import styles from './adminManagementPage.module.scss'
 import ManagerList from '../managerList/ManagerList'
 import { COLOR } from '@/styles/abstracts/color'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Admin } from '@/types/adminTypes'
 import { useGetAdminList } from '@/hooks/queries/useGetAdminList'
 
 const AdminManagementPage = () => {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [currentPage, setCurrentPage] = useState(1)
   const [orderBy, setOrderBy] = useState<keyof Admin>('adminCreatedAt')
   const [sort, setSort] = useState<'asc' | 'desc'>('desc')
   const [adminIsActive, _setAdminIsActive] = useState<boolean | undefined>(undefined)
   const [activeTab, setActiveTab] = useState<'total' | 'admin-manager' | 'cs-manager'>('total')
 
+  // URL 파라미터에서 검색어와 검색 타입 추출
+  const searchQuery = searchParams.get('search') || undefined
+  const searchType = (searchParams.get('searchType') as 'account' | 'email' | 'name' | 'all') || undefined
+
+  // Admin 필드명을 API sortBy 타입으로 매핑
+  const getSortBy = (
+    field: keyof Admin
+  ): 'accountType' | 'account' | 'email' | 'name' | 'isActive' | 'createdAt' | undefined => {
+    const mapping: Record<string, 'accountType' | 'account' | 'email' | 'name' | 'isActive' | 'createdAt'> = {
+      adminAccountTypeId: 'accountType',
+      adminAccount: 'account',
+      adminEmail: 'email',
+      adminName: 'name',
+      adminIsActive: 'isActive',
+      adminCreatedAt: 'createdAt',
+    }
+    return mapping[field]
+  }
+
   const { data: adminList, isLoading } = useGetAdminList({
     skip: currentPage - 1,
     take: 10,
     adminIsActive: adminIsActive,
     adminAccountTypeId: activeTab === 'total' ? undefined : activeTab === 'admin-manager' ? 1 : 2,
+    searchQuery: searchQuery,
+    searchType: searchType,
+    sortBy: getSortBy(orderBy),
+    sortOrder: sort,
   })
+
+  // 검색 파라미터가 변경되면 페이지를 1로 리셋
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery, searchType])
 
   const handleSort = (field: keyof Admin) => {
     if (field === orderBy) {

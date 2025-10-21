@@ -3,6 +3,10 @@ export type AdminListRequest = {
   take?: number
   adminIsActive?: boolean
   adminAccountTypeId?: number
+  searchQuery?: string
+  searchType?: 'account' | 'email' | 'name' | 'all'
+  sortBy?: 'accountType' | 'account' | 'email' | 'name' | 'isActive' | 'createdAt'
+  sortOrder?: 'asc' | 'desc'
 }
 
 export type AdminSubMenu = {
