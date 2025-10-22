@@ -5,19 +5,25 @@ import MemberList from '../../../container/member/memberList/MemberList'
 import styles from './memberPage.module.scss'
 import { Pagination } from '@/components/pagination'
 import { useGetTotalMemberPage } from '@/hooks/queries/useGetTotalMemberPage'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useGetMemberList } from '@/hooks/queries/useGetMemberList'
 import { Member, MemberListRequest } from '@/types/memberType'
 import { useExcelExport } from '@/hooks/useExcelExport'
+import { useSearchParams } from 'react-router-dom'
 
 const MemberPage = () => {
+  const [searchParams] = useSearchParams()
   const [currentPage, setCurrentPage] = useState(1)
   const [activeTab, setActiveTab] = useState<'total' | 'active' | 'inactive'>('total')
   const [orderBy, setOrderBy] = useState<MemberListRequest['orderBy']>('createdAt')
   const [sort, setSort] = useState<MemberListRequest['sort']>('desc')
   const [selectedMembers, setSelectedMembers] = useState<Member[]>([])
-  
+
   const { exportData } = useExcelExport()
+
+  // URL 파라미터에서 검색어와 검색 타입 추출
+  const searchQuery = searchParams.get('search') || undefined
+  const searchType = (searchParams.get('searchType') as 'account' | 'phone' | 'email') || undefined
 
   const { data: totalPages } = useGetTotalMemberPage()
   const { data: memberList, isLoading } = useGetMemberList({
@@ -25,7 +31,14 @@ const MemberPage = () => {
     orderBy,
     userIsActive: activeTab === 'total' ? 'all' : activeTab,
     sort,
+    searchQuery: searchQuery,
+    searchType: searchType,
   })
+
+  // 검색 파라미터가 변경되면 페이지를 1로 리셋
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery, searchType])
 
   const handleTabChange = (key: string) => {
     setActiveTab(key as 'total' | 'active' | 'inactive')

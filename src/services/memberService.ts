@@ -27,13 +27,15 @@ export const memberService = {
   },
 
   getMemberList: async (request: MemberListRequest) => {
-    const { userPage, orderBy, userIsActive, sort } = request
+    const { userPage, orderBy, userIsActive, sort, searchQuery, searchType } = request
 
     const params = new URLSearchParams()
     if (userPage !== undefined) params.append('userPage', userPage.toString())
     if (orderBy !== undefined) params.append('orderBy', orderBy)
     if (userIsActive !== undefined) params.append('userIsActive', userIsActive)
     if (sort !== undefined) params.append('sort', sort)
+    if (searchQuery) params.append('searchQuery', searchQuery)
+    if (searchType) params.append('searchType', searchType)
 
     // 쿼리스트링 생성
     const queryString = params.toString()

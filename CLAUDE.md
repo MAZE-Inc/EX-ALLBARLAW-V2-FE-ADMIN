@@ -1092,5 +1092,397 @@ const handleSave = () => {
 - 배너 광고 (추가 예정)
 - 기타 광고 관련 페이지
 
+## 검색 기능 구현 가이드
+
+### 개요
+모든 리스트 페이지의 검색 기능은 URL 기반 상태 관리와 React Query를 조합하여 구현합니다. 검색 UI는 Layout 컴포넌트에서 관리하고, 실제 API 호출과 데이터 처리는 Page 컴포넌트에서 처리합니다.
+
+### 아키텍처 패턴
+
+```
+Layout (검색 UI)
+  ↓ URL 파라미터 업데이트
+URL (?search=keyword&searchType=email)
+  ↓ useSearchParams로 읽기
+Page (API 호출)
+  ↓ React Query
+API 서비스
+```
+
+### 구현 단계
+
+#### 1. Layout 컴포넌트에 검색 UI 추가
+
+**파일**: `src/pages/[domain]/[domain]Layout/[Domain]Layout.tsx`
+
+```tsx
+import { Outlet, useSearchParams, useLocation, useNavigate } from 'react-router-dom'
+import SearchHeader, { SearchHeaderMenuItemType } from '@/components/searchHeader/SearchHeader'
+import { useState, useEffect } from 'react'
+import { ROUTE_PATH } from '@/routes/routePath'
+
+// 1. 검색 타입 메뉴 아이템 정의
+export const [domain]MenuItems = [
+  { label: '아이디', key: 'account' },
+  { label: '이메일주소', key: 'email' },
+  { label: '계정이름', key: 'name' },
+]
+
+const [Domain]Layout = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  // 2. URL에서 searchType 읽어 초기 선택 아이템 설정
+  const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>(() => {
+    const searchType = searchParams.get('searchType')
+    if (searchType === 'email') {
+      return [domain]MenuItems[1]
+    } else if (searchType === 'name') {
+      return [domain]MenuItems[2]
+    }
+    return [domain]MenuItems[0] // 기본값: 첫 번째 아이템
+  })
+
+  const searchQuery = searchParams.get('search') || ''
+
+  // 3. URL 파라미터 변경 시 selectedItem 동기화
+  useEffect(() => {
+    const type = searchParams.get('searchType')
+    if (type === 'email') {
+      setSelectedItem([domain]MenuItems[1])
+    } else if (type === 'name') {
+      setSelectedItem([domain]MenuItems[2])
+    } else {
+      setSelectedItem([domain]MenuItems[0])
+    }
+  }, [searchParams])
+
+  // 4. 검색 타입 선택 핸들러 (API 호출 없음)
+  const handleSelectionChange = (item: SearchHeaderMenuItemType) => {
+    setSelectedItem(item)
+    // 선택만 변경하고 API 호출은 하지 않음 (검색 시에만 호출)
+  }
+
+  // 5. 검색 실행 핸들러
+  const onSearch = (value: string) => {
+    const searchType = (selectedItem?.key as string) || 'account'
+
+    // 등록/수정 페이지에 있다면 리스트 페이지로 이동
+    if (location.pathname.includes('register') || location.pathname.includes('edit')) {
+      if (value.trim()) {
+        navigate(`${ROUTE_PATH.[DOMAIN]_LIST}?search=${value}&searchType=${searchType}`)
+      } else {
+        navigate(`${ROUTE_PATH.[DOMAIN]_LIST}?searchType=${searchType}`)
+      }
+    } else {
+      // 리스트 페이지에 있다면 현재 페이지에서 검색
+      if (value.trim()) {
+        setSearchParams({
+          search: value,
+          searchType: searchType,
+        })
+      } else {
+        setSearchParams({
+          searchType: searchType,
+        })
+      }
+    }
+  }
+
+  return (
+    <div className={styles['[domain]-layout']}>
+      <SearchHeader
+        menuItems={[domain]MenuItems}
+        className={styles['[domain]-layout__searchHeader']}
+        bordered={false}
+        title='페이지 제목'
+        selectedItem={selectedItem}
+        onSelectionChange={handleSelectionChange}
+        onSearch={onSearch}
+        defaultValue={searchQuery}
+      />
+      <Outlet />
+    </div>
+  )
+}
+
+export default [Domain]Layout
+```
+
+**핵심 포인트:**
+- 검색 타입 선택은 로컬 state만 변경 (API 호출 X)
+- 실제 검색 시에만 URL 파라미터 업데이트
+- 등록/수정 페이지에서 검색 시 리스트 페이지로 이동
+- `defaultValue`로 URL의 검색어를 SearchHeader에 전달
+
+#### 2. Page 컴포넌트에서 URL 파라미터 읽기
+
+**파일**: `src/pages/[domain]/[domain]Management/[Domain]ManagementPage.tsx`
+
+```tsx
+import { useSearchParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { use[Domain]List } from '@/hooks/queries/use[Domain]'
+
+const [Domain]ManagementPage = () => {
+  const [searchParams] = useSearchParams()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [orderBy, setOrderBy] = useState<keyof [Domain]>('[domain]CreatedAt')
+  const [sort, setSort] = useState<'asc' | 'desc'>('desc')
+
+  // 1. URL 파라미터에서 검색어와 검색 타입 추출
+  const searchQuery = searchParams.get('search') || undefined
+  const searchType = (searchParams.get('searchType') as 'account' | 'email' | 'name' | 'all') || undefined
+
+  // 2. Admin 필드명을 API sortBy 타입으로 매핑 (필요한 경우)
+  const getSortBy = (
+    field: keyof [Domain]
+  ): 'field1' | 'field2' | 'createdAt' | undefined => {
+    const mapping: Record<string, 'field1' | 'field2' | 'createdAt'> = {
+      [domain]Field1: 'field1',
+      [domain]Field2: 'field2',
+      [domain]CreatedAt: 'createdAt',
+    }
+    return mapping[field]
+  }
+
+  // 3. React Query로 데이터 가져오기
+  const { data: [domain]List, isLoading } = use[Domain]List({
+    skip: currentPage - 1,
+    take: 10,
+    searchQuery: searchQuery,
+    searchType: searchType,
+    sortBy: getSortBy(orderBy),
+    sortOrder: sort,
+  })
+
+  // 4. 검색 파라미터가 변경되면 페이지를 1로 리셋
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery, searchType])
+
+  // ... 나머지 코드
+}
+```
+
+**핵심 포인트:**
+- `useSearchParams`로 URL에서 검색 파라미터 읽기
+- 검색어가 없으면 `undefined` (빈 문자열이 아님)
+- 검색 파라미터 변경 시 페이지를 1로 리셋
+- 필요시 프론트엔드 필드명을 백엔드 필드명으로 매핑
+
+#### 3. API 서비스 수정
+
+**파일**: `src/services/[domain]Service.ts`
+
+```tsx
+// Request 타입에 검색 파라미터 추가
+export interface [Domain]ListRequest {
+  skip?: number
+  take?: number
+  searchQuery?: string
+  searchType?: 'account' | 'email' | 'name' | 'all'
+  sortBy?: 'field1' | 'field2' | 'createdAt'
+  sortOrder?: 'asc' | 'desc'
+  // 기타 필터 파라미터
+}
+
+// API 호출 함수
+get[Domain]List: async (request: [Domain]ListRequest) => {
+  // 1. 모든 파라미터 destructuring
+  const { skip, take, searchQuery, searchType, sortBy, sortOrder } = request
+
+  // 2. URLSearchParams 생성
+  const params = new URLSearchParams()
+  if (skip !== undefined) params.append('skip', skip.toString())
+  if (take !== undefined) params.append('take', take.toString())
+  if (searchQuery) params.append('searchQuery', searchQuery)
+  if (searchType) params.append('searchType', searchType)
+  if (sortBy) params.append('sortBy', sortBy)
+  if (sortOrder) params.append('sortOrder', sortOrder)
+
+  // 3. API 호출
+  const queryString = params.toString()
+  const url = `/[domain]${queryString ? `?${queryString}` : ''}`
+  const response = await instance.get<[Domain][]>(url)
+  return response.data
+}
+```
+
+**핵심 포인트:**
+- 모든 파라미터를 명시적으로 destructuring
+- `undefined`가 아닌 값만 URLSearchParams에 추가
+- 쿼리 스트링이 있을 때만 `?` 추가
+
+#### 4. React Query 훅 수정
+
+**파일**: `src/hooks/queries/use[Domain].ts`
+
+```tsx
+import { useQuery } from '@tanstack/react-query'
+import { [domain]Service, [Domain]ListRequest } from '@/services/[domain]Service'
+import { QUERY_KEY } from '@/constants/queryKey'
+
+export const use[Domain]List = (request: [Domain]ListRequest) => {
+  return useQuery({
+    // ⚠️ 중요: queryKey에 모든 파라미터를 명시적으로 포함
+    queryKey: [
+      QUERY_KEY.[DOMAIN]_LIST,
+      {
+        skip: request.skip,
+        take: request.take,
+        searchQuery: request.searchQuery,
+        searchType: request.searchType,
+        sortBy: request.sortBy,
+        sortOrder: request.sortOrder,
+        // 기타 필터 파라미터도 모두 포함
+      },
+    ],
+    queryFn: () => [domain]Service.get[Domain]List(request),
+  })
+}
+```
+
+**핵심 포인트:**
+- queryKey에 모든 파라미터를 **명시적으로** 포함
+- `[QUERY_KEY.[DOMAIN]_LIST, request]`는 작동하지 않음 (객체 참조 비교 문제)
+- 각 파라미터를 개별적으로 나열해야 React Query가 변경 감지 가능
+
+### 테스트 체크리스트
+
+구현 후 다음 항목들을 확인하세요:
+
+#### 기본 검색 기능
+- [ ] 검색 타입 선택 시 API 호출이 발생하지 않는가?
+- [ ] 검색어 입력 후 엔터/검색 버튼 클릭 시 URL이 업데이트되는가?
+- [ ] URL 업데이트 후 API가 정상적으로 호출되는가?
+- [ ] 검색 결과가 테이블에 정상적으로 표시되는가?
+- [ ] 검색어를 지우고 검색하면 전체 리스트가 표시되는가?
+
+#### URL 상태 관리
+- [ ] URL에 `?search=keyword&searchType=email` 형태로 파라미터가 추가되는가?
+- [ ] 브라우저 뒤로가기 시 이전 검색 상태로 복원되는가?
+- [ ] URL을 직접 복사하여 새 탭에서 열면 같은 검색 결과가 표시되는가?
+
+#### 페이지 이동
+- [ ] 등록/수정 페이지에서 검색 시 리스트 페이지로 이동하는가?
+- [ ] 이동 후 사이드바에서 리스트 메뉴가 선택 상태로 표시되는가?
+- [ ] 리스트 페이지에서 검색 시 현재 페이지에서 결과가 업데이트되는가?
+
+#### 페이지네이션 및 정렬
+- [ ] 검색 후 페이지가 1로 리셋되는가?
+- [ ] 검색 결과에서 정렬이 정상적으로 작동하는가?
+- [ ] 검색 결과에서 페이지 이동 후 다시 검색하면 1페이지로 돌아가는가?
+
+#### React Query 캐싱
+- [ ] 같은 검색어로 재검색 시 캐시된 데이터가 즉시 표시되는가?
+- [ ] 다른 검색어로 검색 시 새로운 API 호출이 발생하는가?
+- [ ] 검색 타입을 변경하고 검색 시 새로운 API 호출이 발생하는가?
+
+### 일반적인 오류와 해결 방법
+
+#### 1. 검색이 전혀 작동하지 않음
+**증상**: 검색어를 입력하고 검색해도 결과가 바뀌지 않음
+
+**원인**: React Query의 queryKey가 파라미터 변경을 감지하지 못함
+
+**해결**:
+```tsx
+// ❌ 잘못된 예시
+queryKey: [QUERY_KEY.LIST, request]
+
+// ✅ 올바른 예시
+queryKey: [
+  QUERY_KEY.LIST,
+  {
+    searchQuery: request.searchQuery,
+    searchType: request.searchType,
+    // 모든 파라미터를 명시적으로 나열
+  },
+]
+```
+
+#### 2. API에 검색 파라미터가 전달되지 않음
+**증상**: 네트워크 탭에서 확인 시 쿼리 스트링에 검색 파라미터가 없음
+
+**원인**: 서비스 함수에서 파라미터를 destructuring하지 않았거나 URLSearchParams에 추가하지 않음
+
+**해결**:
+```tsx
+// ❌ 잘못된 예시
+get[Domain]List: async (request: [Domain]ListRequest) => {
+  const { skip, take } = request // searchQuery, searchType 누락!
+  // ...
+}
+
+// ✅ 올바른 예시
+get[Domain]List: async (request: [Domain]ListRequest) => {
+  const { skip, take, searchQuery, searchType, sortBy, sortOrder } = request
+  const params = new URLSearchParams()
+  if (searchQuery) params.append('searchQuery', searchQuery)
+  if (searchType) params.append('searchType', searchType)
+  // ...
+}
+```
+
+#### 3. 검색 타입 선택 시 불필요한 API 호출 발생
+**증상**: 드롭다운에서 검색 타입을 변경할 때마다 API가 호출됨
+
+**원인**: `handleSelectionChange`에서 URL을 업데이트함
+
+**해결**:
+```tsx
+// ❌ 잘못된 예시
+const handleSelectionChange = (item: SearchHeaderMenuItemType) => {
+  setSelectedItem(item)
+  setSearchParams({ searchType: item.key }) // URL 업데이트 → API 호출!
+}
+
+// ✅ 올바른 예시
+const handleSelectionChange = (item: SearchHeaderMenuItemType) => {
+  setSelectedItem(item)
+  // 선택만 변경하고 API 호출은 하지 않음 (검색 시에만 호출)
+}
+```
+
+#### 4. 등록/수정 페이지에서 검색 시 사이드바가 업데이트되지 않음
+**증상**: 검색 후 리스트 페이지로 이동했지만 사이드바에서 등록/수정 메뉴가 여전히 선택됨
+
+**원인**: `selectedKeys` 계산 로직이 MainLayout에 있지 않음
+
+**해결**: MainLayout에서 `useMemo`로 `selectedKeys`를 계산하고 Sidebar에 props로 전달
+```tsx
+// MainLayout.tsx
+const selectedKeys = useMemo(() => {
+  const pathname = location.pathname
+  const normalizedPath = pathname.startsWith('/') ? pathname.slice(1) : pathname
+  // 매칭 로직
+  return [matchedKey]
+}, [location.pathname])
+
+<Sidebar selectedKeys={selectedKeys} />
+```
+
+#### 5. 검색 후 페이지가 리셋되지 않음
+**증상**: 3페이지에서 검색하면 결과는 바뀌지만 여전히 3페이지에 머물러 있음
+
+**원인**: 검색 파라미터 변경 시 `currentPage`를 리셋하지 않음
+
+**해결**:
+```tsx
+useEffect(() => {
+  setCurrentPage(1)
+}, [searchQuery, searchType])
+```
+
+### 참고 구현
+
+완전한 구현 예시는 다음 파일을 참고하세요:
+- Layout: `src/pages/admin/adminLayout/AdminLayout.tsx`
+- Page: `src/pages/admin/adminManagement/AdminManagementPage.tsx`
+- Service: `src/services/adminService.ts`
+- Hook: `src/hooks/queries/useGetAdminList.ts`
+
 ## 기타 규칙
 (추후 추가)

@@ -1,4 +1,5 @@
 import styles from './vidoe-info.module.scss'
+import { formatSubscriberCount } from '@/utils/youtubeUtils'
 
 type VidoeInfoProps = {
   channelThumbnail: string
@@ -21,23 +22,6 @@ const VidoeInfo = ({
     window.open(source, '_blank')
   }
 
-  // 구독자 수 안전하게 포맷팅
-  const formatSubscriberCount = (count: number) => {
-    const numCount = Number(count)
-    if (isNaN(numCount) || numCount <= 0) {
-      return '0'
-    }
-
-    // 1000명 이하는 숫자 그대로 표시
-    if (numCount < 1000) {
-      return numCount.toLocaleString()
-    }
-
-    // 1000명 초과는 만 단위로 소수점 1자리까지 표시
-    const manCount = numCount / 10000
-    return `${manCount.toFixed(1)}만`
-  }
-
   return (
     <section className={styles['container']}>
       <figure className={styles['channel-thumbnail']}>
@@ -49,7 +33,7 @@ const VidoeInfo = ({
             <h3 className={styles['channel-name']}>{channelName}</h3>
             <span>
               {handleName}
-              <span style={{ marginLeft: 18 }}>구독자:{formatSubscriberCount(subscriberCount)}명</span>
+              <span style={{ marginLeft: 18 }}>구독자:{formatSubscriberCount(subscriberCount)}</span>
             </span>
           </div>
           <button className={styles['channel-button']} onClick={handleChannelButton}>
