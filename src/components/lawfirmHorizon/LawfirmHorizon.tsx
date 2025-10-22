@@ -1,4 +1,7 @@
+import { useState } from 'react'
 import Tag from '@/components/tag/Tag'
+import { AlertModal } from '@/components/modal/Modal'
+import { formatPhoneNumber } from '@/utils/formatUtils'
 import styles from './lawfirm-horizon.module.scss'
 
 interface LawfirmHorizonProps {
@@ -31,6 +34,41 @@ const LawfirmHorizon = ({
   linkList,
   className,
 }: LawfirmHorizonProps) => {
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false)
+  const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false)
+
+  const handleBlogClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (blogUrl) {
+      window.open(blogUrl, '_blank')
+    }
+  }
+
+  const handleHomepageClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (homepageUrl) {
+      window.open(homepageUrl, '_blank')
+    }
+  }
+
+  const handleAddressClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsAddressModalOpen(true)
+  }
+
+  const handlePhoneClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsPhoneModalOpen(true)
+  }
+
+  const handleCloseAddressModal = () => {
+    setIsAddressModalOpen(false)
+  }
+
+  const handleClosePhoneModal = () => {
+    setIsPhoneModalOpen(false)
+  }
+
   return (
     <article className={`${styles['lawfirm-horizon']} ${className}`}>
       <figure>
@@ -42,25 +80,25 @@ const LawfirmHorizon = ({
             <h3 className={styles['lawfirm-name']}>{lawfirmName}</h3>
             <div className={styles['contact-info']}>
               {blogUrl && (
-                <button className={styles['contact-info-item']}>
+                <button className={styles['contact-info-item']} onClick={handleBlogClick}>
                   {/* <SvgIcon name={'blog'} size={24} /> */}
                   <span>블로그</span>
                 </button>
               )}
               {homepageUrl && (
-                <button className={styles['contact-info-item']}>
+                <button className={styles['contact-info-item']} onClick={handleHomepageClick}>
                   {/* <SvgIcon name={'homepage'} size={24} /> */}
                   <span>홈페이지</span>
                 </button>
               )}
               {address && (
-                <button className={styles['contact-info-item']}>
+                <button className={styles['contact-info-item']} onClick={handleAddressClick}>
                   {/* <SvgIcon name={'map'} size={24} /> */}
                   <span>위치</span>
                 </button>
               )}
               {phoneNumber && (
-                <button className={styles['contact-info-item']}>
+                <button className={styles['contact-info-item']} onClick={handlePhoneClick}>
                   {/* <SvgIcon name={'call'} size={24} /> */}
                   <span>연락처</span>
                 </button>
@@ -76,6 +114,26 @@ const LawfirmHorizon = ({
         <div className={styles['tag-list']}>
           {linkList && linkList.map(link => <Tag key={link.lawfirmDirectId} tag={link.lawfirmDirectName} />)}
         </div>
+      </div>
+
+      {/* 위치 모달 */}
+      <div onClick={(e) => e.stopPropagation()}>
+        <AlertModal
+          isOpen={isAddressModalOpen}
+          onClose={handleCloseAddressModal}
+          message={address || ''}
+          confirmText='확인'
+        />
+      </div>
+
+      {/* 연락처 모달 */}
+      <div onClick={(e) => e.stopPropagation()}>
+        <AlertModal
+          isOpen={isPhoneModalOpen}
+          onClose={handleClosePhoneModal}
+          message={formatPhoneNumber(phoneNumber)}
+          confirmText='확인'
+        />
       </div>
     </article>
   )
