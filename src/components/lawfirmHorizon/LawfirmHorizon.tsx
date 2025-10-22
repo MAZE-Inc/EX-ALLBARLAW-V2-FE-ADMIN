@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from 'react'
+import { useState, MouseEvent } from 'react'
 import Tag from '@/components/tag/Tag'
 import { AlertModal } from '@/components/modal/Modal'
 import { formatPhoneNumber } from '@/utils/formatUtils'
