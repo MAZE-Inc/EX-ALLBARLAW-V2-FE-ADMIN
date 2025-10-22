@@ -54,8 +54,8 @@ const LawyerEditCareer = forwardRef<LawyerEditCareerRef, LawyerEditCareerProps>(
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null)
   const [editingCategoryName, setEditingCategoryName] = useState('')
 
-  // 선택된 항목이 변경될 때 content 업데이트
-  const handleCareerClick = (record: CareerItem) => {
+  // 선택된 항목이 변경될 때 content 업데이트 (행 클릭용)
+  const handleRowClick = (record: CareerItem) => {
     setSelectedCareer(record)
     // Content를 줄 단위로 분리하여 배열로 설정
     const contentLines = record.lawyerCareerContent
@@ -64,10 +64,20 @@ const LawyerEditCareer = forwardRef<LawyerEditCareerRef, LawyerEditCareerProps>(
     setContentArray(contentLines)
   }
 
-  // 카테고리 이름 더블클릭 핸들러
-  const handleCategoryDoubleClick = (record: CareerItem) => {
-    setEditingCategoryId(record.id)
-    setEditingCategoryName(record.lawyerCareerCategoryName)
+  // 카테고리 이름 클릭 핸들러
+  const handleCategoryClick = (record: CareerItem) => {
+    // 이미 선택된 항목을 다시 클릭한 경우 → 편집 모드
+    if (selectedCareer?.id === record.id) {
+      setEditingCategoryId(record.id)
+      setEditingCategoryName(record.lawyerCareerCategoryName)
+    } else {
+      // 처음 클릭 → 선택만 (우측 패널 표시)
+      setSelectedCareer(record)
+      const contentLines = record.lawyerCareerContent
+        ? record.lawyerCareerContent.split('\n').filter(line => line.trim() !== '')
+        : []
+      setContentArray(contentLines)
+    }
   }
 
   // 카테고리 이름 인라인 편집 저장
@@ -82,7 +92,7 @@ const LawyerEditCareer = forwardRef<LawyerEditCareerRef, LawyerEditCareerProps>(
     if (selectedCareer?.id === id) {
       setSelectedCareer(prev => (prev ? { ...prev, lawyerCareerCategoryName: editingCategoryName } : null))
     }
-    message.success('카테고리 이름이 변경되었습니다.')
+    // message.success('카테고리 이름이 변경되었습니다.')
   }
 
   // 카테고리 이름 인라인 편집 취소
@@ -115,9 +125,12 @@ const LawyerEditCareer = forwardRef<LawyerEditCareerRef, LawyerEditCareerProps>(
             />
           ) : (
             <span
-              onDoubleClick={() => handleCategoryDoubleClick(record)}
+              onClick={e => {
+                e.stopPropagation()
+                handleCategoryClick(record)
+              }}
               style={{ cursor: 'pointer', width: '100%', display: 'block' }}
-              title='더블클릭하여 편집'
+              title='클릭하여 편집'
             >
               {text}
             </span>
@@ -212,8 +225,8 @@ const LawyerEditCareer = forwardRef<LawyerEditCareerRef, LawyerEditCareerProps>(
     }
     setCareerData(prev => [...prev, newItem])
     setSelectedCareer(newItem)
-    setContentArray([])
-    message.success('새 카테고리가 추가되었습니다.')
+    setContentArray(['']) // 1줄이 보이도록 빈 문자열 1개
+    // message.success('새 카테고리가 추가되었습니다.')
   }
 
   // 카테고리 삭제
@@ -239,13 +252,9 @@ const LawyerEditCareer = forwardRef<LawyerEditCareerRef, LawyerEditCareerProps>(
     if (selectedCareer) {
       const updatedContent = contentArray.join('\n')
       setCareerData(prev =>
-        prev.map(item =>
-          item.id === selectedCareer.id ? { ...item, lawyerCareerContent: updatedContent } : item
-        )
+        prev.map(item => (item.id === selectedCareer.id ? { ...item, lawyerCareerContent: updatedContent } : item))
       )
-      setSelectedCareer(prev =>
-        prev ? { ...prev, lawyerCareerContent: updatedContent } : null
-      )
+      setSelectedCareer(prev => (prev ? { ...prev, lawyerCareerContent: updatedContent } : null))
     }
   }, [contentArray])
 
@@ -274,7 +283,7 @@ const LawyerEditCareer = forwardRef<LawyerEditCareerRef, LawyerEditCareerProps>(
               dataSource={careerData}
               rowKey='id'
               onChangeOrder={handleChangeOrder}
-              onRowClick={handleCareerClick}
+              onRowClick={handleRowClick}
             />
           </div>
 

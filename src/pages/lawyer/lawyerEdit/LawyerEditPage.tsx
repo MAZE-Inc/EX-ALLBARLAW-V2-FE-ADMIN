@@ -42,8 +42,14 @@ const LawyerEditPage = () => {
       message.success('이력 사항이 저장되었습니다.')
       setIsSaving(false)
     },
-    () => {
-      message.error('이력 사항 저장 중 오류가 발생했습니다.')
+    error => {
+      const errorCode = error.status
+      if (errorCode === 422) {
+        message.error('이력 분류값 또는 이력 항목값이 입력되지 않았습니다. 모두 입력해주세요')
+      } else {
+        message.error('이력 사항 저장 중 오류가 발생했습니다.')
+      }
+
       setIsSaving(false)
     }
   )
@@ -55,8 +61,14 @@ const LawyerEditPage = () => {
       message.success('활동 사항이 저장되었습니다.')
       setIsSaving(false)
     },
-    () => {
-      message.error('활동 사항 저장 중 오류가 발생했습니다.')
+    error => {
+      const errorCode = error.status
+      if (errorCode === 422) {
+        message.error('활동 분류값 또는 활동 항목값이 입력되지 않았습니다. 모두 입력해주세요')
+      } else {
+        message.error('활동 사항 저장 중 오류가 발생했습니다.')
+      }
+
       setIsSaving(false)
     }
   )

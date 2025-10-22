@@ -61,7 +61,7 @@ export const useLawyerCareer = (lawyerId: number) => {
   })
 }
 
-export const useLawyerCareerUpdate = (lawyerId: number, onSuccess: () => void, onError: () => void) => {
+export const useLawyerCareerUpdate = (lawyerId: number, onSuccess: () => void, onError: (error: any) => void) => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: LawyerCareer[]) => lawyerService.updateLawyerCareer(lawyerId, data),
@@ -69,8 +69,8 @@ export const useLawyerCareerUpdate = (lawyerId: number, onSuccess: () => void, o
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LAWYER_CAREER, lawyerId] })
       onSuccess()
     },
-    onError: () => {
-      onError()
+    onError: error => {
+      onError(error)
     },
   })
 }
@@ -83,7 +83,7 @@ export const useLawyerActivity = (lawyerId: number) => {
   })
 }
 
-export const useLawyerActivityUpdate = (lawyerId: number, onSuccess: () => void, onError: () => void) => {
+export const useLawyerActivityUpdate = (lawyerId: number, onSuccess: () => void, onError: (error: any) => void) => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: LawyerActivity[]) => lawyerService.updateLawyerActivity(lawyerId, data),
@@ -91,8 +91,8 @@ export const useLawyerActivityUpdate = (lawyerId: number, onSuccess: () => void,
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.LAWYER_ACTIVITY, lawyerId] })
       onSuccess()
     },
-    onError: () => {
-      onError()
+    onError: error => {
+      onError(error)
     },
   })
 }

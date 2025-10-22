@@ -54,8 +54,8 @@ const LawyerEditActivity = forwardRef<LawyerEditActivityRef, LawyerEditActivityP
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null)
   const [editingCategoryName, setEditingCategoryName] = useState('')
 
-  // 선택된 항목이 변경될 때 content 업데이트
-  const handleActivityClick = (record: ActivityItem) => {
+  // 선택된 항목이 변경될 때 content 업데이트 (행 클릭용)
+  const handleRowClick = (record: ActivityItem) => {
     setSelectedActivity(record)
     // Content를 줄 단위로 분리하여 배열로 설정
     const contentLines = record.lawyerActivityContent
@@ -64,10 +64,20 @@ const LawyerEditActivity = forwardRef<LawyerEditActivityRef, LawyerEditActivityP
     setContentArray(contentLines)
   }
 
-  // 카테고리 이름 더블클릭 핸들러
-  const handleCategoryDoubleClick = (record: ActivityItem) => {
-    setEditingCategoryId(record.id)
-    setEditingCategoryName(record.lawyerActivityCategoryName)
+  // 카테고리 이름 클릭 핸들러
+  const handleCategoryClick = (record: ActivityItem) => {
+    // 이미 선택된 항목을 다시 클릭한 경우 → 편집 모드
+    if (selectedActivity?.id === record.id) {
+      setEditingCategoryId(record.id)
+      setEditingCategoryName(record.lawyerActivityCategoryName)
+    } else {
+      // 처음 클릭 → 선택만 (우측 패널 표시)
+      setSelectedActivity(record)
+      const contentLines = record.lawyerActivityContent
+        ? record.lawyerActivityContent.split('\n').filter(line => line.trim() !== '')
+        : []
+      setContentArray(contentLines)
+    }
   }
 
   // 카테고리 이름 인라인 편집 저장
@@ -82,7 +92,7 @@ const LawyerEditActivity = forwardRef<LawyerEditActivityRef, LawyerEditActivityP
     if (selectedActivity?.id === id) {
       setSelectedActivity(prev => (prev ? { ...prev, lawyerActivityCategoryName: editingCategoryName } : null))
     }
-    message.success('카테고리 이름이 변경되었습니다.')
+    // message.success('카테고리 이름이 변경되었습니다.')
   }
 
   // 카테고리 이름 인라인 편집 취소
@@ -115,9 +125,12 @@ const LawyerEditActivity = forwardRef<LawyerEditActivityRef, LawyerEditActivityP
             />
           ) : (
             <span
-              onDoubleClick={() => handleCategoryDoubleClick(record)}
+              onClick={e => {
+                e.stopPropagation()
+                handleCategoryClick(record)
+              }}
               style={{ cursor: 'pointer', width: '100%', display: 'block' }}
-              title='더블클릭하여 편집'
+              title='클릭하여 편집'
             >
               {text}
             </span>
@@ -212,8 +225,8 @@ const LawyerEditActivity = forwardRef<LawyerEditActivityRef, LawyerEditActivityP
     }
     setActivityData(prev => [...prev, newItem])
     setSelectedActivity(newItem)
-    setContentArray([])
-    message.success('새 카테고리가 추가되었습니다.')
+    setContentArray(['']) // 1줄이 보이도록 빈 문자열 1개
+    // message.success('새 카테고리가 추가되었습니다.')
   }
 
   // 카테고리 삭제
@@ -239,13 +252,9 @@ const LawyerEditActivity = forwardRef<LawyerEditActivityRef, LawyerEditActivityP
     if (selectedActivity) {
       const updatedContent = contentArray.join('\n')
       setActivityData(prev =>
-        prev.map(item =>
-          item.id === selectedActivity.id ? { ...item, lawyerActivityContent: updatedContent } : item
-        )
+        prev.map(item => (item.id === selectedActivity.id ? { ...item, lawyerActivityContent: updatedContent } : item))
       )
-      setSelectedActivity(prev =>
-        prev ? { ...prev, lawyerActivityContent: updatedContent } : null
-      )
+      setSelectedActivity(prev => (prev ? { ...prev, lawyerActivityContent: updatedContent } : null))
     }
   }, [contentArray])
 
@@ -274,7 +283,7 @@ const LawyerEditActivity = forwardRef<LawyerEditActivityRef, LawyerEditActivityP
               dataSource={activityData}
               rowKey='id'
               onChangeOrder={handleChangeOrder}
-              onRowClick={handleActivityClick}
+              onRowClick={handleRowClick}
             />
           </div>
 
