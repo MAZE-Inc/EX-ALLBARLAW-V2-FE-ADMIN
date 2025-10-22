@@ -11,6 +11,7 @@ import { useCategorySelection } from '@/hooks/useCategorySelection'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import styles from './VideoEditor.module.scss'
 import { YoutubeVideoInfoResponse } from '@/types/videoTypes'
+import { formatSubscriberCount } from '@/utils/youtubeUtils'
 
 const TagRender = (props: CustomTagProps) => (
   <Tag closable={props.closable} onClose={props.onClose} style={{ marginRight: 8, marginBottom: 4 }}>
@@ -232,7 +233,7 @@ const VideoEditor = () => {
             <div className={styles.channelInfoList}>
               <ul>
                 <li>채널 명: {formData.videoCaseChannelName}</li>
-                <li>구독자 수: {channelInfo.subscriberCount}명</li>
+                <li>구독자 수: {formatSubscriberCount(formData.videoCaseSubscriberCount)}</li>
                 <li>핸들 명: {formData.videoCaseHandleName}</li>
                 <li>채널 설명: {formData.videoCaseChannelDescription}</li>
               </ul>
