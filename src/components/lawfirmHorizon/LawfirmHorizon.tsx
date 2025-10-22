@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState, MouseEvent } from 'react'
 import Tag from '@/components/tag/Tag'
 import { AlertModal } from '@/components/modal/Modal'
 import { formatPhoneNumber } from '@/utils/formatUtils'
@@ -37,26 +37,26 @@ const LawfirmHorizon = ({
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false)
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false)
 
-  const handleBlogClick = (e: React.MouseEvent) => {
+  const handleBlogClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     if (blogUrl) {
       window.open(blogUrl, '_blank')
     }
   }
 
-  const handleHomepageClick = (e: React.MouseEvent) => {
+  const handleHomepageClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     if (homepageUrl) {
       window.open(homepageUrl, '_blank')
     }
   }
 
-  const handleAddressClick = (e: React.MouseEvent) => {
+  const handleAddressClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     setIsAddressModalOpen(true)
   }
 
-  const handlePhoneClick = (e: React.MouseEvent) => {
+  const handlePhoneClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     setIsPhoneModalOpen(true)
   }
@@ -117,7 +117,7 @@ const LawfirmHorizon = ({
       </div>
 
       {/* 위치 모달 */}
-      <div onClick={(e) => e.stopPropagation()}>
+      <div onClick={e => e.stopPropagation()}>
         <AlertModal
           isOpen={isAddressModalOpen}
           onClose={handleCloseAddressModal}
@@ -127,7 +127,7 @@ const LawfirmHorizon = ({
       </div>
 
       {/* 연락처 모달 */}
-      <div onClick={(e) => e.stopPropagation()}>
+      <div onClick={e => e.stopPropagation()}>
         <AlertModal
           isOpen={isPhoneModalOpen}
           onClose={handleClosePhoneModal}
