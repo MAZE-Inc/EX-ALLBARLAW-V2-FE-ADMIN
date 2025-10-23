@@ -4,6 +4,8 @@ import { useCreateLawfirm, useLawfirm, useUpdateLawfirm } from '@/hooks/queries/
 import { useLawfirmForm } from '@/hooks/useLawfirmForm'
 import { useLawfirmImages } from '@/hooks/useLawfirmImages'
 import { useLawfirmDirectLinks } from '@/hooks/useLawfirmDirectLinks'
+import { useAddressSearch } from '@/hooks/useAddressSearch'
+import AddressSearchModal from '@/components/addressSearchModal/AddressSearchModal'
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Input, Radio, RadioChangeEvent, Select, Spin, message, Upload } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
@@ -80,6 +82,8 @@ const AdLawfirmEditPage = () => {
   const [isMemberType, setIsMemberType] = useState<'member' | 'nonMember'>('member')
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>()
   const [selectedSubCategory, setSelectedSubCategory] = useState<number | undefined>()
+
+  const { isOpen, openAddressSearch, closeAddressSearch } = useAddressSearch()
 
   const getMainCategoryIdBySubcategoryId = (subcategoryId: number) => {
     return categories?.find(cat => cat.subcategories.some(sub => sub.subcategoryId === subcategoryId))?.categoryId
@@ -195,6 +199,10 @@ const AdLawfirmEditPage = () => {
         lawfirmDirects: prev.lawfirmDirects.map((link, i) => (i === index ? { ...link, [field]: value } : link)),
       }))
     }
+  }
+
+  const handleAddressComplete = (data: { address: string; zonecode: string }) => {
+    handleInputChange('lawfirmAddress', data.address)
   }
 
   const handleSubmit = async () => {
@@ -426,7 +434,9 @@ const AdLawfirmEditPage = () => {
               <label className={styles.label}>로펌 주소</label>
             </div>
             <div className={styles.inputCol}>
-              <Button icon={<PlusOutlined />}>주소검색하기</Button>
+              <Button icon={<PlusOutlined />} onClick={openAddressSearch}>
+                주소검색하기
+              </Button>
               <Input
                 placeholder='상세주소를 모두 입력해 주세요 (선택사항)'
                 value={formData.lawfirmAddress || ''}
@@ -697,6 +707,8 @@ const AdLawfirmEditPage = () => {
           </div>
         </div>
       </section>
+
+      <AddressSearchModal isOpen={isOpen} onClose={closeAddressSearch} onComplete={handleAddressComplete} />
     </div>
   )
 }
