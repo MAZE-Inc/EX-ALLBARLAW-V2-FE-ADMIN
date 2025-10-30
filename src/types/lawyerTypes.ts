@@ -203,6 +203,7 @@ export type LawyerInfoListResponse = {
       lawyerLawfirmContact: string
       lawyerBarExamNumber: number
       lawyerApprovalStatus: string
+      lawyerWithdrawalStatus: null | 'PENDING'
       lawyerLawSchoolDiplomaUrl: string | null
       lawyerCertificateUrl: string | null
       lawyerBarExamPassDate: string | null

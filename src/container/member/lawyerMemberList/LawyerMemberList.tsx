@@ -14,6 +14,7 @@ export interface LawyerMember {
   lawyerLawfirmContact: string
   lawyerBarExamNumber: number
   lawyerApprovalStatus: string
+  lawyerWithdrawalStatus: null | 'PENDING'
   lawyerLawSchoolDiplomaUrl: string | null
   lawyerCertificateUrl: string | null
   lawyerBarExamPassDate: string | null
@@ -54,6 +55,12 @@ const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort, 
   const handleModalSubmit = (submittedData: any) => {
     console.log('승인정보 저장:', submittedData)
     // 모달은 자체적으로 API 호출 처리
+  }
+
+  const handleWithdrawal = (lawyer: LawyerMember, e: React.MouseEvent) => {
+    e.stopPropagation() // 이벤트 버블링 방지
+    console.log('탈퇴처리 클릭:', lawyer)
+    // TODO: 추후 탈퇴 처리 로직 추가
   }
 
   const columns: TableProps<LawyerMember>['columns'] = [
@@ -120,6 +127,18 @@ const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort, 
       title: '승인여부',
       dataIndex: 'lawyerApprovalStatus',
       render: (status: string, record: LawyerMember) => {
+        // 탈퇴 대기 상태인 경우
+        if (record.lawyerWithdrawalStatus === 'PENDING') {
+          return (
+            <div className={styles['approval-cell']}>
+              <span>대기</span>
+              <Button size='small' onClick={e => handleWithdrawal(record, e)}>
+                탈퇴처리
+              </Button>
+            </div>
+          )
+        }
+
         // 승인 상태를 한글로 변환하고 pending일 때 진행 상황 표시
         const getStatusText = (status: string, record: LawyerMember) => {
           switch (status?.toLowerCase()) {
