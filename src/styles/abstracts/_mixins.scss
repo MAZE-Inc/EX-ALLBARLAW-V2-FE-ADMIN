@@ -38,7 +38,8 @@
     display: -webkit-box;
     -webkit-line-clamp: $lines;
     -webkit-box-orient: vertical;
-    word-wrap: break-word;
+    word-break: keep-all;
+    overflow-wrap: break-all;
   }
 }
 
