@@ -5,6 +5,7 @@ import { useFileUpload } from '@/hooks/useFileUpload'
 import styles from './lawyerEditBasicInfo.module.scss'
 import { useLawyerBasicInfo } from '@/hooks/queries/useLawyer'
 import { useCategory } from '@/hooks/queries/useCategory'
+import TagInput from '@/components/tag/TagInput'
 
 const { TextArea } = Input
 
@@ -31,6 +32,7 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
   const { data: lawyerBasicInfo } = useLawyerBasicInfo(Number(lawyerId))
   const { data: categoryList } = useCategory()
 
+  console.log(lawyerBasicInfo)
   // 폼 데이터 상태
   const [formData, setFormData] = useState({
     greeting: '',
@@ -40,7 +42,7 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
     birthDay: undefined as number | undefined,
     gender: '',
     phoneNumber: '',
-    tags: '',
+    tags: [] as string[],
     lawfirmName: '',
     address: '',
     addressDetail: '',
@@ -86,16 +88,11 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
       newErrors.phoneNumber = '올바른 휴대폰 번호 형식이 아닙니다.'
     }
 
-    // 태그 검사 (최소 2개, 최대 4개)
-    const tagArray = formData.tags
-      .split(',')
-      .map(tag => tag.trim())
-      .filter(tag => tag.length > 0)
-
-    if (tagArray.length < 2) {
+    // 태그 검사 (최소 2개, 최대 20개)
+    if (formData.tags.length < 2) {
       newErrors.tags = '최소 2개 이상의 태그를 입력해주세요.'
-    } else if (tagArray.length > 4) {
-      newErrors.tags = '태그는 최대 4개까지 입력 가능합니다.'
+    } else if (formData.tags.length > 20) {
+      newErrors.tags = '태그는 최대 20개까지 입력 가능합니다.'
     }
 
     if (!formData.lawfirmName.trim()) {
@@ -149,7 +146,7 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
         birthDay: lawyerBasicInfo.lawyerBirthDay || undefined,
         gender: lawyerBasicInfo.lawyerGender === 0 ? 'M' : 'F',
         phoneNumber: lawyerBasicInfo.lawyerPhone || '',
-        tags: lawyerBasicInfo.lawyerTags?.map(tag => (typeof tag === 'string' ? tag : tag.tagName)).join(', ') || '',
+        tags: lawyerBasicInfo.lawyerTags?.map((tag: any) => (typeof tag === 'string' ? tag : tag.tagName)) || [],
         lawfirmName: lawyerBasicInfo.lawyerLawfirmName || '',
         address: lawyerBasicInfo.lawyerLawfirmAddress || '',
         addressDetail: lawyerBasicInfo.lawyerLawfirmAddressDetail || '',
@@ -219,10 +216,7 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
   const getFormData = () => {
     return {
       ...formData,
-      tags: formData.tags
-        .split(',')
-        .map(tag => tag.trim())
-        .filter(tag => tag.length > 0),
+      tags: formData.tags,
     }
   }
 
@@ -486,26 +480,29 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
           </div>
         </div>
 
-        {/* 검찰 태그 */}
+        {/* 관련 태그 */}
         <div className={styles.formRow}>
           <div className={styles.labelCol}>
             <label className={styles.label}>
               관련 태그
               <br />
-              (최소2개 / 최대 4개)
+              (최소2개 / 최대20개)
             </label>
           </div>
           <div className={styles.inputCol}>
             <div style={{ width: '100%' }}>
-              <Input
-                placeholder='자신있는 분야, 관련 키워드를 입력해주세요. 검색에 노출됩니다 (콤마로 구분)'
-                value={formData.tags}
-                onChange={e => handleInputChange('tags', e.target.value)}
+              <TagInput
+                tags={formData.tags}
+                onChange={tags => handleInputChange('tags', tags)}
+                placeholder='자신있는 분야, 관련 키워드를 입력 후 엔터 또는 쉼표를 눌러주세요'
+                maxTags={20}
+                disabled={false}
+                isLoading={false}
                 status={errors.tags ? 'error' : undefined}
               />
               {errors.tags && <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.tags}</div>}
               <div className={styles.tagList} style={{ marginTop: 8 }}>
-                <span className={styles.link}>2개이상의 태그를 입력해주세요. 콤마를 이용하여 구분할 수 있습니다.</span>
+                <span className={styles.link}>2개이상의 태그를 입력해주세요. 검색에 노출됩니다.</span>
               </div>
             </div>
           </div>
