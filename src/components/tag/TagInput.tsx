@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react'
-import { Input } from 'antd'
 import styles from './tagInput.module.scss'
 
 type TagInputProps = {
@@ -23,7 +22,7 @@ const TagInput: React.FC<TagInputProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
-  const inputRef = useRef<any>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleAddTag = (value: string) => {
     const trimmedValue = value.trim()
@@ -82,19 +81,20 @@ const TagInput: React.FC<TagInputProps> = ({
     return `${placeholder} (${tags.length}/${maxTags})`
   }
 
+  const wrapperClassName = `${styles['tags-input-wrapper']} ${
+    errorMessage || status === 'error' ? styles['error'] : ''
+  } ${disabled ? styles['disabled'] : ''}`
+
   return (
     <div className={styles['tags-container']}>
-      <div
-        className={`${styles['tags-input-wrapper']} ${errorMessage || status === 'error' ? styles['error'] : ''} ${disabled ? styles['disabled'] : ''}`}
-        onClick={() => inputRef.current?.focus()}
-      >
+      <div className={wrapperClassName} onClick={() => inputRef.current?.focus()}>
         {tags.map((tag, index) => (
           <span key={index} className={styles['tag-item']}>
             #{tag}
             <button
               type='button'
               className={styles['tag-remove']}
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation()
                 handleRemoveTag(index)
               }}
