@@ -222,6 +222,7 @@ export type LawyerRegisterModifyRequest = {
   barExamPassYear?: number
   barExamPassMonth?: number
   barExamPassDay?: number
+  lawyerWithdrawalStatus?: null | 'PENDING'
 }
 
 export type LawyerRegisterModifyResponse = {

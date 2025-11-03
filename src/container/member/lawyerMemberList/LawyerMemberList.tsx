@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button, Table, TableProps } from 'antd'
 import styles from './lawyerMemberList.module.scss'
 import LawyerApprovalModal from '@/components/lawyerApprovalModal/LawyerApprovalModal'
+import LawyerWithdrawalModal from '@/components/lawyerWithdrawalModal/LawyerWithdrawalModal'
 
 // LawyerInfoListResponse의 lawyerList 항목 타입
 export interface LawyerMember {
@@ -33,6 +34,7 @@ interface LawyerMemberListProps {
 const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort, onSelectionChange }: LawyerMemberListProps) => {
   const [selectedRows, setSelectedRows] = useState<LawyerMember[]>([])
   const [modalVisible, setModalVisible] = useState(false)
+  const [withdrawalModalVisible, setWithdrawalModalVisible] = useState(false)
   const [selectedLawyer, setSelectedLawyer] = useState<LawyerMember | null>(null)
 
   // Convert API sort type to Ant Design sort type
@@ -59,8 +61,13 @@ const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort, 
 
   const handleWithdrawal = (lawyer: LawyerMember, e: React.MouseEvent) => {
     e.stopPropagation() // 이벤트 버블링 방지
-    console.log('탈퇴처리 클릭:', lawyer)
-    // TODO: 추후 탈퇴 처리 로직 추가
+    setSelectedLawyer(lawyer)
+    setWithdrawalModalVisible(true)
+  }
+
+  const handleWithdrawalModalClose = () => {
+    setWithdrawalModalVisible(false)
+    setSelectedLawyer(null)
   }
 
   const columns: TableProps<LawyerMember>['columns'] = [
@@ -216,6 +223,12 @@ const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort, 
           passingDate: selectedLawyer?.lawyerBarExamPassDate || undefined,
           approvalStatus: selectedLawyer?.lawyerApprovalStatus?.toLowerCase() === 'approved' ? 'approved' : 'pending',
         }}
+      />
+      <LawyerWithdrawalModal
+        open={withdrawalModalVisible}
+        onCancel={handleWithdrawalModalClose}
+        lawyerId={selectedLawyer?.lawyerId || null}
+        lawyerName={selectedLawyer?.lawyerName || ''}
       />
     </div>
   )
