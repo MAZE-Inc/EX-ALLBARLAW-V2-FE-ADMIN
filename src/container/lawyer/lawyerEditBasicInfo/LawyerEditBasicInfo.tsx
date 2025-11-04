@@ -6,6 +6,7 @@ import styles from './lawyerEditBasicInfo.module.scss'
 import { useLawyerBasicInfo } from '@/hooks/queries/useLawyer'
 import { useCategory } from '@/hooks/queries/useCategory'
 import TagInput from '@/components/tag/TagInput'
+import { useAddressSearch, type AddressData } from '@/hooks/useAddressSearch'
 
 const { TextArea } = Input
 
@@ -28,6 +29,7 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
   const [profileImages, setProfileImages] = useState<(ProfileImage | null)[]>([null, null, null, null, null])
   const { uploadFile } = useFileUpload()
   const [isDataInitialized, setIsDataInitialized] = useState(false)
+  const { open: openAddressSearch } = useAddressSearch()
 
   const { data: lawyerBasicInfo } = useLawyerBasicInfo(Number(lawyerId))
   const { data: categoryList } = useCategory()
@@ -272,6 +274,13 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
         return newErrors
       })
     }
+  }
+
+  // 주소 검색 핸들러
+  const handleAddressSearch = () => {
+    openAddressSearch((data: AddressData) => {
+      handleInputChange('address', data.address)
+    })
   }
 
   // ref를 통해 부모 컴포넌트에서 호출 가능한 함수들 노출
@@ -536,7 +545,7 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
           <div className={styles.inputCol}>
             <div style={{ width: '100%' }}>
               <div className={styles.flexRow}>
-                <Button>주소 검색하기</Button>
+                <Button onClick={handleAddressSearch}>주소 검색하기</Button>
                 <Input
                   placeholder='신주소 입력'
                   style={{ flex: 1, marginLeft: 8 }}

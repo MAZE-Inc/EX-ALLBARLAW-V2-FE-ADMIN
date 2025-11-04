@@ -4,8 +4,7 @@ import { useCreateLawfirm, useLawfirm, useUpdateLawfirm } from '@/hooks/queries/
 import { useLawfirmForm } from '@/hooks/useLawfirmForm'
 import { useLawfirmImages } from '@/hooks/useLawfirmImages'
 import { useLawfirmDirectLinks } from '@/hooks/useLawfirmDirectLinks'
-import { useAddressSearch } from '@/hooks/useAddressSearch'
-import AddressSearchModal from '@/components/addressSearchModal/AddressSearchModal'
+import { useAddressSearch, type AddressData } from '@/hooks/useAddressSearch'
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Input, Radio, RadioChangeEvent, Select, Spin, message, Upload } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
@@ -83,7 +82,7 @@ const AdLawfirmEditPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>()
   const [selectedSubCategory, setSelectedSubCategory] = useState<number | undefined>()
 
-  const { isOpen, openAddressSearch, closeAddressSearch } = useAddressSearch()
+  const { open: openAddressSearch } = useAddressSearch()
 
   const getMainCategoryIdBySubcategoryId = (subcategoryId: number) => {
     return categories?.find(cat => cat.subcategories.some(sub => sub.subcategoryId === subcategoryId))?.categoryId
@@ -201,8 +200,10 @@ const AdLawfirmEditPage = () => {
     }
   }
 
-  const handleAddressComplete = (data: { address: string; zonecode: string }) => {
-    handleInputChange('lawfirmAddress', data.address)
+  const handleAddressSearch = () => {
+    openAddressSearch((data: AddressData) => {
+      handleInputChange('lawfirmAddress', data.address)
+    })
   }
 
   const handleSubmit = async () => {
@@ -434,7 +435,7 @@ const AdLawfirmEditPage = () => {
               <label className={styles.label}>로펌 주소</label>
             </div>
             <div className={styles.inputCol}>
-              <Button icon={<PlusOutlined />} onClick={openAddressSearch}>
+              <Button icon={<PlusOutlined />} onClick={handleAddressSearch}>
                 주소검색하기
               </Button>
               <Input
@@ -707,8 +708,6 @@ const AdLawfirmEditPage = () => {
           </div>
         </div>
       </section>
-
-      <AddressSearchModal isOpen={isOpen} onClose={closeAddressSearch} onComplete={handleAddressComplete} />
     </div>
   )
 }
