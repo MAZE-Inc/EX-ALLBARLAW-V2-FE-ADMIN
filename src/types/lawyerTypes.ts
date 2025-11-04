@@ -273,11 +273,13 @@ export interface LawyerBasicInfo {
   lawyerBirthDay: number
   lawyerGender: number
   lawyerPhone: string
+  lawyerInstagramUrl?: string | null
+  lawyerYoutubeUrl?: string | null
+  lawyerBlogUrl?: string | null
   lawyerTags: {
     tagId: number
     tagName: string
   }[]
-
   lawyerLawfirmName: string
   lawyerLawfirmAddress: string
   lawyerLawfirmAddressDetail: string

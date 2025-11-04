@@ -45,6 +45,9 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
     gender: '',
     phoneNumber: '',
     tags: [] as string[],
+    blogUrl: '',
+    youtubeUrl: '',
+    instagramUrl: '',
     lawfirmName: '',
     address: '',
     addressDetail: '',
@@ -149,6 +152,9 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
         gender: lawyerBasicInfo.lawyerGender === 0 ? 'M' : 'F',
         phoneNumber: lawyerBasicInfo.lawyerPhone || '',
         tags: lawyerBasicInfo.lawyerTags?.map((tag: any) => (typeof tag === 'string' ? tag : tag.tagName)) || [],
+        blogUrl: lawyerBasicInfo.lawyerBlogUrl || '',
+        youtubeUrl: lawyerBasicInfo.lawyerYoutubeUrl || '',
+        instagramUrl: lawyerBasicInfo.lawyerInstagramUrl || '',
         lawfirmName: lawyerBasicInfo.lawyerLawfirmName || '',
         address: lawyerBasicInfo.lawyerLawfirmAddress || '',
         addressDetail: lawyerBasicInfo.lawyerLawfirmAddressDetail || '',
@@ -513,6 +519,66 @@ const LawyerEditBasicInfo = forwardRef<LawyerEditBasicInfoRef, { lawyerId: strin
               <div className={styles.tagList} style={{ marginTop: 8 }}>
                 <span className={styles.link}>2개이상의 태그를 입력해주세요. 검색에 노출됩니다.</span>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 네이버 블로그 주소 */}
+        <div className={styles.formRow}>
+          <div className={styles.labelCol}>
+            <label className={styles.label}>네이버 블로그 주소</label>
+          </div>
+          <div className={styles.inputCol}>
+            <div style={{ width: '100%' }}>
+              <Input
+                placeholder='네이버 블로그 URL을 입력해주세요'
+                value={formData.blogUrl}
+                onChange={e => handleInputChange('blogUrl', e.target.value)}
+                status={errors.blogUrl ? 'error' : undefined}
+              />
+              {errors.blogUrl && (
+                <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.blogUrl}</div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* 유튜브 채널 */}
+        <div className={styles.formRow}>
+          <div className={styles.labelCol}>
+            <label className={styles.label}>유튜브 채널</label>
+          </div>
+          <div className={styles.inputCol}>
+            <div style={{ width: '100%' }}>
+              <Input
+                placeholder='유튜브 채널 URL을 입력해주세요'
+                value={formData.youtubeUrl}
+                onChange={e => handleInputChange('youtubeUrl', e.target.value)}
+                status={errors.youtubeUrl ? 'error' : undefined}
+              />
+              {errors.youtubeUrl && (
+                <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.youtubeUrl}</div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* 인스타그램 주소 */}
+        <div className={styles.formRow}>
+          <div className={styles.labelCol}>
+            <label className={styles.label}>인스타그램 주소</label>
+          </div>
+          <div className={styles.inputCol}>
+            <div style={{ width: '100%' }}>
+              <Input
+                placeholder='인스타그램 URL을 입력해주세요'
+                value={formData.instagramUrl}
+                onChange={e => handleInputChange('instagramUrl', e.target.value)}
+                status={errors.instagramUrl ? 'error' : undefined}
+              />
+              {errors.instagramUrl && (
+                <div style={{ color: '#ff4d4f', fontSize: '14px', marginTop: '4px' }}>{errors.instagramUrl}</div>
+              )}
             </div>
           </div>
         </div>
