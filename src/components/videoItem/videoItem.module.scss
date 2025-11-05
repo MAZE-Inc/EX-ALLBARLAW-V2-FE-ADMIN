@@ -11,7 +11,6 @@
   &.small {
     .video-horizon-figure {
       width: 13rem;
-      height: 7.1875rem;
     }
     .video-content-section {
       h1 {
@@ -32,7 +31,6 @@
     @media (max-width: $breakpoint-desktop) {
       .video-horizon-figure {
         width: 100%;
-        height: 10.5rem;
       }
       .video-content-section h1 {
         font-size: 0.9375rem;
@@ -45,7 +43,6 @@
     gap: 0.3rem;
     .video-horizon-figure {
       width: 10rem;
-      height: 5.625rem;
     }
     .video-content-section {
       h1 {
@@ -66,7 +63,7 @@
     }
     @media (max-width: $breakpoint-desktop) {
       .video-horizon-figure {
-        height: 8rem;
+        width: 100%;
       }
       .video-content-section {
         h1 {
@@ -84,7 +81,6 @@
     gap: 0.75rem;
     .video-horizon-figure {
       width: 16rem;
-      height: 9rem;
     }
     .video-content-section {
       h1 {
@@ -104,7 +100,7 @@
     }
     @media (max-width: $breakpoint-desktop) {
       .video-horizon-figure {
-        height: 12rem;
+        width: 100%;
       }
       .video-content-section h1 {
         font-size: 1rem;
@@ -116,11 +112,23 @@
 
 .video-horizon-figure {
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+
+  &::before {
+    content: '';
+    display: block;
+    padding-top: 56.25%; // 16:9 비율 (9/16 * 100)
+  }
+
   img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 0.5rem;
   }
 }
 
