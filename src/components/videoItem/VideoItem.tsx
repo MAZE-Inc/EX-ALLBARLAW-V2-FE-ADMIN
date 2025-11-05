@@ -37,8 +37,8 @@ const VideoItem = ({
       <section className={styles['video-content-section']}>
         <header className={styles['video-content-section-header']}>
           <h1>{title}</h1>
+          <p>{summaryContents}</p>
         </header>
-        <p>{summaryContents}</p>
         <div className={styles['video-content-section-footer']}>
           <span className={styles.lawyer}>
             {lawyerName} 변호사 [{lawfirmName}]
