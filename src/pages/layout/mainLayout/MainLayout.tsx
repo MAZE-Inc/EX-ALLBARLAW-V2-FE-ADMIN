@@ -22,6 +22,9 @@ const MainLayout = () => {
     // pathname에서 앞의 / 제거 (normalize)
     const normalizedPath = pathname.startsWith('/') ? pathname.slice(1) : pathname
 
+    console.log('🔍 Current pathname:', pathname)
+    console.log('🔍 Normalized path:', normalizedPath)
+
     // 모든 메뉴 아이템의 key를 추출
     const allKeys: string[] = []
     menuItemsWithPermissions.forEach((item: any) => {
@@ -34,8 +37,11 @@ const MainLayout = () => {
       }
     })
 
+    console.log('🔍 All menu keys:', allKeys)
+
     // 1. 정확히 일치하는 key 찾기
     if (allKeys.includes(normalizedPath)) {
+      console.log('🔍 Exact match found:', normalizedPath)
       return [normalizedPath]
     }
 
@@ -45,9 +51,11 @@ const MainLayout = () => {
     if (matchingKeys.length > 0) {
       // 가장 긴 key 선택 (더 구체적인 경로)
       const longestKey = matchingKeys.reduce((a, b) => (a.length > b.length ? a : b))
+      console.log('🔍 Partial match found:', longestKey)
       return [longestKey]
     }
 
+    console.log('🔍 No match found, returning empty array')
     return []
   }, [location.pathname])
 

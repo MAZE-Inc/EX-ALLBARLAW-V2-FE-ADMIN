@@ -43,7 +43,11 @@ const SidebarHeader = () => {
 const Sidebar: React.FC<SidebarProps> = ({ collapsed = false, isTablet = false, subMenuIds = [], selectedKeys = [] }) => {
   const navigate = useNavigate()
 
+  // 디버그: selectedKeys 확인
+  console.log('🔍 Sidebar selectedKeys:', selectedKeys)
+
   const onClick: MenuProps['onClick'] = e => {
+    console.log('🔍 Menu clicked:', e.key)
     navigate(e.key)
   }
 
@@ -58,9 +62,14 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed = false, isTablet = false, 
               return subMenuIds.includes(child.permissionId)
             })
             .map((child: any) => {
-              // permissionId를 제거하고 나머지 속성만 반환
+              // permissionId를 제거하고 key의 앞 슬래시도 제거
               const { permissionId, ...rest } = child
-              return rest
+              // key에서 앞의 / 제거
+              const normalizedKey = rest.key.startsWith('/') ? rest.key.slice(1) : rest.key
+              return {
+                ...rest,
+                key: normalizedKey
+              }
             })
 
           if (filteredChildren.length > 0) {
@@ -78,6 +87,9 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed = false, isTablet = false, 
 
   const filteredMenuItems = filterMenuItems(menuItemsWithPermissions)
   const alwaysOpenKeys = ['admin', 'category', 'member', 'lawyer', 'content', 'chat', 'board', 'ad', 'statistics']
+
+  // 디버그: 필터링된 메뉴 아이템 확인
+  console.log('🔍 Filtered menu items:', filteredMenuItems)
 
   return (
     <div
