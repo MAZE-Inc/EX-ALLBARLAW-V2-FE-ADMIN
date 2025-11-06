@@ -246,3 +246,11 @@ export const useUpdateLawyerRegister = ({
     },
   })
 }
+
+export const useLawyerWithdrawalInfo = (withdrawalId: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.LAWYER_WITHDRAWAL_INFO, withdrawalId],
+    queryFn: () => lawyerMemberService.LawyerWithdrawalInfo(withdrawalId),
+    enabled: withdrawalId !== undefined,
+  })
+}

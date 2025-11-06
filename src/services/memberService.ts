@@ -156,4 +156,10 @@ export const lawyerMemberService = {
     const response = await instance.patch<LawyerRegisterModifyResponse>(`/lawyers/${lawyerId}`, request)
     return response.data
   },
+  LawyerWithdrawalInfo: async (withdrawalId: number) => {
+    const response = await instance.get<import('@/types/lawyerTypes').LawyerWithdrawalInfoResponse>(
+      `/lawyers/withdrawals/${withdrawalId}`
+    )
+    return response.data
+  },
 }

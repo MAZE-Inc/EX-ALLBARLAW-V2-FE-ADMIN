@@ -204,6 +204,7 @@ export type LawyerInfoListResponse = {
       lawyerBarExamNumber: number
       lawyerApprovalStatus: string
       lawyerWithdrawalStatus: null | 'PENDING'
+      lawyerWithdrawalStatusId: number | null
       lawyerLawSchoolDiplomaUrl: string | null
       lawyerCertificateUrl: string | null
       lawyerBarExamPassDate: string | null
@@ -332,4 +333,17 @@ export type AdLawyerUpdateRequest = {
   lawyerAdLawyerId: number
   lawyerAdStartedAt: string | Date
   lawyerAdFinishedAt: string | Date
+}
+
+export type LawyerWithdrawalInfoResponse = {
+  withdrawalId: number
+  lawyerAccount: string
+  withdrawalReason: string | null
+  withdrawalStatus: string
+  withdrawalRequestedAt: string
+  withdrawalApprovedAt: string | null
+  approvedByAdminId: number | null
+  approvedByAdminName: string | null
+  withdrawalRejectedAt: string | null
+  withdrawalRejectedReason: string | null
 }

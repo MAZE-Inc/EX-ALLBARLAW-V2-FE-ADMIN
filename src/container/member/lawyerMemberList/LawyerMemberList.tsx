@@ -16,6 +16,7 @@ export interface LawyerMember {
   lawyerBarExamNumber: number
   lawyerApprovalStatus: string
   lawyerWithdrawalStatus: null | 'PENDING'
+  lawyerWithdrawalStatusId: number | null
   lawyerLawSchoolDiplomaUrl: string | null
   lawyerCertificateUrl: string | null
   lawyerBarExamPassDate: string | null
@@ -31,7 +32,14 @@ interface LawyerMemberListProps {
   onSelectionChange?: (selectedRows: LawyerMember[]) => void
 }
 
-const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort, onSelectionChange }: LawyerMemberListProps) => {
+const LawyerMemberList = ({
+  data,
+  loading,
+  onSort,
+  currentOrderBy,
+  currentSort,
+  onSelectionChange,
+}: LawyerMemberListProps) => {
   const [selectedRows, setSelectedRows] = useState<LawyerMember[]>([])
   const [modalVisible, setModalVisible] = useState(false)
   const [withdrawalModalVisible, setWithdrawalModalVisible] = useState(false)
@@ -188,9 +196,7 @@ const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort, 
     },
     onSelect: (record: LawyerMember, selected: boolean) => {
       setSelectedRows(prev => {
-        const newSelectedRows = selected 
-          ? [...prev, record]
-          : prev.filter(row => row.lawyerId !== record.lawyerId)
+        const newSelectedRows = selected ? [...prev, record] : prev.filter(row => row.lawyerId !== record.lawyerId)
         onSelectionChange?.(newSelectedRows)
         return newSelectedRows
       })
@@ -224,12 +230,14 @@ const LawyerMemberList = ({ data, loading, onSort, currentOrderBy, currentSort, 
           approvalStatus: selectedLawyer?.lawyerApprovalStatus?.toLowerCase() === 'approved' ? 'approved' : 'pending',
         }}
       />
-      <LawyerWithdrawalModal
-        open={withdrawalModalVisible}
-        onCancel={handleWithdrawalModalClose}
-        lawyerId={selectedLawyer?.lawyerId || null}
-        lawyerName={selectedLawyer?.lawyerName || ''}
-      />
+      {withdrawalModalVisible && (
+        <LawyerWithdrawalModal
+          open={withdrawalModalVisible}
+          onCancel={handleWithdrawalModalClose}
+          withdrawalId={selectedLawyer?.lawyerWithdrawalStatusId || null}
+          lawyerName={selectedLawyer?.lawyerName || ''}
+        />
+      )}
     </div>
   )
 }

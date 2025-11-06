@@ -13,6 +13,7 @@ export const QUERY_KEY = {
   MEMBER_KEEP_COUNT: 'memberKeepCount',
   LAWYER_MEMBER_LIST: 'lawyerMemberList',
   LAWYER_INFO_LIST: 'lawyerInfoList',
+  LAWYER_WITHDRAWAL_INFO: 'lawyerWithdrawalInfo',
 
   // 공지사항
   ADMIN_LIST: 'adminList',
