@@ -32,7 +32,7 @@ const SidebarHeader = () => {
         <button className={styles['logout-btn']} onClick={handleLogout}>
           [로그아웃]
         </button>
-        <a href='https://v2.allbarlaw.com/' target='_blank' rel='noopener noreferrer' className={styles['home-link']}>
+        <a href='https://allbarlaw.com/' target='_blank' rel='noopener noreferrer' className={styles['home-link']}>
           홈페이지 바로가기
         </a>
       </div>
@@ -40,7 +40,12 @@ const SidebarHeader = () => {
   )
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ collapsed = false, isTablet = false, subMenuIds = [], selectedKeys = [] }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  collapsed = false,
+  isTablet = false,
+  subMenuIds = [],
+  selectedKeys = [],
+}) => {
   const navigate = useNavigate()
 
   // 디버그: selectedKeys 확인
@@ -68,7 +73,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed = false, isTablet = false, 
               const normalizedKey = rest.key.startsWith('/') ? rest.key.slice(1) : rest.key
               return {
                 ...rest,
-                key: normalizedKey
+                key: normalizedKey,
               }
             })
 
