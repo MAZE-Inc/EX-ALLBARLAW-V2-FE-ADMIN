@@ -1,0 +1,77 @@
+name: CI
+on:
+  # Triggers the workflow on push events but only for the "main" branch
+  push:
+    branches: ['dev']
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 소스를 가져옵니다.
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      # 실행 속도를 빠르게 하기 위해 설치된 Node 모듈을 캐시하도록 설정합니다.
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      # 모듈을 설치합니다.
+      - name: Install Dependencies
+        run: yarn install
+      # 결과물을 만듭니다.
+      - name: Build
+        run: CI= yarn build
+
+      # 빌드 결과 확인
+      - name: Check build output
+        run: |
+          echo "Current directory contents:"
+          ls -la
+          if [ -d "build" ]; then
+            echo "Build directory exists"
+            ls -la build/
+          elif [ -d "dist" ]; then
+            echo "Dist directory exists"
+            ls -la dist/
+          else
+            echo "Neither build nor dist directory found"
+            echo "Looking for common build output directories:"
+            find . -type d -name "*build*" -o -name "*dist*" -o -name "*out*" | head -10
+          fi
+
+      # S3에 결과물을 업로드합니다.
+      - name: Deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          # 빌드 디렉토리 확인 후 업로드
+          if [ -d "build" ]; then
+            BUILD_DIR="build"
+          elif [ -d "dist" ]; then
+            BUILD_DIR="dist"
+          else
+            echo "Build output directory not found!"
+            exit 1
+          fi
+
+          aws s3 cp \
+            --recursive \
+            --region ${{ secrets.AWS_REGION_DEV }} \
+            $BUILD_DIR s3://${{ secrets.BUCKET_NAME_DEV }}
+
+      # CloudFront 캐시 무효화
+      - name: Invalidate CloudFront
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.DISTRIBUTION_DEV }} \
+            --paths "/*"
