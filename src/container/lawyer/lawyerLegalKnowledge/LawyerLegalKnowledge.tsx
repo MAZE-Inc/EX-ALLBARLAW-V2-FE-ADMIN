@@ -23,14 +23,14 @@ const LawyerLegalKnowledge = forwardRef<HTMLElement, LawyerLegalKnowledgeProps>(
     }
 
     return (
-      <section ref={ref} className={styles['lawyer-legal-knowledge']} aria-label='변호사의 법률 지식'>
+      <section ref={ref} className={styles['lawyer-legal-knowledge']} aria-label='법률 지식인'>
         <header className={styles['lawyer-legal-knowledge__header']}>
-          <h3 className={styles['lawyer-legal-knowledge__title']}>변호사의 법률 지식</h3>
+          <h3 className={styles['lawyer-legal-knowledge__title']}>법률 지식인</h3>
           {hasKnowledge && (
             <button
               type='button'
               className={styles['lawyer-legal-knowledge__button']}
-              aria-label='변호사의 법률 지식 더보기'
+              aria-label='법률 지식인 더보기'
               onClick={handleMoreKnowledge}
             >
               더보기

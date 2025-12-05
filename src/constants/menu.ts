@@ -32,24 +32,24 @@ export const menuItemsWithPermissions: ExtendedMenuItem[] = [
     key: 'category',
     label: '분류 설정',
     children: [
-      { 
-        key: 'category-management', 
+      {
+        key: 'category-management',
         label: '대/소분류 관리',
         permissionId: ADMIN_PERMISSION_IDS.CATEGORY_MANAGEMENT,
-      }
+      },
     ],
   },
   {
     key: 'member',
     label: '회원관리',
     children: [
-      { 
-        key: 'member-member', 
+      {
+        key: 'member-member',
         label: '일반 회원',
         permissionId: ADMIN_PERMISSION_IDS.MEMBER_GENERAL,
       },
-      { 
-        key: 'member-lawyer', 
+      {
+        key: 'member-lawyer',
         label: '변호사 회원',
         permissionId: ADMIN_PERMISSION_IDS.MEMBER_LAWYER,
       },
@@ -59,30 +59,30 @@ export const menuItemsWithPermissions: ExtendedMenuItem[] = [
     key: 'lawyer',
     label: '변호사 관리',
     children: [
-      { 
-        key: 'lawyer-management', 
+      {
+        key: 'lawyer-management',
         label: '변호사 리스트',
         permissionId: ADMIN_PERMISSION_IDS.LAWYER_LIST,
-      }
+      },
     ],
   },
   {
     key: 'content',
     label: '분류별 컨텐츠 관리',
     children: [
-      { 
-        key: `${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_BLOG}`, 
-        label: '블로그글',
+      {
+        key: `${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_BLOG}`,
+        label: '법률정보의 글',
         permissionId: ADMIN_PERMISSION_IDS.CONTENT_BLOG,
       },
-      { 
-        key: `${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_VIDEO}`, 
-        label: '법률영상',
+      {
+        key: `${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_VIDEO}`,
+        label: '변호사의 영상',
         permissionId: ADMIN_PERMISSION_IDS.CONTENT_VIDEO,
       },
-      { 
-        key: `${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_KNOWLEDGE}`, 
-        label: '법률지식인',
+      {
+        key: `${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_KNOWLEDGE}`,
+        label: '법률 지식인',
         permissionId: ADMIN_PERMISSION_IDS.CONTENT_KNOWLEDGE,
       },
     ],
@@ -91,29 +91,29 @@ export const menuItemsWithPermissions: ExtendedMenuItem[] = [
     key: 'chat',
     label: '채팅상담',
     children: [
-      { 
-        key: 'chat-list', 
+      {
+        key: 'chat-list',
         label: '채팅리스트',
         permissionId: ADMIN_PERMISSION_IDS.CHAT_LIST,
-      }
+      },
     ],
   },
   {
     key: 'board',
     label: '게시판',
     children: [
-      { 
-        key: ROUTE_PATH.BOARD_NOTICE, 
+      {
+        key: ROUTE_PATH.BOARD_NOTICE,
         label: '공지사항',
         permissionId: ADMIN_PERMISSION_IDS.BOARD_NOTICE,
       },
-      { 
-        key: 'board-faq', 
+      {
+        key: 'board-faq',
         label: 'FAQ',
         permissionId: ADMIN_PERMISSION_IDS.BOARD_FAQ,
       },
-      { 
-        key: 'board-legalDictionary', 
+      {
+        key: 'board-legalDictionary',
         label: '법률 백과사전',
         permissionId: ADMIN_PERMISSION_IDS.BOARD_DICTIONARY,
       },
@@ -123,18 +123,18 @@ export const menuItemsWithPermissions: ExtendedMenuItem[] = [
     key: 'ad',
     label: '광고 관리',
     children: [
-      { 
-        key: 'ad-lawfirm', 
+      {
+        key: 'ad-lawfirm',
         label: '로펌 광고',
         permissionId: ADMIN_PERMISSION_IDS.AD_LAWFIRM,
       },
-      { 
-        key: 'ad-banner', 
+      {
+        key: 'ad-banner',
         label: '배너 광고',
         permissionId: ADMIN_PERMISSION_IDS.AD_BANNER,
       },
-      { 
-        key: 'ad-lawyer', 
+      {
+        key: 'ad-lawyer',
         label: '변호사 광고',
         permissionId: ADMIN_PERMISSION_IDS.AD_LAWYER,
       },
@@ -144,27 +144,24 @@ export const menuItemsWithPermissions: ExtendedMenuItem[] = [
     key: 'statistics',
     label: '통계',
     children: [
-      { 
-        key: 'statistics-list', 
+      {
+        key: 'statistics-list',
         label: '통계 바로가기',
         permissionId: ADMIN_PERMISSION_IDS.STATISTICS,
-      }
+      },
     ],
   },
 ]
 
 // 권한에 따라 필터링된 메뉴 아이템 생성
-export const filterMenuItemsByPermissions = (
-  items: ExtendedMenuItem[],
-  userPermissions: number[]
-): MenuItem[] => {
+export const filterMenuItemsByPermissions = (items: ExtendedMenuItem[], userPermissions: number[]): MenuItem[] => {
   return items.reduce<MenuItem[]>((filtered, item) => {
     if (item.children) {
       // 자식 메뉴 필터링
-      const filteredChildren = item.children.filter(child => 
-        !child.permissionId || userPermissions.includes(child.permissionId)
+      const filteredChildren = item.children.filter(
+        child => !child.permissionId || userPermissions.includes(child.permissionId)
       )
-      
+
       // 접근 가능한 자식이 있는 경우에만 부모 메뉴 표시
       if (filteredChildren.length > 0) {
         filtered.push({
@@ -183,7 +180,7 @@ export const filterMenuItemsByPermissions = (
         label: item.label,
       })
     }
-    
+
     return filtered
   }, [])
 }
