@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useParams } from 'react-router-dom'
 import DetailHeader from '@/container/content/detailHeader/DetailHeader'
-import { useGetBlogDetail } from '@/hooks/queries/useContent'
+import { useGetBlogDetail, useDeleteBlog } from '@/hooks/queries/useContent'
 import styles from './blogDetail.module.scss'
 import { COLOR } from '@/styles/abstracts/color'
 import { getBlogDetailText } from '@/utils/blogTextFormatter'
-import { Button, Empty } from 'antd'
+import { Button, Empty, Modal, message } from 'antd'
 import { LinkOutlined, FileTextOutlined } from '@ant-design/icons'
 import { BLOG_HEADER_PORTAL_ID } from '../blogMain/BlogPage'
 import { useNavigate } from 'react-router-dom'
@@ -38,13 +38,37 @@ const BlogDetail = () => {
     navigate(`${ROUTE_PATH.CONTENT_BLOG}/edit/${blogCaseId}`)
   }
 
+  const deleteBlogMutation = useDeleteBlog({
+    blogCaseId: Number(blogCaseId),
+    onSuccess: () => {
+      message.success('블로그가 삭제되었습니다.')
+      navigate(ROUTE_PATH.CONTENT_BLOG)
+    },
+    onError: () => {
+      message.error('블로그 삭제에 실패했습니다.')
+    },
+  })
+
+  const handleDeleteBlog = () => {
+    Modal.confirm({
+      title: '블로그 삭제',
+      content: '정말로 이 블로그를 삭제하시겠습니까?',
+      okText: '삭제',
+      cancelText: '취소',
+      okButtonProps: { danger: true },
+      onOk: () => {
+        deleteBlogMutation.mutate()
+      },
+    })
+  }
+
   return (
     <>
       {portalContainer &&
         createPortal(
           <div className={styles['blog-header']}>
             <Button onClick={handleEditBlog}>수정</Button>
-            <Button danger>삭제</Button>
+            <Button danger onClick={handleDeleteBlog} loading={deleteBlogMutation.isPending}>삭제</Button>
             <Button type='primary' disabled>
               법률정보 글 등록(Excel)
             </Button>

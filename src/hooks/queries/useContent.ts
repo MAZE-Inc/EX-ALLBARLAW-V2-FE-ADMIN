@@ -84,6 +84,26 @@ export const useEditBlog = ({
   })
 }
 
+export const useDeleteBlog = ({
+  blogCaseId,
+  onSuccess,
+  onError,
+}: {
+  blogCaseId: number
+  onSuccess: () => void
+  onError: () => void
+}) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: () => contentService.deleteBlog(blogCaseId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.BLOG_LIST] })
+      onSuccess()
+    },
+    onError,
+  })
+}
+
 export const useVideoList = (request: VideoListRequest) => {
   return useQuery({
     queryKey: [QUERY_KEY.VIDEO_LIST, request],
@@ -212,6 +232,26 @@ export const useEditVideo = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.VIDEO_LIST] })
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.VIDEO_DETAIL, videoCaseId] })
+      onSuccess()
+    },
+    onError,
+  })
+}
+
+export const useDeleteVideo = ({
+  videoCaseId,
+  onSuccess,
+  onError,
+}: {
+  videoCaseId: number
+  onSuccess: () => void
+  onError: () => void
+}) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: () => contentService.deleteVideo(videoCaseId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.VIDEO_LIST] })
       onSuccess()
     },
     onError,

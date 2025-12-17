@@ -73,6 +73,11 @@ export const contentService = {
     return response.data
   },
 
+  deleteBlog: async (blogCaseId: number) => {
+    const response = await instance.delete(`/blog-cases/${blogCaseId}`)
+    return response.data
+  },
+
   getVideoList: async (request: VideoListRequest) => {
     const { subcategoryId, take, cursor, cursorId, orderBy, search } = request
 
@@ -188,6 +193,12 @@ export const contentService = {
     const response = await instance.patch<EditVideoResponse>(`/video-cases/${videoCaseId}`, request)
     return response.data
   },
+
+  deleteVideo: async (videoCaseId: number) => {
+    const response = await instance.delete(`/video-cases/${videoCaseId}`)
+    return response.data
+  },
+
   getVideoChannelInfo: async (request: { channelUrl: string }) => {
     const response = await instance.post<VideoChannelInfoResponse>(`/video-cases/youtube/channel/fetch`, request)
     return response.data
