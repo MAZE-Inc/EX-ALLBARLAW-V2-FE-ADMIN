@@ -195,6 +195,10 @@ const router = createBrowserRouter([
             path: 'edit',
             element: <VideoEditor />,
           },
+          {
+            path: 'edit/:videoCaseId',
+            element: <VideoEditor />,
+          },
         ],
       },
       {

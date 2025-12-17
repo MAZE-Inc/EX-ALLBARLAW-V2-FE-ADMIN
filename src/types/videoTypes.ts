@@ -107,3 +107,38 @@ export type YoutubeVideoInfoResponse = {
   thumbnail: string
   title: string
 }
+
+export type EditVideoRequest = {
+  videoCaseTitle: string
+  videoCaseSummaryContent: string
+  videoCaseSource: string
+  videoCaseThumbnail: string
+  videoCaseChannelDescription: string
+  videoCaseChannelThumbnail: string
+  videoCaseHandleName: string
+  videoCaseChannelName: string
+  videoCaseTags: string[]
+  videoCaseLawyerId: number
+  videoCaseSubcategoryId: number
+}
+
+export type EditVideoResponse = {
+  videoCaseId: number
+  videoCaseTitle: string
+  videoCaseSource: string
+  videoCaseThumbnail: string
+  videoCaseSummaryContent?: string
+  videoCaseChannelName: string
+  videoCaseSubscriberCount: number
+  videoCaseHandleName: string
+  videoCaseChannelThumbnail: string
+  videoCaseChannelDescription?: string
+  videoCaseLikesCount: number
+  videoCaseViewCount: number
+  videoCasePublishedAt: string
+  videoCaseSubcategoryId?: number
+  videoCaseLawyerId?: number
+  videoCaseCreatedAt: string
+  videoCaseUpdatedAt: string
+  videoCaseTags: string[]
+}

@@ -2,6 +2,7 @@ import { Button, Input, Modal, Space, Table, Upload, message, Select, Tag } from
 import { PlusOutlined } from '@ant-design/icons'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
 import { useLawyerSearch } from '@/hooks/queries/useLawyer'
@@ -9,6 +10,7 @@ import { useCreateBlog, useEditBlog, useGetBlogDetail } from '@/hooks/queries/us
 import { useBlogAiSummary } from '@/hooks/queries/useAiSummary'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { useCategory } from '@/hooks/queries/useCategory'
+import { BLOG_HEADER_PORTAL_ID } from '../blogMain/BlogPage'
 import styles from './BlogEditor.module.scss'
 
 const { TextArea } = Input
@@ -23,7 +25,13 @@ const BlogEditor = () => {
   const navigate = useNavigate()
   const { subCategoryId, blogCaseId } = useParams()
   const isEditMode = !!blogCaseId
+  const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null)
   const { data: categoryList } = useCategory()
+
+  useEffect(() => {
+    const container = document.getElementById(BLOG_HEADER_PORTAL_ID)
+    setPortalContainer(container)
+  }, [])
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined)
   const [formData, setFormData] = useState({
     blogUrl: '',
@@ -339,11 +347,27 @@ const BlogEditor = () => {
   }
 
   return (
-    <div className={styles.blogEditor}>
-      <h1 className={styles.blogEditor__title}>
-        <span>♦</span> {isEditMode ? '법률정보 글 수정' : '법률정보 글 입력'}
-      </h1>
-      <section className={styles.blogEditor__form}>
+    <>
+      {portalContainer &&
+        createPortal(
+          <div className={styles['blog-header']}>
+            <Button onClick={handleCancel}>취소</Button>
+            <Button
+              type='primary'
+              onClick={handleSave}
+              loading={isEditMode ? patchBlogMutation.isPending : createBlogMutation.isPending}
+              disabled={!isFormValid()}
+            >
+              {isEditMode ? '수정' : '저장'}
+            </Button>
+          </div>,
+          portalContainer
+        )}
+      <div className={styles.blogEditor}>
+        <h1 className={styles.blogEditor__title}>
+          <span>♦</span> {isEditMode ? '법률정보 글 수정' : '법률정보 글 입력'}
+        </h1>
+        <section className={styles.blogEditor__form}>
         {/* 카테고리 선택 */}
         <div className={styles.formRow}>
           <div className={styles.labelCol}>
@@ -562,24 +586,6 @@ const BlogEditor = () => {
         </div>
       </section>
 
-      {/* 액션 버튼 */}
-      <div className={styles.blogEditor__actions}>
-        <Space>
-          <Button size='large' onClick={handleCancel}>
-            취소
-          </Button>
-          <Button
-            type='primary'
-            size='large'
-            onClick={handleSave}
-            loading={isEditMode ? patchBlogMutation.isPending : createBlogMutation.isPending}
-            disabled={!isFormValid()}
-          >
-            {isEditMode ? '수정' : '저장'}
-          </Button>
-        </Space>
-      </div>
-
       {/* 변호사 검색 모달 */}
       <Modal title='변호사 이름 검색' open={isLawyerModalOpen} onCancel={handleModalCancel} width={900} footer={null}>
         <div style={{ marginBottom: 16 }}>
@@ -678,7 +684,8 @@ const BlogEditor = () => {
           ]}
         />
       </Modal>
-    </div>
+      </div>
+    </>
   )
 }
 

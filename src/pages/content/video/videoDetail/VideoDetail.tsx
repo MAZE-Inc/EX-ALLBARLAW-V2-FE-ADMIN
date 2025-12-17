@@ -28,12 +28,16 @@ const VideoDetail = () => {
     navigate(`${ROUTE_PATH.CONTENT_VIDEO}/edit`)
   }
 
+  const handleEditVideo = () => {
+    navigate(`${ROUTE_PATH.CONTENT_VIDEO}/edit/${videoCaseId}`)
+  }
+
   return (
     <>
       {portalContainer &&
         createPortal(
           <div className={styles['video-header']}>
-            <Button>수정</Button>
+            <Button onClick={handleEditVideo}>수정</Button>
             <Button danger>삭제</Button>
             <Button type='primary' onClick={handleRegisterVideo}>
               영상정보 글 등록

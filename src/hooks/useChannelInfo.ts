@@ -44,6 +44,7 @@ export const useChannelInfo = () => {
 
   return {
     isChannelInfoFetched,
+    setChannelInfoFetched: setIsChannelInfoFetched,
     subscriberCount,
     channelData,
     isChannelLoading,

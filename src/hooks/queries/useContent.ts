@@ -4,6 +4,7 @@ import { QUERY_KEY } from '@/constants/query'
 import { BlogDetailRequest, BlogListRequest, CreateBlogRequest, EditBlogRequest } from '@/types/blogTypes'
 import {
   CreateVideoRequest,
+  EditVideoRequest,
   VideoChannelInfoResponse,
   VideoDetailRequest,
   VideoListRequest,
@@ -190,6 +191,27 @@ export const useCreateVideo = ({ onSuccess, onError }: { onSuccess: () => void; 
     mutationFn: (request: CreateVideoRequest) => contentService.createVideo(request),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.VIDEO_LIST] })
+      onSuccess()
+    },
+    onError,
+  })
+}
+
+export const useEditVideo = ({
+  videoCaseId,
+  onSuccess,
+  onError,
+}: {
+  videoCaseId: number
+  onSuccess: () => void
+  onError: () => void
+}) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (request: EditVideoRequest) => contentService.editVideo(request, videoCaseId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.VIDEO_LIST] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.VIDEO_DETAIL, videoCaseId] })
       onSuccess()
     },
     onError,

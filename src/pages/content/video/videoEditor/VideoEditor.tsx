@@ -1,8 +1,10 @@
 import { Button, Input, Modal, Space, Table, message, Select, Tag } from 'antd'
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
-import { useCreateVideo, useGetYoutubeVideoInfo } from '@/hooks/queries/useContent'
+import { useCreateVideo, useEditVideo, useGetVideoDetail, useGetYoutubeVideoInfo } from '@/hooks/queries/useContent'
+import { VIDEO_HEADER_PORTAL_ID } from '../videoMain/VideoPage'
 import { useVideoForm } from '@/hooks/useVideoForm'
 import { useLawyerSelection } from '@/hooks/useLawyerSelection'
 import { useChannelInfo } from '@/hooks/useChannelInfo'
@@ -21,8 +23,15 @@ const TagRender = (props: CustomTagProps) => (
 
 const VideoEditor = () => {
   const navigate = useNavigate()
-  const { subCategoryId } = useParams()
+  const { subCategoryId, videoCaseId } = useParams()
+  const isEditMode = !!videoCaseId
   const [channelUrl, setChannelUrl] = useState('')
+  const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null)
+
+  useEffect(() => {
+    const container = document.getElementById(VIDEO_HEADER_PORTAL_ID)
+    setPortalContainer(container)
+  }, [])
 
   // 커스텀 훅들
   const { formData, setFormData, handleInputChange, isFormValid } = useVideoForm(subCategoryId)
@@ -75,14 +84,31 @@ const VideoEditor = () => {
     }
   }, [aiSummary.summaryData, aiSummary.shouldFetchSummary, setFormData, aiSummary])
 
+  // Get video detail for edit mode
+  const { data: videoDetail } = useGetVideoDetail({
+    videoCaseId: Number(videoCaseId),
+  })
+
   // Create video mutation
   const createVideoMutation = useCreateVideo({
     onSuccess: () => {
       message.success('영상정보가 성공적으로 등록되었습니다.')
-      navigate(`${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_VIDEO}`)
+      navigate(ROUTE_PATH.CONTENT_VIDEO)
     },
     onError: () => {
       message.error('영상정보 등록에 실패했습니다. 다시 시도해주세요.')
+    },
+  })
+
+  // Edit video mutation for edit mode
+  const editVideoMutation = useEditVideo({
+    videoCaseId: Number(videoCaseId),
+    onSuccess: () => {
+      message.success('영상정보가 성공적으로 수정되었습니다.')
+      navigate(ROUTE_PATH.CONTENT_VIDEO)
+    },
+    onError: () => {
+      message.error('영상정보 수정에 실패했습니다. 다시 시도해주세요.')
     },
   })
 
@@ -95,6 +121,48 @@ const VideoEditor = () => {
       }))
     }
   }, [subCategoryId, setFormData])
+
+  // Edit 모드일 때 기존 데이터 로드
+  useEffect(() => {
+    if (isEditMode && videoDetail && categoryList) {
+      // 카테고리 설정
+      const parentCategory = categoryList.find(cat =>
+        cat.subcategories.some(sub => sub.subcategoryId === videoDetail.subcategoryId)
+      )
+      if (parentCategory) {
+        setSelectedCategoryId(parentCategory.categoryId)
+      }
+
+      // 채널 URL 설정
+      setChannelUrl(videoDetail.source || '')
+
+      // 폼 데이터 설정
+      setFormData({
+        subcategoryId: videoDetail.subcategoryId,
+        videoCaseTitle: videoDetail.title || '',
+        videoCaseSummaryContent: videoDetail.summaryContent || '',
+        videoCaseSource: videoDetail.source || '',
+        videoCaseThumbnail: videoDetail.thumbnail || '',
+        videoCaseChannelDescription: videoDetail.channelDescription || '',
+        videoCaseChannelThumbnail: videoDetail.channelThumbnail || '',
+        videoCaseHandleName: videoDetail.handleName || '',
+        videoCaseChannelName: videoDetail.channelName || '',
+        videoCaseTags: videoDetail.tags?.map(tag => tag.name) || [],
+        videoCaseLawyerId: videoDetail.lawyerId,
+        selectedLawyer: {
+          lawyerId: videoDetail.lawyerId,
+          lawyerName: videoDetail.lawyerName,
+          lawyerLawfirmName: videoDetail.lawfirmName,
+          lawyerProfileImage: videoDetail.lawyerProfileImage,
+        },
+        videoCaseSubscriberCount: videoDetail.subscriberCount || 0,
+      })
+
+      // 채널 정보가 로드되었음을 표시
+      channelInfo.setChannelInfoFetched(true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditMode, videoDetail, categoryList])
 
   // 변호사 선택 핸들러
   const handleLawyerSelect = (lawyerId: number) => {
@@ -130,8 +198,26 @@ const VideoEditor = () => {
       return
     }
 
-    // formData를 그대로 전달
-    createVideoMutation.mutate(formData)
+    if (isEditMode) {
+      // Edit mode - use edit mutation
+      const editVideoRequest = {
+        videoCaseTitle: formData.videoCaseTitle,
+        videoCaseSummaryContent: formData.videoCaseSummaryContent,
+        videoCaseSource: formData.videoCaseSource,
+        videoCaseThumbnail: formData.videoCaseThumbnail,
+        videoCaseChannelDescription: formData.videoCaseChannelDescription,
+        videoCaseChannelThumbnail: formData.videoCaseChannelThumbnail,
+        videoCaseHandleName: formData.videoCaseHandleName,
+        videoCaseChannelName: formData.videoCaseChannelName,
+        videoCaseTags: formData.videoCaseTags,
+        videoCaseLawyerId: formData.videoCaseLawyerId,
+        videoCaseSubcategoryId: formData.subcategoryId,
+      }
+      editVideoMutation.mutate(editVideoRequest)
+    } else {
+      // Create mode
+      createVideoMutation.mutate(formData)
+    }
   }
 
   const handleCancel = () => {
@@ -151,10 +237,26 @@ const VideoEditor = () => {
   }
 
   return (
-    <div className={styles.videoEditor}>
-      <h1 className={styles.videoEditor__title}>
-        <span>♦</span> 영상정보입력
-      </h1>
+    <>
+      {portalContainer &&
+        createPortal(
+          <div className={styles['video-header']}>
+            <Button onClick={handleCancel}>취소</Button>
+            <Button
+              type='primary'
+              onClick={handleSave}
+              loading={isEditMode ? editVideoMutation.isPending : createVideoMutation.isPending}
+              disabled={!isFormValid(channelInfo.isChannelInfoFetched)}
+            >
+              {isEditMode ? '수정' : '저장'}
+            </Button>
+          </div>,
+          portalContainer
+        )}
+      <div className={styles.videoEditor}>
+        <h1 className={styles.videoEditor__title}>
+          <span>♦</span> {isEditMode ? '영상정보수정' : '영상정보입력'}
+        </h1>
       <section className={styles.videoEditor__form}>
         {/* 카테고리 선택 */}
         <div className={styles.formRow}>
@@ -364,24 +466,6 @@ const VideoEditor = () => {
         </div>
       </section>
 
-      {/* 액션 버튼 */}
-      <div className={styles.videoEditor__actions}>
-        <Space>
-          <Button size='large' onClick={handleCancel}>
-            취소
-          </Button>
-          <Button
-            type='primary'
-            size='large'
-            onClick={handleSave}
-            loading={createVideoMutation.isPending}
-            disabled={!isFormValid(channelInfo.isChannelInfoFetched)}
-          >
-            저장
-          </Button>
-        </Space>
-      </div>
-
       {/* 변호사 검색 모달 */}
       <Modal
         title='변호사 이름 검색'
@@ -488,7 +572,8 @@ const VideoEditor = () => {
           ]}
         />
       </Modal>
-    </div>
+      </div>
+    </>
   )
 }
 

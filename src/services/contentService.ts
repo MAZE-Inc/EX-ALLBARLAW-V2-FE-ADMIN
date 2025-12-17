@@ -18,6 +18,8 @@ import {
 import {
   CreateVideoRequest,
   CreateVideoResponse,
+  EditVideoRequest,
+  EditVideoResponse,
   VideoChannelInfoResponse,
   VideoDetailRequest,
   VideoDetailResponse,
@@ -179,6 +181,11 @@ export const contentService = {
     }
 
     const response = await instance.post<CreateVideoResponse>(`/video-cases/subcategory/${subcategoryId}`, payload)
+    return response.data
+  },
+
+  editVideo: async (request: EditVideoRequest, videoCaseId: number) => {
+    const response = await instance.patch<EditVideoResponse>(`/video-cases/${videoCaseId}`, request)
     return response.data
   },
   getVideoChannelInfo: async (request: { channelUrl: string }) => {
