@@ -34,12 +34,16 @@ const BlogDetail = () => {
     navigate(`${ROUTE_PATH.CONTENT_BLOG}/edit`)
   }
 
+  const handleEditBlog = () => {
+    navigate(`${ROUTE_PATH.CONTENT_BLOG}/edit/${blogCaseId}`)
+  }
+
   return (
     <>
       {portalContainer &&
         createPortal(
           <div className={styles['blog-header']}>
-            <Button>수정</Button>
+            <Button onClick={handleEditBlog}>수정</Button>
             <Button danger>삭제</Button>
             <Button type='primary' disabled>
               법률정보 글 등록(Excel)

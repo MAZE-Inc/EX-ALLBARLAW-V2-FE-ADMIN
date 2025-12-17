@@ -82,7 +82,7 @@ export type CreateBlogResponse = {
   blogCaseTags: string[]
 }
 
-export type PatchBlogRequest = {
+export type EditBlogRequest = {
   blogCaseTitle: string
   blogCaseSummaryContent: string
   blogCaseThumbnail: string | null
@@ -92,7 +92,7 @@ export type PatchBlogRequest = {
   blogCaseSubcategoryId: number
 }
 
-export type PatchBlogResponse = {
+export type EditBlogResponse = {
   blogCaseId: number
   blogCaseTitle: string
   blogCaseOriginalContentLength: number

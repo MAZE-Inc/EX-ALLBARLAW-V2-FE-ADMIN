@@ -165,6 +165,10 @@ const router = createBrowserRouter([
             path: 'edit',
             element: <BlogEditor />,
           },
+          {
+            path: 'edit/:blogCaseId',
+            element: <BlogEditor />,
+          },
         ],
       },
       {

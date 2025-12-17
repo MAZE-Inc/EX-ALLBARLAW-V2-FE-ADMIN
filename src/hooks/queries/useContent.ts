@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { contentService } from '@/services/contentService'
 import { QUERY_KEY } from '@/constants/query'
-import { BlogDetailRequest, BlogListRequest, CreateBlogRequest, PatchBlogRequest } from '@/types/blogTypes'
+import { BlogDetailRequest, BlogListRequest, CreateBlogRequest, EditBlogRequest } from '@/types/blogTypes'
 import {
   CreateVideoRequest,
   VideoChannelInfoResponse,
@@ -62,7 +62,7 @@ export const useGetBlogDetail = (request: BlogDetailRequest) => {
   })
 }
 
-export const usePatchBlog = ({
+export const useEditBlog = ({
   blogCaseId,
   onSuccess,
   onError,
@@ -73,7 +73,7 @@ export const usePatchBlog = ({
 }) => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (request: PatchBlogRequest) => contentService.patchBlog(request, blogCaseId),
+    mutationFn: (request: EditBlogRequest) => contentService.editBlog(request, blogCaseId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.BLOG_LIST] })
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.BLOG_DETAIL, blogCaseId] })

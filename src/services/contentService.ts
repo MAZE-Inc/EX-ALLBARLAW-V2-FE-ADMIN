@@ -6,8 +6,8 @@ import {
   BlogListResponse,
   CreateBlogRequest,
   CreateBlogResponse,
-  PatchBlogRequest,
-  PatchBlogResponse,
+  EditBlogRequest,
+  EditBlogResponse,
 } from '@/types/blogTypes'
 import {
   KnowledgeDetailRequest,
@@ -66,8 +66,8 @@ export const contentService = {
     }
   },
 
-  patchBlog: async (request: PatchBlogRequest, blogCaseId: number) => {
-    const response = await instance.patch<PatchBlogResponse>(`/blog-case/${blogCaseId}`, request)
+  editBlog: async (request: EditBlogRequest, blogCaseId: number) => {
+    const response = await instance.patch<EditBlogResponse>(`/blog-cases/${blogCaseId}`, request)
     return response.data
   },
 
