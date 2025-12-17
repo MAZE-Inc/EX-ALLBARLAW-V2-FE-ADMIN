@@ -33,6 +33,7 @@ export const QUERY_KEY = {
 
   //컨텐츠
   BLOG_LIST: 'blogList',
+  BLOG_COUNT: 'blogCount',
   BLOG_DETAIL: 'blogDetail',
   VIDEO_LIST: 'videoList',
   VIDEO_DETAIL: 'videoDetail',

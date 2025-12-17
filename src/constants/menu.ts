@@ -71,17 +71,17 @@ export const menuItemsWithPermissions: ExtendedMenuItem[] = [
     label: '분류별 컨텐츠 관리',
     children: [
       {
-        key: `${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_BLOG}`,
+        key: ROUTE_PATH.CONTENT_BLOG,
         label: '법률정보의 글',
         permissionId: ADMIN_PERMISSION_IDS.CONTENT_BLOG,
       },
       {
-        key: `${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_VIDEO}`,
+        key: ROUTE_PATH.CONTENT_VIDEO,
         label: '변호사의 영상',
         permissionId: ADMIN_PERMISSION_IDS.CONTENT_VIDEO,
       },
       {
-        key: `${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_KNOWLEDGE}`,
+        key: ROUTE_PATH.CONTENT_KNOWLEDGE,
         label: '법률 지식인',
         permissionId: ADMIN_PERMISSION_IDS.CONTENT_KNOWLEDGE,
       },

@@ -29,8 +29,12 @@ import axios from 'axios'
 const userUrl = import.meta.env.VITE_USER_SERVER_API
 
 export const contentService = {
+  getCountBlog: async (subcategoryId: number | 'all', recentDays: number | 'all') => {
+    const response = await axios.get(`${userUrl}/blog-case/${subcategoryId}/${recentDays}/count`)
+    return response.data
+  },
   getBlogList: async (request: BlogListRequest) => {
-    const { subcategoryId, take, cursor, cursorId, orderBy } = request
+    const { subcategoryId, take, cursor, cursorId, orderBy, search } = request
 
     // 쿼리 파라미터 객체 생성 (값이 있을 때만 포함)
     const params = new URLSearchParams()
@@ -38,6 +42,7 @@ export const contentService = {
     if (cursor !== undefined) params.append('cursor', cursor.toString())
     if (cursorId !== undefined) params.append('cursorId', cursorId.toString())
     if (orderBy !== undefined) params.append('orderBy', orderBy)
+    if (search !== undefined) params.append('search', search)
 
     // 쿼리스트링 생성
     const queryString = params.toString()
@@ -60,7 +65,7 @@ export const contentService = {
   },
 
   getVideoList: async (request: VideoListRequest) => {
-    const { subcategoryId, take, cursor, cursorId, orderBy } = request
+    const { subcategoryId, take, cursor, cursorId, orderBy, search } = request
 
     // 쿼리 파라미터 객체 생성 (값이 있을 때만 포함)
     const params = new URLSearchParams()
@@ -68,6 +73,7 @@ export const contentService = {
     if (cursor !== undefined) params.append('cursor', cursor.toString())
     if (cursorId !== undefined) params.append('cursorId', cursorId.toString())
     if (orderBy !== undefined) params.append('orderBy', orderBy)
+    if (search !== undefined) params.append('search', search)
 
     // 쿼리스트링 생성
     const queryString = params.toString()

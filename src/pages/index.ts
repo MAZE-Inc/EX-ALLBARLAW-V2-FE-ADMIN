@@ -46,7 +46,6 @@ import AdLawyerListPage from './ad/adLawyer/adLawyerList/AdLawyerListPage'
 import AdLawyerEditPage from './ad/adLawyer/adLawyerEdit/AdLawyerEditPage'
 
 // content
-import ContentLayout from './content/contentLayout/ContentLayout'
 import BlogDetail from './content/blog/blogDetail/BlogDetail'
 import BlogList from './content/blog/blogList/BlogList'
 import BlogEditor from './content/blog/blogEditor/BlogEditor'
@@ -94,7 +93,6 @@ export {
   LawyerMemberPage,
   LawyerListPage,
   LawyerDetailPage,
-  ContentLayout,
   BlogDetail,
   BlogList,
   BlogEditor,

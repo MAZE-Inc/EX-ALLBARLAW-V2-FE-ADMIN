@@ -53,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const onClick: MenuProps['onClick'] = e => {
     console.log('🔍 Menu clicked:', e.key)
-    navigate(e.key)
+    navigate(`/${e.key}`)
   }
 
   // 권한에 따라 메뉴 아이템 필터링

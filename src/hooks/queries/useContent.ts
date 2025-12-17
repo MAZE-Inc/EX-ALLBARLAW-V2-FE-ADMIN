@@ -19,9 +19,16 @@ export const useBlogList = (request: BlogListRequest) => {
   })
 }
 
+export const useCountBlog = (subcategoryId: number | 'all', recentDays: number | 'all') => {
+  return useQuery({
+    queryKey: [QUERY_KEY.BLOG_COUNT, subcategoryId, recentDays],
+    queryFn: () => contentService.getCountBlog(subcategoryId, recentDays),
+  })
+}
+
 export const useInfiniteBlogList = (request: Omit<BlogListRequest, 'cursor' | 'cursorId'>) => {
   const query = useInfiniteQuery({
-    queryKey: [QUERY_KEY.BLOG_LIST, 'infinite', request.subcategoryId, request.orderBy],
+    queryKey: [QUERY_KEY.BLOG_LIST, 'infinite', request.subcategoryId, request.orderBy, request.search],
     queryFn: ({ pageParam }) =>
       contentService.getBlogList({
         ...request,
@@ -64,7 +71,7 @@ export const useVideoList = (request: VideoListRequest) => {
 
 export const useInfiniteVideoList = (request: Omit<VideoListRequest, 'cursor' | 'cursorId'>) => {
   const query = useInfiniteQuery({
-    queryKey: [QUERY_KEY.VIDEO_LIST, 'infinite', request.subcategoryId, request.orderBy],
+    queryKey: [QUERY_KEY.VIDEO_LIST, 'infinite', request.subcategoryId, request.orderBy, request.search],
     queryFn: ({ pageParam }) =>
       contentService.getVideoList({
         ...request,

@@ -11,6 +11,7 @@ export type BlogListRequest = {
   cursor?: number
   cursorId?: number
   orderBy?: SortType
+  search?: string
 }
 
 export type RandomBlogListRequest = {

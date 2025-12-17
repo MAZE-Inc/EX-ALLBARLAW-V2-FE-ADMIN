@@ -32,7 +32,6 @@ import {
   MemberDetailPage,
   LawyerMemberLayout,
   LawyerMemberPage,
-  ContentLayout,
   BlogDetail,
   BlogPage,
   BlogList,
@@ -143,78 +142,72 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: ROUTE_PATH.CONTENT,
-        element: <ContentLayout />,
+        path: ROUTE_PATH.CONTENT_BLOG,
+        element: <BlogPage />,
         children: [
           {
-            path: ROUTE_PATH.CONTENT_BLOG,
-            element: <BlogPage />,
-            children: [
-              {
-                path: '',
-                element: <BlogList />,
-              },
-              {
-                path: ':subCategoryId',
-                element: <BlogList />,
-              },
-              {
-                path: ':subCategoryId/:blogCaseId',
-                element: <BlogDetail />,
-              },
-              {
-                path: ':subCategoryId/edit',
-                element: <BlogEditor />,
-              },
-              {
-                path: 'edit',
-                element: <BlogEditor />,
-              },
-            ],
+            path: '',
+            element: <BlogList />,
           },
           {
-            path: ROUTE_PATH.CONTENT_VIDEO,
-            element: <VideoPage />,
-            children: [
-              {
-                path: '',
-                element: <VideoList />,
-              },
-              {
-                path: ':subCategoryId',
-                element: <VideoList />,
-              },
-              {
-                path: ':subCategoryId/:videoCaseId',
-                element: <VideoDetail />,
-              },
-              {
-                path: ':subCategoryId/edit',
-                element: <VideoEditor />,
-              },
-              {
-                path: 'edit',
-                element: <VideoEditor />,
-              },
-            ],
+            path: ':subCategoryId',
+            element: <BlogList />,
           },
           {
-            path: ROUTE_PATH.CONTENT_KNOWLEDGE,
-            element: <KnowledgePage />,
-            children: [
-              {
-                path: '',
-                element: <KnowledgeList />,
-              },
-              {
-                path: ':subCategoryId',
-                element: <KnowledgeList />,
-              },
-              {
-                path: ':subCategoryId/:knowledgeId',
-                element: <KnowledgeDetail />,
-              },
-            ],
+            path: ':subCategoryId/:blogCaseId',
+            element: <BlogDetail />,
+          },
+          {
+            path: ':subCategoryId/edit',
+            element: <BlogEditor />,
+          },
+          {
+            path: 'edit',
+            element: <BlogEditor />,
+          },
+        ],
+      },
+      {
+        path: ROUTE_PATH.CONTENT_VIDEO,
+        element: <VideoPage />,
+        children: [
+          {
+            path: '',
+            element: <VideoList />,
+          },
+          {
+            path: ':subCategoryId',
+            element: <VideoList />,
+          },
+          {
+            path: ':subCategoryId/:videoCaseId',
+            element: <VideoDetail />,
+          },
+          {
+            path: ':subCategoryId/edit',
+            element: <VideoEditor />,
+          },
+          {
+            path: 'edit',
+            element: <VideoEditor />,
+          },
+        ],
+      },
+      {
+        path: ROUTE_PATH.CONTENT_KNOWLEDGE,
+        element: <KnowledgePage />,
+        children: [
+          {
+            path: '',
+            element: <KnowledgeList />,
+          },
+          {
+            path: ':subCategoryId',
+            element: <KnowledgeList />,
+          },
+          {
+            path: ':subCategoryId/:knowledgeId',
+            element: <KnowledgeDetail />,
           },
         ],
       },
