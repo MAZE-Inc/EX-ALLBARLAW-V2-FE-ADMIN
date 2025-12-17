@@ -4,6 +4,7 @@ import { useCategory } from '@/hooks/queries/useCategory'
 import { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import styles from './videoPage.module.scss'
+import { useCountVideo } from '@/hooks/queries/useContent'
 
 export const VIDEO_HEADER_PORTAL_ID = 'video-header-portal'
 
@@ -13,6 +14,11 @@ const VideoPage = () => {
 
   const [selectedMainCategory, setSelectedMainCategory] = useState<number | null>(null)
   const [selectedSubcategory, setSelectedSubcategory] = useState<number | null>(null)
+
+  const { data: countVideo } = useCountVideo({
+    subcategoryId: 'all',
+    recentDays: 'all',
+  })
 
   const handleMainCategoryClick = (categoryId: number) => {
     setSelectedMainCategory(categoryId)
@@ -33,7 +39,7 @@ const VideoPage = () => {
   return (
     <main className={styles['video-page']}>
       <SearchHeader
-        title='전체 : 512개가 등록되어 있습니다.'
+        title={`전체 : ${(countVideo ?? 0).toLocaleString()}개가 등록되어 있습니다.`}
         placeholder='선택'
         searchPlaceholder='검색어를 입력하세요'
         onSearch={handleSearch}

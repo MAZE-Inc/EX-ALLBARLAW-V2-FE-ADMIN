@@ -28,11 +28,7 @@ const BlogList = () => {
   })
 
   const handleRegisterBlog = () => {
-    if (subCategoryId) {
-      navigate(`${subCategoryId}/edit`)
-    } else {
-      navigate('edit')
-    }
+    navigate(`${ROUTE_PATH.CONTENT_BLOG}/edit`)
   }
 
   useInfiniteScroll({

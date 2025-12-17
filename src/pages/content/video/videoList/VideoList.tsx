@@ -39,11 +39,7 @@ const VideoList = () => {
   }
 
   const handleRegisterVideo = () => {
-    if (subCategoryId) {
-      navigate(`${subCategoryId}/edit`)
-    } else {
-      navigate('edit')
-    }
+    navigate(`${ROUTE_PATH.CONTENT_VIDEO}/edit`)
   }
 
   const isEmpty = !data?.pages || data.pages.every(page => page.data.length === 0)

@@ -78,6 +78,11 @@ export const contentService = {
     return response.data
   },
 
+  getCountVideo: async (subcategoryId: number | 'all', recentDays: number | 'all') => {
+    const response = await axios.get(`${userUrl}/video-case/${subcategoryId}/${recentDays}/count`)
+    return response.data
+  },
+
   getVideoList: async (request: VideoListRequest) => {
     const { subcategoryId, take, cursor, cursorId, orderBy, search } = request
 

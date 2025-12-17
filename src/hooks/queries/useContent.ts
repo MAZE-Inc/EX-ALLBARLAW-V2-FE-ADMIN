@@ -287,3 +287,16 @@ export const useGetYoutubeVideoInfo = ({
     onError,
   })
 }
+
+export const useCountVideo = ({
+  subcategoryId,
+  recentDays,
+}: {
+  subcategoryId: number | 'all'
+  recentDays: number | 'all'
+}) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.BLOG_COUNT, subcategoryId, recentDays],
+    queryFn: () => contentService.getCountVideo(subcategoryId, recentDays),
+  })
+}
