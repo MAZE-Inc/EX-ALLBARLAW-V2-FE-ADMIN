@@ -6,6 +6,8 @@ import {
   BlogListResponse,
   CreateBlogRequest,
   CreateBlogResponse,
+  PatchBlogRequest,
+  PatchBlogResponse,
 } from '@/types/blogTypes'
 import {
   KnowledgeDetailRequest,
@@ -62,6 +64,11 @@ export const contentService = {
       console.error('Failed to fetch blog detail:', error)
       throw error
     }
+  },
+
+  patchBlog: async (request: PatchBlogRequest, blogCaseId: number) => {
+    const response = await instance.patch<PatchBlogResponse>(`/blog-case/${blogCaseId}`, request)
+    return response.data
   },
 
   getVideoList: async (request: VideoListRequest) => {

@@ -69,14 +69,14 @@ const BlogList = () => {
     <>
       {portalContainer &&
         createPortal(
-          <>
+          <div className={styles['blog-header']}>
             <Button type='primary' disabled>
               법률정보 글 등록(Excel)
             </Button>
             <Button type='primary' onClick={handleRegisterBlog}>
               법률정보 글 등록
             </Button>
-          </>,
+          </div>,
           portalContainer
         )}
       <main className={styles['blog-list']}>

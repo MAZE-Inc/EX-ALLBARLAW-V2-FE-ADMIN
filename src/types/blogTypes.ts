@@ -81,3 +81,30 @@ export type CreateBlogResponse = {
   blogCaseUpdatedAt: string
   blogCaseTags: string[]
 }
+
+export type PatchBlogRequest = {
+  blogCaseTitle: string
+  blogCaseSummaryContent: string
+  blogCaseThumbnail: string | null
+  blogCaseSource: string
+  blogCaseTags: string[]
+  blogCaseLawyerId: number
+  blogCaseSubcategoryId: number
+}
+
+export type PatchBlogResponse = {
+  blogCaseId: number
+  blogCaseTitle: string
+  blogCaseOriginalContentLength: number
+  blogCaseSummaryContent?: string
+  blogCaseThumbnail: string | null
+  blogCaseSource: string
+  blogCaseLikesCount: number
+  blogCaseViewCount: number
+  blogCasePublishedAt: string
+  blogCaseSubcategoryId?: number
+  blogCaseLawyerId?: number
+  blogCaseCreatedAt: string
+  blogCaseUpdatedAt: string
+  blogCaseTags: string[]
+}
