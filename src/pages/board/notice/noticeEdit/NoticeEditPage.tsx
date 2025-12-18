@@ -1,11 +1,14 @@
-import ContentForm from '@/components/contentForm/ContentForm'
+import ContentForm, { ContentFormRef } from '@/components/contentForm/ContentForm'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import { message } from 'antd'
+import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
+import { message, Button } from 'antd'
 import { NoticeDetailResponse } from '@/types/boardTypes'
 import { ROUTE_PATH } from '@/routes/routePath'
 import { usePostNotice } from '@/hooks/mutations/usePostNotice'
 import { useReadNoticeType, useUpdateNotice } from '@/hooks/queries/useNotice'
+import { NOTICE_HEADER_PORTAL_ID } from '../noticeLayout/NoticeLayout'
+import styles from './noticeEdit.module.scss'
 
 const NoticeEditPage = () => {
   const navigate = useNavigate()
@@ -18,6 +21,13 @@ const NoticeEditPage = () => {
 
   const [loading, setLoading] = useState(false)
   const [noticeData, setNoticeData] = useState<NoticeDetailResponse | null>(null)
+  const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null)
+  const formRef = useRef<ContentFormRef>(null)
+
+  useEffect(() => {
+    const container = document.getElementById(NOTICE_HEADER_PORTAL_ID)
+    setPortalContainer(container)
+  }, [])
 
   useEffect(() => {
     if (isEditMode) {
@@ -102,23 +112,43 @@ const NoticeEditPage = () => {
     value: String(type.noticeTypeId),
   }))
 
+  const handleSubmit = () => {
+    formRef.current?.submit()
+  }
+
   return (
-    <section style={{ padding: 36 }}>
-      <ContentForm
-        initialTitle={isEditMode && noticeData ? noticeData.noticeTitle : ''}
-        initialContent={isEditMode && noticeData ? noticeData.noticeContent : ''}
-        initialRadioValue={isEditMode && noticeData ? String(noticeData.noticeTypeId) : '1'}
-        titlePlaceholder='공지사항 제목을 입력하세요'
-        contentPlaceholder='공지사항 내용을 작성하세요...'
-        saveButtonText={isEditMode ? '수정 완료' : '공지 등록'}
-        radioLabel='공지 유형'
-        showRadio={true}
-        radioOptions={radioOptions}
-        loading={loading}
-        onSave={handleSave}
-        onCancel={handleCancel}
-      />
-    </section>
+    <>
+      {portalContainer &&
+        createPortal(
+          <div className={styles.noticeEditHeader}>
+            <Button onClick={handleCancel} disabled={loading}>
+              취소
+            </Button>
+            <Button type='primary' onClick={handleSubmit} loading={loading}>
+              {isEditMode ? '수정 완료' : '공지 등록'}
+            </Button>
+          </div>,
+          portalContainer
+        )}
+      <section style={{ padding: 36 }}>
+        <ContentForm
+          ref={formRef}
+          initialTitle={isEditMode && noticeData ? noticeData.noticeTitle : ''}
+          initialContent={isEditMode && noticeData ? noticeData.noticeContent : ''}
+          initialRadioValue={isEditMode && noticeData ? String(noticeData.noticeTypeId) : '1'}
+          titlePlaceholder='공지사항 제목을 입력하세요'
+          contentPlaceholder='공지사항 내용을 작성하세요...'
+          saveButtonText={isEditMode ? '수정 완료' : '공지 등록'}
+          radioLabel='공지 유형'
+          showRadio={true}
+          radioOptions={radioOptions}
+          loading={loading}
+          onSave={handleSave}
+          onCancel={handleCancel}
+          hideButtons
+        />
+      </section>
+    </>
   )
 }
 

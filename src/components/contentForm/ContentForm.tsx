@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { Button, Input, Space, Radio, Row, Col } from 'antd'
 import RichTextEditor from '@/components/richTextEditor/RichTextEditor'
 import { Viewer } from '@toast-ui/react-editor'
@@ -8,6 +8,10 @@ import styles from './content-form.module.scss'
 interface RadioOption {
   label: string
   value: string
+}
+
+export interface ContentFormRef {
+  submit: () => void
 }
 
 interface ContentFormProps {
@@ -37,9 +41,10 @@ interface ContentFormProps {
 
   className?: string
   readOnly?: boolean
+  hideButtons?: boolean
 }
 
-const ContentForm = ({
+const ContentForm = forwardRef<ContentFormRef, ContentFormProps>(({
   initialTitle = '',
   initialContent = '',
   initialRadioValue = '',
@@ -58,7 +63,8 @@ const ContentForm = ({
   showRadio = false,
   className,
   readOnly = false,
-}: ContentFormProps) => {
+  hideButtons = false,
+}, ref) => {
   const [title, setTitle] = useState(initialTitle)
   const [content, setContent] = useState(initialContent)
   const [radioValue, setRadioValue] = useState(initialRadioValue)
@@ -89,6 +95,11 @@ const ContentForm = ({
   const handleCancel = () => {
     onCancel()
   }
+
+  // ref를 통해 submit 메서드 노출
+  useImperativeHandle(ref, () => ({
+    submit: handleSave,
+  }))
 
   return (
     <div className={`${styles.contentForm} ${className}`}>
@@ -156,21 +167,23 @@ const ContentForm = ({
         </Row>
 
         {/* 버튼 영역 */}
-        <div className={styles.buttonContainer}>
-          <Space className={styles.buttonSpace}>
-            <Button onClick={handleCancel} disabled={loading} className={styles.cancelButton}>
-              {cancelButtonText}
-            </Button>
-            {!readOnly && (
-              <Button type='primary' onClick={handleSave} loading={loading} className={styles.saveButton}>
-                {saveButtonText}
+        {!hideButtons && (
+          <div className={styles.buttonContainer}>
+            <Space className={styles.buttonSpace}>
+              <Button onClick={handleCancel} disabled={loading} className={styles.cancelButton}>
+                {cancelButtonText}
               </Button>
-            )}
-          </Space>
-        </div>
+              {!readOnly && (
+                <Button type='primary' onClick={handleSave} loading={loading} className={styles.saveButton}>
+                  {saveButtonText}
+                </Button>
+              )}
+            </Space>
+          </div>
+        )}
       </Space>
     </div>
   )
-}
+})
 
 export default ContentForm
