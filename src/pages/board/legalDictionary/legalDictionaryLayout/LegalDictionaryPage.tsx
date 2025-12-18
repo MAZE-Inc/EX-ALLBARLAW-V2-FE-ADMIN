@@ -5,7 +5,7 @@ import { DownloadOutlined } from '@ant-design/icons'
 import SearchHeader, { SearchHeaderMenuItemType } from '../../../../components/searchHeader/SearchHeader'
 import styles from './legalDictionaryLayout.module.scss'
 import { ROUTE_PATH } from '@/routes/routePath'
-import { noticeMenuItems } from '@/constants/board'
+// import { noticeMenuItems } from '@/constants/board'
 import { useReadNoticeCount } from '@/hooks/queries/useNotice'
 import { COLOR } from '@/styles/abstracts/color'
 import { LegalDictionaryProvider, useLegalDictionary } from '@/contexts/LegalDictionaryContext'
@@ -109,7 +109,7 @@ const LegalDictionaryLayoutContent = () => {
         placeholder='분류 선택'
         searchPlaceholder='검색어를 입력하세요'
         onSearch={handleSearch}
-        menuItems={noticeMenuItems}
+        // menuItems={noticeMenuItems}
         bordered={false}
         title={`전체 : ${noticeCount?.total}개가 등록되어 있습니다.`}
         className={styles.noticeListPage__searchHeader}

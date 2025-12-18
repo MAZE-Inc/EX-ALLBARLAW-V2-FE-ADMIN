@@ -10,10 +10,11 @@ import {
 export const noticeService = {
   readNoticeCount: async () => await instance.get('/notice/count'),
   readNoticeType: async () => await instance.get('/notice/types'),
-  readNoticeList: async (noticePage: number) =>
+  readNoticeList: async (noticePage: number, searchQuery?: string) =>
     await instance.get<NoticeListResponse>('/notice', {
       params: {
         noticePage: noticePage,
+        searchQuery: searchQuery,
       },
     }),
   readNoticeDetail: async (noticeId: number) => await instance.get<NoticeDetailResponse>(`/notice/${noticeId}`),

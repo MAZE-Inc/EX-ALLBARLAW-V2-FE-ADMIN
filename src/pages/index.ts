@@ -19,7 +19,7 @@ import SubCategoryBannerListPage from './ad/adBanner/subCategoryBannerList/SubCa
 import StatisticsPage from './statistics/statistics/StatisticsPage'
 import ChatListPage from './chat/ChatListPage'
 import LegalDictionaryPage from './board/legalDictionary/legalDictionaryLayout/LegalDictionaryPage'
-import NoticeLayout from './board/notice/noticeLayout/NoticeListPage'
+import NoticeLayout from './board/notice/noticeLayout/NoticeLayout'
 import NoticeDetailPage from './board/notice/noticeDetail/NoticeDetailPage'
 import NoticeEditPage from './board/notice/noticeEdit/NoticeEditPage'
 import NoticeListPage from './board/notice/noticeList/NoticeListPage'

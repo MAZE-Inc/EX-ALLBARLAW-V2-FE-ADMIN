@@ -1,4 +1,5 @@
 import { Button, Table, TableProps } from 'antd'
+import { createPortal } from 'react-dom'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ROUTE_PATH } from '@/routes/routePath'
 import { useState, useEffect, useMemo } from 'react'
@@ -8,17 +9,25 @@ import styles from './noticeList.module.scss'
 import dayjs from 'dayjs'
 import { useGetNoticeList, useReadNoticeCount, useReadNoticeType } from '@/hooks/queries/useNotice'
 import { Pagination } from '@/components/pagination'
+import { NOTICE_HEADER_PORTAL_ID } from '../noticeLayout/NoticeLayout'
 
 const NoticeListPage = () => {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
+  const searchQuery = searchParams.get('searchQuery') || undefined
+  const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null)
   const [noticePage, setNoticePage] = useState(() => {
     const page = searchParams.get('page')
     return page ? parseInt(page, 10) : 1
   })
   const { data: noticeCount } = useReadNoticeCount()
   const { getTypeName } = useReadNoticeType()
-  const { data: noticeListResponse, isError, error } = useGetNoticeList(noticePage)
+  const { data: noticeListResponse, isError, error } = useGetNoticeList({ noticePage, searchQuery })
+
+  useEffect(() => {
+    const container = document.getElementById(NOTICE_HEADER_PORTAL_ID)
+    setPortalContainer(container)
+  }, [])
 
   useEffect(() => {
     if (isError) {
@@ -26,7 +35,16 @@ const NoticeListPage = () => {
     }
   }, [isError, error])
 
+  // 검색어가 변경되면 페이지를 1로 리셋
+  useEffect(() => {
+    setNoticePage(1)
+  }, [searchQuery])
+
   const handleCreateNotice = () => {
+    // 검색어가 있으면 지우기
+    if (searchQuery) {
+      setSearchParams({})
+    }
     navigate(`${ROUTE_PATH.BOARD_NOTICE}/${ROUTE_PATH.BOARD_NOTICE_EDIT}`)
   }
 
@@ -81,31 +99,37 @@ const NoticeListPage = () => {
   ]
 
   return (
-    <div style={{ padding: 24 }}>
-      <Button className={styles.noticeListPage__button} onClick={handleCreateNotice}>
-        공지사항 작성
-      </Button>
-      <Table<NoticeType>
-        columns={columns}
-        dataSource={noticeList}
-        rowKey='noticeId'
-        rowSelection={rowSelection}
-        pagination={false}
-        onRow={record => ({
-          onClick: () => handleRowClick(record),
-          style: { cursor: 'pointer' },
-        })}
-      />
-      <Pagination
-        className={styles.noticeListPage__pagination}
-        currentPage={noticePage}
-        totalPages={noticeCount?.totalPages}
-        onPageChange={page => {
-          setNoticePage(page)
-          setSearchParams({ page: page.toString() })
-        }}
-      />
-    </div>
+    <>
+      {portalContainer &&
+        createPortal(
+          <Button type='primary' onClick={handleCreateNotice}>
+            공지사항 작성
+          </Button>,
+          portalContainer
+        )}
+      <div style={{ padding: 24 }}>
+        <Table<NoticeType>
+          columns={columns}
+          dataSource={noticeList}
+          rowKey='noticeId'
+          rowSelection={rowSelection}
+          pagination={false}
+          onRow={record => ({
+            onClick: () => handleRowClick(record),
+            style: { cursor: 'pointer' },
+          })}
+        />
+        <Pagination
+          className={styles.noticeListPage__pagination}
+          currentPage={noticePage}
+          totalPages={noticeCount?.totalPages}
+          onPageChange={page => {
+            setNoticePage(page)
+            setSearchParams({ page: page.toString() })
+          }}
+        />
+      </div>
+    </>
   )
 }
 

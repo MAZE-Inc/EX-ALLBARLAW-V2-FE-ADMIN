@@ -42,11 +42,11 @@ export const useReadNoticeCount = () => {
   })
 }
 
-export const useGetNoticeList = (noticePage: number) => {
+export const useGetNoticeList = ({ noticePage, searchQuery }: { noticePage: number; searchQuery?: string }) => {
   return useQuery({
-    queryKey: [QUERY_KEY.NOTICE_LIST, noticePage],
+    queryKey: [QUERY_KEY.NOTICE_LIST, noticePage, searchQuery],
     queryFn: async () => {
-      const res = await noticeService.readNoticeList(noticePage)
+      const res = await noticeService.readNoticeList(noticePage, searchQuery)
       return res.data.notices
     },
   })
