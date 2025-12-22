@@ -26,26 +26,18 @@ const FaqListPage = () => {
   const { data: faqCount } = useReadFaqCount()
 
   // 페이지 변경 핸들러
-  const handlePageChange = (page: number) => {
-    setSearchParams({ page: page.toString() })
-  }
+  const handlePageChange = (page: number) => setSearchParams({ page: page.toString() })
 
-  const showModal = () => {
-    setIsModalVisible(true)
-  }
+  const showModal = () => setIsModalVisible(true)
 
-  const handleCancel = () => {
-    setIsModalVisible(false)
-  }
+  const handleCancel = () => setIsModalVisible(false)
 
   const handleSubmit = (categoryName: string) => {
     createFaqType(categoryName)
     setIsModalVisible(false)
   }
 
-  const handleFaqRegister = () => {
-    navigate(`${ROUTE_PATH.BOARD_FAQ_EDIT}`)
-  }
+  const handleFaqRegister = () => navigate(`${ROUTE_PATH.BOARD_FAQ_EDIT}`)
 
   // 체크박스 선택 처리
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
