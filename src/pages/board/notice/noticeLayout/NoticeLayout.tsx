@@ -28,9 +28,7 @@ const NoticeLayout = () => {
     setSelectedItem(item)
   }
 
-  const handleSearch = (value: string) => {
-    navigation(`${ROUTE_PATH.BOARD_NOTICE}?searchQuery=${value}`)
-  }
+  const handleSearch = (value: string) => navigation(`${ROUTE_PATH.BOARD_NOTICE}?searchQuery=${value}`)
 
   return (
     <div className={styles.noticeListPage}>

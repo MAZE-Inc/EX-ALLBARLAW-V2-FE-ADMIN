@@ -11,13 +11,33 @@ import { COLOR } from '@/styles/abstracts/color'
 import { LegalDictionaryProvider, useLegalDictionary } from '@/contexts/LegalDictionaryContext'
 import { useExcelExport } from '@/hooks/useExcelExport'
 
+export const LEGAL_DICTIONARY_HEADER_PORTAL_ID = 'legal-dictionary-header-portal'
+
+const LegalDictionaryMenuItems = [
+  {
+    label: '한글 용어명',
+    key: 'korean',
+  },
+  {
+    label: '영문 용어명',
+    key: 'english',
+  },
+  {
+    label: '한문 용어명',
+    key: 'chinese',
+  },
+]
+
 const LegalDictionaryLayoutContent = () => {
   const { selectedLegalTerms, selectedReports } = useLegalDictionary()
   const { exportData } = useExcelExport()
   const navigate = useNavigate()
   const location = useLocation()
-  const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>(null)
-  const [_searchValue, setSearchValue] = useState('')
+  const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>({
+    label: '한글 용어명',
+    key: 'korean',
+  })
+
   const { data: noticeCount } = useReadNoticeCount()
 
   // 현재 경로에 따라 탭 선택 상태 결정
@@ -79,7 +99,10 @@ const LegalDictionaryLayoutContent = () => {
   }
 
   const handleSearch = (value: string) => {
-    setSearchValue(value)
+    const params = new URLSearchParams()
+    if (value) params.set('searchQuery', value)
+    if (selectedItem?.key) params.set('searchType', String(selectedItem.key))
+    navigate(`${ROUTE_PATH.BOARD_LEGAL_DICTIONARY}?${params.toString()}`)
   }
 
   const handleTabChange = (key: string) => {
@@ -109,11 +132,14 @@ const LegalDictionaryLayoutContent = () => {
         placeholder='분류 선택'
         searchPlaceholder='검색어를 입력하세요'
         onSearch={handleSearch}
-        // menuItems={noticeMenuItems}
+        menuItems={LegalDictionaryMenuItems}
         bordered={false}
         title={`전체 : ${noticeCount?.total}개가 등록되어 있습니다.`}
         className={styles.noticeListPage__searchHeader}
       />
+      <header className={styles.legalDictionaryLayout__header}>
+        <div id={LEGAL_DICTIONARY_HEADER_PORTAL_ID} />
+      </header>
       {!isDetailPage() && !isEditPage() && (
         <div style={{ padding: '0 24px' }}>
           <div className={styles['button-wrapper']}>

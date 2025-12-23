@@ -52,7 +52,7 @@ export const contentService = {
     const queryString = params.toString()
     const url = `/blog-case/${subcategoryId}${queryString ? `?${queryString}` : ''}`
 
-    const response = await axios.get<BlogListResponse>(`${userUrl}${url}`)
+    const response = await instance.get<BlogListResponse>(url)
 
     return response.data
   },

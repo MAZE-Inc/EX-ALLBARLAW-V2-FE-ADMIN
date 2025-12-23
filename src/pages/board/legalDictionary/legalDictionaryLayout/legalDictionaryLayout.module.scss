@@ -11,6 +11,12 @@
   padding: 0 24px 16px;
 }
 
+.legalDictionaryLayout__header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+}
+
 .legalDictionaryLayout__container {
   display: flex;
   flex-direction: column;

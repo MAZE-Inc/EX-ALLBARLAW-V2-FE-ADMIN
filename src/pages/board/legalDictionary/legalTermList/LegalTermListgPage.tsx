@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Table, TableProps } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useLegalTermList } from '@/hooks/queries/useLegalTerm'
 import { LegalTermListRequest } from '@/types/legalTermTypes'
 import { Pagination } from '@/components/pagination/Pagination'
@@ -18,22 +18,39 @@ interface LegalTermTableData {
 
 const LegalTermListPage = () => {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const searchQuery = searchParams.get('searchQuery') || ''
+  const searchType = (searchParams.get('searchType') as LegalTermListRequest['searchType']) || 'korean'
+
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedRows, setSelectedRows] = useState<LegalTermTableData[]>([])
   const [request, setRequest] = useState<LegalTermListRequest>({
     page: 1,
+    searchQuery,
+    searchType,
   })
-  
+
+  // URL 파라미터가 변경되면 request 업데이트
+  useEffect(() => {
+    setRequest(prev => ({
+      ...prev,
+      page: 1,
+      searchQuery,
+      searchType,
+    }))
+    setCurrentPage(1)
+  }, [searchQuery, searchType])
+
   const { setSelectedLegalTerms } = useLegalDictionary()
   const { data: legalTermData, isLoading } = useLegalTermList(request)
-  
+
   // 선택된 항목이 변경될 때마다 Context 업데이트
   useEffect(() => {
     setSelectedLegalTerms(selectedRows)
   }, [selectedRows, setSelectedLegalTerms])
 
   // API 응답 데이터를 테이블 형식으로 변환
-  const tableData: LegalTermTableData[] = 
+  const tableData: LegalTermTableData[] =
     legalTermData?.legalTerms?.map(term => ({
       key: term.id,
       id: term.id,
@@ -50,7 +67,7 @@ const LegalTermListPage = () => {
       page,
     }))
   }
-  
+
   const columns: TableProps<LegalTermTableData>['columns'] = [
     {
       title: '한글 용어명',
@@ -77,9 +94,7 @@ const LegalTermListPage = () => {
     },
     onSelect: (record: LegalTermTableData, selected: boolean) => {
       setSelectedRows(prev => {
-        const newSelectedRows = selected 
-          ? [...prev, record] 
-          : prev.filter(row => row.id !== record.id)
+        const newSelectedRows = selected ? [...prev, record] : prev.filter(row => row.id !== record.id)
         return newSelectedRows
       })
     },
@@ -100,13 +115,9 @@ const LegalTermListPage = () => {
           },
         })}
       />
-      {legalTermData?.totalPages && (
+      {legalTermData?.totalPages !== undefined && legalTermData.totalPages > 0 && (
         <div className={styles['pagination-wrapper']}>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={legalTermData.totalPages}
-            onPageChange={handlePageChange}
-          />
+          <Pagination currentPage={currentPage} totalPages={legalTermData.totalPages} onPageChange={handlePageChange} />
         </div>
       )}
     </div>
