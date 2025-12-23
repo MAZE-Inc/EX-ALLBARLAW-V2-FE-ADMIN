@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Table, TableProps, Tabs, TabsProps, ConfigProvider } from 'antd'
-import SearchHeader from '@/components/searchHeader/SearchHeader'
+import SearchHeader, { SearchHeaderMenuItemType } from '@/components/searchHeader/SearchHeader'
 import styles from './chat.module.scss'
 import dayjs from 'dayjs'
 import { useChatList } from '@/hooks/queries/useChat'
@@ -20,17 +20,35 @@ interface ChatTableData {
   status: string
 }
 
+const ChatListMenuItems = [
+  {
+    label: '의뢰인',
+    key: 'userName',
+  },
+  {
+    label: '변호사',
+    key: 'lawyerName',
+  },
+]
+
 const ChatListPage = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'ended'>('all')
   const [orderBy, _setOrderBy] = useState<ChatListRequest['orderBy']>('lastMessageAt')
   const [sort, _setSort] = useState<ChatListRequest['sort']>('desc')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedItem, setSelectedItem] = useState<SearchHeaderMenuItemType | null>({
+    label: '의뢰인',
+    key: 'userName',
+  })
 
   const { data: chatListData, isLoading } = useChatList({
     chatRoomPage: currentPage,
     orderBy,
     sort,
     chatRoomStatus: activeTab,
+    searchType: selectedItem?.key as ChatListRequest['searchType'],
+    searchQuery,
   })
 
   // API 응답 데이터를 테이블 형식으로 변환
@@ -52,8 +70,15 @@ const ChatListPage = () => {
   })
 
   // 페이지 변경 핸들러
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
+  const handlePageChange = (page: number) => setCurrentPage(page)
+
+  const handleSelectionChange = (item: SearchHeaderMenuItemType) => {
+    setSelectedItem(item)
+  }
+
+  const handleSearch = (value: string) => {
+    setSearchQuery(value)
+    setCurrentPage(1)
   }
 
   // 탭 변경 핸들러
@@ -139,9 +164,13 @@ const ChatListPage = () => {
       <SearchHeader
         className={styles['admin-layout__searchHeader']}
         bordered={false}
+        menuItems={ChatListMenuItems}
         title='채팅 관리'
         placeholder='선택'
+        onSelectionChange={handleSelectionChange}
+        onSearch={handleSearch}
         searchPlaceholder='검색어를 입력하세요'
+        selectedItem={selectedItem}
       />
       <ConfigProvider
         theme={{

@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ConfigProvider, message } from 'antd'
 import { COLOR } from '@/styles/abstracts/color'
 import './styles/main.scss'
@@ -41,7 +41,7 @@ createRoot(document.getElementById('root')!).render(
   >
     <QueryClientProvider client={queryClient}>
       <Router />
-      {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
+      {/* {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />} */}
     </QueryClientProvider>
   </ConfigProvider>
   // </StrictMode>
