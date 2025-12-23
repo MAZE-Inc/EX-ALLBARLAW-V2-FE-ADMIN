@@ -166,7 +166,7 @@ const LegalTermErrorReportList = () => {
           },
         })}
       />
-      {reportData?.totalPages && (
+      {reportData?.totalPages !== undefined && reportData.totalPages > 0 && (
         <div className={styles['pagination-wrapper']}>
           <Pagination currentPage={currentPage} totalPages={reportData.totalPages} onPageChange={handlePageChange} />
         </div>
