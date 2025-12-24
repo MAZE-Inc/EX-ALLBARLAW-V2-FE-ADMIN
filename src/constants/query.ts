@@ -36,8 +36,10 @@ export const QUERY_KEY = {
   BLOG_COUNT: 'blogCount',
   BLOG_DETAIL: 'blogDetail',
   VIDEO_LIST: 'videoList',
+  VIDEO_COUNT: 'videoCount',
   VIDEO_DETAIL: 'videoDetail',
   KNOWLEDGE_LIST: 'knowledgeList',
+  KNOWLEDGE_COUNT: 'knowledgeCount',
   KNOWLEDGE_DETAIL: 'knowledgeDetail',
 
   // 변호사

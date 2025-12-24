@@ -28,13 +28,10 @@ import {
   YoutubeVideoInfoRequest,
   YoutubeVideoInfoResponse,
 } from '@/types/videoTypes'
-import axios from 'axios'
-
-const userUrl = import.meta.env.VITE_USER_SERVER_API
 
 export const contentService = {
   getCountBlog: async (subcategoryId: number | 'all', recentDays: number | 'all') => {
-    const response = await axios.get(`${userUrl}/blog-cases/${subcategoryId}/${recentDays}/count`)
+    const response = await instance.get(`/blog-cases/${subcategoryId}/${recentDays}/count`)
     return response.data
   },
   getBlogList: async (request: BlogListRequest) => {
@@ -80,12 +77,12 @@ export const contentService = {
   },
 
   getCountVideo: async (subcategoryId: number | 'all', recentDays: number | 'all') => {
-    const response = await instance.get(`/video-case/${subcategoryId}/${recentDays}/count`)
+    const response = await instance.get(`/video-cases/${subcategoryId}/${recentDays}/count`)
     return response.data
   },
 
   getVideoList: async (request: VideoListRequest) => {
-    const { subcategoryId, take, cursor, cursorId, orderBy, search } = request
+    const { subcategoryId, take, cursor, cursorId, orderBy, search, searchType } = request
 
     // 쿼리 파라미터 객체 생성 (값이 있을 때만 포함)
     const params = new URLSearchParams()
@@ -94,6 +91,7 @@ export const contentService = {
     if (cursorId !== undefined) params.append('cursorId', cursorId.toString())
     if (orderBy !== undefined) params.append('orderBy', orderBy)
     if (search !== undefined) params.append('search', search)
+    if (searchType !== undefined) params.append('searchType', searchType)
 
     // 쿼리스트링 생성
     const queryString = params.toString()
@@ -106,12 +104,17 @@ export const contentService = {
 
   getVideoDetail: async (request: VideoDetailRequest) => {
     const { videoCaseId } = request
-    const response = await axios.get<VideoDetailResponse>(`${userUrl}/video-case/detail/${videoCaseId}`)
+    const response = await instance.get<VideoDetailResponse>(`/video-cases/detail/${videoCaseId}`)
+    return response.data
+  },
+
+  getCountKnowledge: async (subcategoryId: number | 'all', recentDays: number | 'all') => {
+    const response = await instance.get(`/knowledge/${subcategoryId}/${recentDays}/count`)
     return response.data
   },
 
   getKnowledgeList: async (request: KnowledgeListRequest) => {
-    const { subcategoryId, take, cursor, cursorId, orderBy } = request
+    const { subcategoryId, take, cursor, cursorId, orderBy, search, searchType } = request
 
     // 쿼리 파라미터 객체 생성 (값이 있을 때만 포함)
     const params = new URLSearchParams()
@@ -119,6 +122,8 @@ export const contentService = {
     if (cursor !== undefined) params.append('cursor', cursor.toString())
     if (cursorId !== undefined) params.append('cursorId', cursorId.toString())
     if (orderBy !== undefined) params.append('orderBy', orderBy)
+    if (search !== undefined) params.append('search', search)
+    if (searchType !== undefined) params.append('searchType', searchType)
 
     // 쿼리스트링 생성
     const queryString = params.toString()

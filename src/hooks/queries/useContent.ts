@@ -120,7 +120,14 @@ export const useVideoList = (request: VideoListRequest) => {
 
 export const useInfiniteVideoList = (request: Omit<VideoListRequest, 'cursor' | 'cursorId'>) => {
   const query = useInfiniteQuery({
-    queryKey: [QUERY_KEY.VIDEO_LIST, 'infinite', request.subcategoryId, request.orderBy, request.search],
+    queryKey: [
+      QUERY_KEY.VIDEO_LIST,
+      'infinite',
+      request.subcategoryId,
+      request.orderBy,
+      request.search,
+      request.searchType,
+    ],
     queryFn: ({ pageParam }) =>
       contentService.getVideoList({
         ...request,
@@ -162,7 +169,14 @@ export const useGetKnowledgeList = (request: KnowledgeListRequest) => {
 
 export const useInfiniteKnowledgeList = (request: Omit<KnowledgeListRequest, 'cursor' | 'cursorId'>) => {
   const { data, isLoading, isError, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: [QUERY_KEY.KNOWLEDGE_LIST, 'infinite', request.subcategoryId, request.orderBy],
+    queryKey: [
+      QUERY_KEY.KNOWLEDGE_LIST,
+      'infinite',
+      request.subcategoryId,
+      request.orderBy,
+      request.search,
+      request.searchType,
+    ],
     queryFn: ({ pageParam }) =>
       contentService.getKnowledgeList({
         ...request,
@@ -303,7 +317,20 @@ export const useCountVideo = ({
   recentDays: number | 'all'
 }) => {
   return useQuery({
-    queryKey: [QUERY_KEY.BLOG_COUNT, subcategoryId, recentDays],
+    queryKey: [QUERY_KEY.VIDEO_COUNT, subcategoryId, recentDays],
     queryFn: () => contentService.getCountVideo(subcategoryId, recentDays),
+  })
+}
+
+export const useCountKnowledge = ({
+  subcategoryId,
+  recentDays,
+}: {
+  subcategoryId: number | 'all'
+  recentDays: number | 'all'
+}) => {
+  return useQuery({
+    queryKey: [QUERY_KEY.KNOWLEDGE_COUNT, subcategoryId, recentDays],
+    queryFn: () => contentService.getCountKnowledge(subcategoryId, recentDays),
   })
 }

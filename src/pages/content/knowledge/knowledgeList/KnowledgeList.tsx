@@ -1,6 +1,7 @@
+import { useEffect, useState } from 'react'
 import { useInfiniteKnowledgeList } from '@/hooks/queries/useContent'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import styles from './knowledgeList.module.scss'
 import { ROUTE_PATH } from '@/routes/routePath'
 import LegalKnowledgeItem from '@/components/legalKnowledgeItem/LegalKnowledgeItem'
@@ -10,9 +11,23 @@ import { Fragment } from 'react/jsx-runtime'
 const KnowledgeList = () => {
   const { subCategoryId } = useParams()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const searchFromUrl = searchParams.get('search') || undefined
+  const searchTypeFromUrl = (searchParams.get('searchType') as 'title' | 'lawyerName') || undefined
+
+  const [search, setSearch] = useState(searchFromUrl)
+  const [searchType, setSearchType] = useState(searchTypeFromUrl)
+
+  // URL 파라미터가 변경되면 상태 업데이트
+  useEffect(() => {
+    setSearch(searchFromUrl)
+    setSearchType(searchTypeFromUrl)
+  }, [searchFromUrl, searchTypeFromUrl])
 
   const { knowledgeList, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteKnowledgeList({
     subcategoryId: subCategoryId ? Number(subCategoryId) : 'all',
+    search,
+    searchType,
   })
 
   useInfiniteScroll({

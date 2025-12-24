@@ -12,6 +12,7 @@ export type VideoListRequest = {
   cursorId?: number
   orderBy?: SortType
   search?: string
+  searchType?: 'title' | 'lawyerName'
 }
 
 export type RandomVideoListRequest = {

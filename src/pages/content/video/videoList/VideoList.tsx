@@ -14,8 +14,18 @@ const VideoList = () => {
   const { subCategoryId } = useParams()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const search = searchParams.get('search') || undefined
+  const searchFromUrl = searchParams.get('search') || undefined
+  const searchTypeFromUrl = (searchParams.get('searchType') as 'title' | 'lawyerName') || undefined
+
+  const [search, setSearch] = useState(searchFromUrl)
+  const [searchType, setSearchType] = useState(searchTypeFromUrl)
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null)
+
+  // URL 파라미터가 변경되면 상태 업데이트
+  useEffect(() => {
+    setSearch(searchFromUrl)
+    setSearchType(searchTypeFromUrl)
+  }, [searchFromUrl, searchTypeFromUrl])
 
   useEffect(() => {
     const container = document.getElementById(VIDEO_HEADER_PORTAL_ID)
@@ -25,6 +35,7 @@ const VideoList = () => {
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteVideoList({
     subcategoryId: subCategoryId ? Number(subCategoryId) : 'all',
     search,
+    searchType,
   })
 
   useInfiniteScroll({
