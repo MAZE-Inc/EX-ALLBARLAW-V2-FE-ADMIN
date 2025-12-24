@@ -22,10 +22,8 @@ const KnowledgeList = () => {
     containerSelector: '.knowledge-list-container',
   })
 
-  const handleClickKnowledge = (knowledgeCaseId: number) => {
-    console.log(knowledgeCaseId)
+  const handleClickKnowledge = (knowledgeCaseId: number) =>
     navigate(`${ROUTE_PATH.CONTENT_KNOWLEDGE}/${subCategoryId}/${knowledgeCaseId}`)
-  }
 
   return (
     <main className={styles['knowledge-list']}>
