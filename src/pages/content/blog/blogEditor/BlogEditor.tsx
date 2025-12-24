@@ -103,7 +103,8 @@ const BlogEditor = () => {
   })
 
   useEffect(() => {
-    if (subCategoryId && categoryList) {
+    // 수정 모드가 아닐 때만 URL의 subCategoryId로 카테고리 설정
+    if (!isEditMode && subCategoryId && categoryList) {
       // 서브카테고리 ID가 있으면 해당하는 카테고리 찾아서 설정
       const parentCategory = categoryList.find(cat =>
         cat.subcategories.some(sub => sub.subcategoryId === Number(subCategoryId))
@@ -116,7 +117,7 @@ const BlogEditor = () => {
         subcategoryId: subCategoryId,
       }))
     }
-  }, [subCategoryId, categoryList])
+  }, [isEditMode, subCategoryId, categoryList])
 
   // Edit 모드일 때 기존 데이터 로드
   useEffect(() => {

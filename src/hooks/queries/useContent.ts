@@ -64,7 +64,7 @@ export const useGetBlogDetail = (request: BlogDetailRequest) => {
   return useQuery({
     queryKey: [QUERY_KEY.BLOG_DETAIL, request.blogCaseId],
     queryFn: () => contentService.getBlogDetail(request),
-    enabled: request.blogCaseId !== undefined,
+    enabled: !!request.blogCaseId && !Number.isNaN(request.blogCaseId),
     staleTime: 1000 * 60 * 10,
     gcTime: 1000 * 60 * 30,
   })
