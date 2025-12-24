@@ -128,6 +128,16 @@ const LawyerMemberList = ({
       }),
     },
     {
+      title: '소속 연락처',
+      dataIndex: 'lawyerLawfirmContact',
+      render: (contact: string | null) => contact || '-',
+      sorter: true,
+      sortOrder: getSortOrder('lawfirmContact'),
+      onHeaderCell: () => ({
+        onClick: () => onSort('lawfirmContact'),
+      }),
+    },
+    {
       title: '출신 시험',
       dataIndex: 'lawyerBarExamNumber',
       render: (examNumber: number) => `${examNumber}회`,

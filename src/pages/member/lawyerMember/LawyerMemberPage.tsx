@@ -3,18 +3,34 @@ import { DownloadOutlined } from '@ant-design/icons'
 import styles from './lawyerMember.module.scss'
 import { COLOR } from '@/styles/abstracts/color'
 import LawyerMemberList, { type LawyerMember } from '@/container/member/lawyerMemberList/LawyerMemberList'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useLawyerInfoList } from '@/hooks/queries/useMember'
 import { Pagination } from '@/components/pagination'
 import { useExcelExport } from '@/hooks/useExcelExport'
 import { laywerInfoOrderby } from '@/types/lawyerTypes'
 
+type LawyerSearchType = 'account' | 'email' | 'name' | 'contact' | 'lawfirmName' | 'lawfirmContact' | 'all'
+
 const LawyerMemberPage = () => {
+  const [searchParams] = useSearchParams()
+  const searchQueryFromUrl = searchParams.get('searchQuery') || ''
+  const searchTypeFromUrl = (searchParams.get('searchType') as LawyerSearchType) || 'all'
+
   const [currentPage, setCurrentPage] = useState(1)
   const [activeTab, setActiveTab] = useState<'all' | 'new' | 'approved' | 'pending'>('all')
   const [orderBy, setOrderBy] = useState<laywerInfoOrderby>('createdAt')
   const [sort, setSort] = useState<'asc' | 'desc'>('desc')
   const [selectedLawyers, setSelectedLawyers] = useState<LawyerMember[]>([])
+  const [search, setSearch] = useState(searchQueryFromUrl)
+  const [searchType, setSearchType] = useState<LawyerSearchType>(searchTypeFromUrl)
+
+  // URL 파라미터가 변경되면 상태 업데이트
+  useEffect(() => {
+    setSearch(searchQueryFromUrl)
+    setSearchType(searchTypeFromUrl)
+    setCurrentPage(1)
+  }, [searchQueryFromUrl, searchTypeFromUrl])
 
   const { exportData } = useExcelExport()
 
@@ -24,6 +40,8 @@ const LawyerMemberPage = () => {
     orderBy: orderBy,
     sort: sort,
     state: activeTab,
+    search,
+    searchType,
   })
 
   const handleSort = (field: string) => {
@@ -36,9 +54,7 @@ const LawyerMemberPage = () => {
     }
   }
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
+  const handlePageChange = (page: number) => setCurrentPage(page)
 
   const items: TabsProps['items'] = [
     {

@@ -182,6 +182,8 @@ export type laywerInfoOrderby =
 export interface LawyerInfoListRequest extends Omit<LawyerMemberListRequest, 'orderBy'> {
   orderBy?: laywerInfoOrderby
   state?: 'all' | 'new' | 'pending' | 'approved'
+  search?: string
+  searchType?: 'account' | 'email' | 'name' | 'contact' | 'lawfirmName' | 'lawfirmContact' | 'all'
 }
 
 export type LawyerMemberListResponse = {

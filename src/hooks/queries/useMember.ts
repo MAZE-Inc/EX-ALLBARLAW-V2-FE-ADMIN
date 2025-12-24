@@ -210,7 +210,15 @@ export const useLawyerMemberList = (request: LawyerMemberListRequest) => {
 
 export const useLawyerInfoList = (request: LawyerInfoListRequest) => {
   return useQuery({
-    queryKey: [QUERY_KEY.LAWYER_INFO_LIST, request.lawyerPage, request.orderBy, request.sort, request.state],
+    queryKey: [
+      QUERY_KEY.LAWYER_INFO_LIST,
+      request.lawyerPage,
+      request.orderBy,
+      request.sort,
+      request.state,
+      request.search,
+      request.searchType,
+    ],
     queryFn: () => lawyerMemberService.getLawyerInfoList(request),
     enabled: request.lawyerPage !== undefined,
   })
