@@ -21,7 +21,7 @@ export const lawyerService = {
     const { searchQuery, searchType } = request
 
     const params = new URLSearchParams()
-    if (searchQuery) params.append('searchQuery', searchQuery)
+    if (searchQuery) params.append('search', searchQuery)
     if (searchType) params.append('searchType', searchType)
 
     const url = `/lawyers/search?${params.toString()}`
@@ -30,12 +30,14 @@ export const lawyerService = {
     return response.data
   },
   getLawyerList: async (request: LawyerListRequest) => {
-    const { lawyerPage, orderBy, sort } = request
+    const { lawyerPage, orderBy, sort, search, searchType } = request
 
     const params = new URLSearchParams()
     if (lawyerPage) params.append('lawyerPage', lawyerPage.toString())
     if (orderBy) params.append('orderBy', orderBy)
     if (sort) params.append('sort', sort)
+    if (search) params.append('search', search)
+    if (searchType) params.append('searchType', searchType)
 
     const url = `/lawyers?${params.toString()}`
 

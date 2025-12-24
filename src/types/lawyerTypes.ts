@@ -47,6 +47,8 @@ export type LawyerListRequest = {
     | 'totalVisitCount'
     | 'monthlyVisitCount'
   sort?: 'asc' | 'desc'
+  search?: string
+  searchType?: 'lawyerName' | 'lawfirmName' | 'all'
 }
 
 export type LawyerListResponse = {

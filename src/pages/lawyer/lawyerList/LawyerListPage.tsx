@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Table, TableProps, Avatar, Button } from 'antd'
 import dayjs from 'dayjs'
 import { useLawyerList } from '@/hooks/queries/useLawyer'
@@ -8,17 +8,33 @@ import { blog, instagram, youtube } from '@/assets/imgs'
 import styles from './lawyerList.module.scss'
 import { DownloadOutlined } from '@ant-design/icons'
 import { useExcelExport } from '@/hooks/useExcelExport'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 const LawyerListPage = () => {
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedRows, setSelectedRows] = useState<Lawyer[]>([])
+  const [searchParams] = useSearchParams()
+  const searchQueryFromUrl = searchParams.get('searchQuery') || ''
+  const searchTypeFromUrl = (searchParams.get('searchType') as LawyerListRequest['searchType']) || 'all'
   const [request, setRequest] = useState<LawyerListRequest>({
     lawyerPage: 1,
     orderBy: 'createdAt',
     sort: 'desc',
+    search: searchQueryFromUrl,
+    searchType: searchTypeFromUrl,
   })
+
+  // URL 파라미터가 변경되면 request 업데이트
+  useEffect(() => {
+    setRequest(prev => ({
+      ...prev,
+      lawyerPage: 1,
+      search: searchQueryFromUrl,
+      searchType: searchTypeFromUrl,
+    }))
+    setCurrentPage(1)
+  }, [searchQueryFromUrl, searchTypeFromUrl])
 
   const { data: lawyerData, isLoading } = useLawyerList(request)
   const { exportData } = useExcelExport()
@@ -170,7 +186,7 @@ const LawyerListPage = () => {
           style: { cursor: 'pointer' },
         })}
       />
-      {lawyerData?.totalPages && (
+      {lawyerData?.totalPages !== undefined && lawyerData.totalPages > 0 && (
         <div className={styles['pagination-wrapper']}>
           <Pagination currentPage={currentPage} totalPages={lawyerData.totalPages} onPageChange={handlePageChange} />
         </div>
