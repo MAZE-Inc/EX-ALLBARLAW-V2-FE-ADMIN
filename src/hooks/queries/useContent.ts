@@ -29,7 +29,14 @@ export const useCountBlog = (subcategoryId: number | 'all', recentDays: number |
 
 export const useInfiniteBlogList = (request: Omit<BlogListRequest, 'cursor' | 'cursorId'>) => {
   const query = useInfiniteQuery({
-    queryKey: [QUERY_KEY.BLOG_LIST, 'infinite', request.subcategoryId, request.orderBy, request.search],
+    queryKey: [
+      QUERY_KEY.BLOG_LIST,
+      'infinite',
+      request.subcategoryId,
+      request.orderBy,
+      request.search,
+      request.searchType,
+    ],
     queryFn: ({ pageParam }) =>
       contentService.getBlogList({
         ...request,

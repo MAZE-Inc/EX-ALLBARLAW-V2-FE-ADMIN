@@ -14,8 +14,18 @@ const BlogList = () => {
   const navigate = useNavigate()
   const { subCategoryId } = useParams<{ subCategoryId: string }>()
   const [searchParams] = useSearchParams()
-  const search = searchParams.get('search') || undefined
+  const searchFromUrl = searchParams.get('search') || undefined
+  const searchTypeFromUrl = (searchParams.get('searchType') as 'title' | 'lawyerName') || undefined
+
+  const [search, setSearch] = useState(searchFromUrl)
+  const [searchType, setSearchType] = useState(searchTypeFromUrl)
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null)
+
+  // URL 파라미터가 변경되면 상태 업데이트
+  useEffect(() => {
+    setSearch(searchFromUrl)
+    setSearchType(searchTypeFromUrl)
+  }, [searchFromUrl, searchTypeFromUrl])
 
   useEffect(() => {
     const container = document.getElementById(BLOG_HEADER_PORTAL_ID)
@@ -25,11 +35,10 @@ const BlogList = () => {
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteBlogList({
     subcategoryId: subCategoryId ? Number(subCategoryId) : 'all',
     search,
+    searchType,
   })
 
-  const handleRegisterBlog = () => {
-    navigate(`${ROUTE_PATH.CONTENT_BLOG}/edit`)
-  }
+  const handleRegisterBlog = () => navigate(`${ROUTE_PATH.CONTENT_BLOG}/edit`)
 
   useInfiniteScroll({
     hasNextPage,

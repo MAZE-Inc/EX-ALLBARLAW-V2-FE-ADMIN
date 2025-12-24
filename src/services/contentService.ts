@@ -38,7 +38,7 @@ export const contentService = {
     return response.data
   },
   getBlogList: async (request: BlogListRequest) => {
-    const { subcategoryId, take, cursor, cursorId, orderBy, search } = request
+    const { subcategoryId, take, cursor, cursorId, orderBy, search, searchType } = request
 
     // 쿼리 파라미터 객체 생성 (값이 있을 때만 포함)
     const params = new URLSearchParams()
@@ -47,6 +47,7 @@ export const contentService = {
     if (cursorId !== undefined) params.append('cursorId', cursorId.toString())
     if (orderBy !== undefined) params.append('orderBy', orderBy)
     if (search !== undefined) params.append('search', search)
+    if (searchType !== undefined) params.append('searchType', searchType)
 
     // 쿼리스트링 생성
     const queryString = params.toString()
