@@ -24,7 +24,7 @@ const KnowledgeList = () => {
 
   const handleClickKnowledge = (knowledgeCaseId: number) => {
     console.log(knowledgeCaseId)
-    navigate(`${ROUTE_PATH.CONTENT}/${ROUTE_PATH.CONTENT_KNOWLEDGE}/${subCategoryId}/${knowledgeCaseId}`)
+    navigate(`${ROUTE_PATH.CONTENT_KNOWLEDGE}/${subCategoryId}/${knowledgeCaseId}`)
   }
 
   return (

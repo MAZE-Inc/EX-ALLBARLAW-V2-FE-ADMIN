@@ -34,7 +34,7 @@ const userUrl = import.meta.env.VITE_USER_SERVER_API
 
 export const contentService = {
   getCountBlog: async (subcategoryId: number | 'all', recentDays: number | 'all') => {
-    const response = await axios.get(`${userUrl}/blog-case/${subcategoryId}/${recentDays}/count`)
+    const response = await axios.get(`${userUrl}/blog-cases/${subcategoryId}/${recentDays}/count`)
     return response.data
   },
   getBlogList: async (request: BlogListRequest) => {
@@ -50,7 +50,7 @@ export const contentService = {
 
     // 쿼리스트링 생성
     const queryString = params.toString()
-    const url = `/blog-case/${subcategoryId}${queryString ? `?${queryString}` : ''}`
+    const url = `/blog-cases/list/${subcategoryId}${queryString ? `?${queryString}` : ''}`
 
     const response = await instance.get<BlogListResponse>(url)
 
@@ -59,7 +59,7 @@ export const contentService = {
 
   getBlogDetail: async (request: BlogDetailRequest) => {
     try {
-      const response = await axios.get<BlogDetailResponse>(`${userUrl}/blog-case/detail/${request.blogCaseId}`)
+      const response = await instance.get<BlogDetailResponse>(`/blog-cases/detail/${request.blogCaseId}`)
 
       return response.data
     } catch (error) {
@@ -79,7 +79,7 @@ export const contentService = {
   },
 
   getCountVideo: async (subcategoryId: number | 'all', recentDays: number | 'all') => {
-    const response = await axios.get(`${userUrl}/video-case/${subcategoryId}/${recentDays}/count`)
+    const response = await instance.get(`/video-case/${subcategoryId}/${recentDays}/count`)
     return response.data
   },
 
@@ -96,9 +96,9 @@ export const contentService = {
 
     // 쿼리스트링 생성
     const queryString = params.toString()
-    const url = `/video-case/${subcategoryId}${queryString ? `?${queryString}` : ''}`
+    const url = `/video-cases/list/${subcategoryId}${queryString ? `?${queryString}` : ''}`
 
-    const response = await axios.get<VideoListResponse>(`${userUrl}${url}`)
+    const response = await instance.get<VideoListResponse>(url)
 
     return response.data
   },
@@ -123,13 +123,13 @@ export const contentService = {
     const queryString = params.toString()
     const url = `/knowledge/${subcategoryId}${queryString ? `?${queryString}` : ''}`
 
-    const response = await axios.get<KnowledgeListResponse>(`${userUrl}${url}`)
+    const response = await instance.get<KnowledgeListResponse>(url)
 
     return response.data
   },
 
   getKnowledgeDetail: async (request: KnowledgeDetailRequest) => {
-    const response = await axios.get<KnowledgeDetailResponse>(`${userUrl}/knowledge/detail/${request.knowledgeId}`)
+    const response = await instance.get<KnowledgeDetailResponse>(`/knowledge/detail/${request.knowledgeId}`)
 
     return response.data
   },
