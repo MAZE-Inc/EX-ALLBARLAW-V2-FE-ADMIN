@@ -21,7 +21,7 @@ export const lawyerService = {
     const { searchQuery, searchType } = request
 
     const params = new URLSearchParams()
-    if (searchQuery) params.append('search', searchQuery)
+    if (searchQuery) params.append('searchQuery', searchQuery)
     if (searchType) params.append('searchType', searchType)
 
     const url = `/lawyers/search?${params.toString()}`

@@ -46,3 +46,9 @@ export type FaqEditRequest = {
 }
 
 export type FaqDetailResponse = Faq & { faqContent: string }
+
+export type FaqRequest = {
+  faqPage?: number
+  searchQuery?: string
+  faqSearchType?: 'faqType' | 'title'
+}

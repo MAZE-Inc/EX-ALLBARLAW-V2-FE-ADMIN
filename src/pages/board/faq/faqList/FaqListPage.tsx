@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import styles from './faqList.module.scss'
@@ -9,6 +9,8 @@ import { Faq } from '@/types/boardTypes'
 import { Pagination } from '@/components/pagination'
 import InputModal from '@/components/inputModal'
 
+type FaqSearchType = 'faqType' | 'title'
+
 const QuestionTitle = () => <div style={{ textAlign: 'center' }}>질문</div>
 
 const FaqListPage = () => {
@@ -18,10 +20,25 @@ const FaqListPage = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const { getTypeName } = useReadFaqType()
 
-  // URL에서 페이지 정보 가져오기 (기본값: 1)
+  // URL에서 페이지 및 검색 정보 가져오기
   const currentPage = Number(searchParams.get('page')) || 1
+  const searchQueryFromUrl = searchParams.get('searchQuery') || undefined
+  const faqSearchTypeFromUrl = (searchParams.get('faqSearchType') as FaqSearchType) || undefined
 
-  const { data: faqList, isLoading } = useReadFaq(currentPage)
+  const [searchQuery, setSearchQuery] = useState(searchQueryFromUrl)
+  const [faqSearchType, setFaqSearchType] = useState(faqSearchTypeFromUrl)
+
+  // URL 파라미터가 변경되면 상태 업데이트
+  useEffect(() => {
+    setSearchQuery(searchQueryFromUrl)
+    setFaqSearchType(faqSearchTypeFromUrl)
+  }, [searchQueryFromUrl, faqSearchTypeFromUrl])
+
+  const { data: faqList, isLoading } = useReadFaq({
+    faqPage: currentPage,
+    searchQuery,
+    faqSearchType,
+  })
   const { mutate: createFaqType } = useCreateFaqType()
   const { data: faqCount } = useReadFaqCount()
 

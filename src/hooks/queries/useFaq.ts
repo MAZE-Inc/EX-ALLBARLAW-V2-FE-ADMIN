@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { message } from 'antd'
 import { faqService } from '@/services/boardService'
 import { QUERY_KEY } from '@/constants/query'
-import { FaqEditRequest, FaqType } from '@/types/boardTypes'
+import { FaqEditRequest, FaqRequest, FaqType } from '@/types/boardTypes'
 
 export const useReadFaqType = () => {
   const {
@@ -56,11 +56,11 @@ export const useCreateFaqType = () => {
   })
 }
 
-export const useReadFaq = (faqPage: number) => {
+export const useReadFaq = (request: FaqRequest) => {
   return useQuery({
-    queryKey: [QUERY_KEY.FAQ_LIST, faqPage],
+    queryKey: [QUERY_KEY.FAQ_LIST, request],
     queryFn: async () => {
-      const res = await faqService.readFaq(faqPage)
+      const res = await faqService.readFaq(request)
       return res.data.faqs
     },
   })

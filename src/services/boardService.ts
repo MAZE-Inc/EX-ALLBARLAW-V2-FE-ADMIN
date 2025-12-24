@@ -2,6 +2,7 @@ import instance from '@/lib/axios'
 import {
   FaqDetailResponse,
   FaqEditRequest,
+  FaqRequest,
   NoticeDetailResponse,
   NoticeListResponse,
   NoticePostRequest,
@@ -28,7 +29,7 @@ export const faqService = {
   readFaqCount: async () => await instance.get('/faq/count'),
   readFaqType: async () => await instance.get('/faq/types'),
   createFaqType: async (faqTypeName: string) => await instance.post('/faq/types', { faqTypeName }),
-  readFaq: async (faqPage: number) => await instance.get('/faq', { params: { faqPage } }),
+  readFaq: async (request: FaqRequest) => await instance.get('/faq', { params: request }),
   createFaq: async (faq: FaqEditRequest) => await instance.post('/faq', faq),
   readFaqDetail: async (faqId: number) => await instance.get<FaqDetailResponse>(`/faq/${faqId}`),
   deleteFaq: async (faqId: number) => await instance.delete(`/faq/${faqId}`),
