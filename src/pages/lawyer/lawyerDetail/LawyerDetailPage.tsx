@@ -64,15 +64,15 @@ const LawyerDetailPage = () => {
             </button>
             <button className={styles['lawyer-detail__button']} onClick={() => scrollToSection(blogRef)}>
               <span>법률정보의 글</span>
-              <span>(10)</span>
+              <span>({lawyerDetail?.statistics.blogCaseCount})</span>
             </button>
             <button className={styles['lawyer-detail__button']} onClick={() => scrollToSection(videoRef)}>
               <span>변호사의 영상</span>
-              <span>(10)</span>
+              <span>({lawyerDetail?.statistics.videoCount})</span>
             </button>
             <button className={styles['lawyer-detail__button']} onClick={() => scrollToSection(legalKnowledgeRef)}>
               <span>법률 지식인</span>
-              <span>(10)</span>
+              <span>({lawyerDetail?.statistics.consultationRequestCount})</span>
             </button>
           </section>
           <LawyerCareer

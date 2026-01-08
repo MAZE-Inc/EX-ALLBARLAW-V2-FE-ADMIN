@@ -65,9 +65,9 @@ export type LawyerAchievement = {
 }
 
 type LawyerStatistics = {
-  blogPostCount: number
+  blogCaseCount: number
   videoCount: number
-  knowledgeAnswerCount: number
+  consultationRequestCount: number
   last30DaysSiteVisitCount: number
   totalSiteVisitCount: number
 }

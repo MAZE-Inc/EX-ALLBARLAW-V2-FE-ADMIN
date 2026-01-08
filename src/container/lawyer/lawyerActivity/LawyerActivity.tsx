@@ -33,9 +33,9 @@ const LawyerActivity = ({ statistics, createdAt }: LawyerActivityProps) => {
             <td>
               {formatNumber(statistics?.totalSiteVisitCount)} / {formatNumber(statistics?.last30DaysSiteVisitCount)}
             </td>
-            <td>{formatNumber(statistics?.blogPostCount)}</td>
+            <td>{formatNumber(statistics?.blogCaseCount)}</td>
             <td>{formatNumber(statistics?.videoCount)}</td>
-            <td>{formatNumber(statistics?.knowledgeAnswerCount)}</td>
+            <td>{formatNumber(statistics?.consultationRequestCount)}</td>
           </tr>
         </tbody>
       </table>
@@ -54,7 +54,7 @@ const LawyerActivity = ({ statistics, createdAt }: LawyerActivityProps) => {
           </tr>
           <tr>
             <th>법률정보의 글</th>
-            <td>{formatNumber(statistics?.blogPostCount)}</td>
+            <td>{formatNumber(statistics?.blogCaseCount)}</td>
           </tr>
           <tr>
             <th>변호사의 영상</th>
@@ -62,7 +62,7 @@ const LawyerActivity = ({ statistics, createdAt }: LawyerActivityProps) => {
           </tr>
           <tr>
             <th>법률 지식인 답변</th>
-            <td>{formatNumber(statistics?.knowledgeAnswerCount)}</td>
+            <td>{formatNumber(statistics?.consultationRequestCount)}</td>
           </tr>
         </tbody>
       </table>
