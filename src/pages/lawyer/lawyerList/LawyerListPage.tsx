@@ -6,7 +6,7 @@ import { LawyerListRequest, Lawyer } from '@/types/lawyerTypes'
 import { Pagination } from '@/components/pagination/Pagination'
 import { blog, instagram, youtube } from '@/assets/imgs'
 import styles from './lawyerList.module.scss'
-import { DownloadOutlined } from '@ant-design/icons'
+import { DownloadOutlined, UserOutlined } from '@ant-design/icons'
 import { useExcelExport } from '@/hooks/useExcelExport'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
@@ -56,7 +56,7 @@ const LawyerListPage = () => {
     const excelData = selectedRows.map(lawyer => ({
       변호사명: lawyer.lawyerName || '',
       소속: lawyer.lawyerLawfirmName || '',
-      // 가입일자: lawyer.createdAt ? dayjs(lawyer.createdAt).format('YYYY-MM-DD') : '-',
+      가입일자: lawyer.lawyerCreatedAt ? dayjs(lawyer.lawyerCreatedAt).format('YYYY-MM-DD') : '-',
       방문횟수: lawyer.lawyerTotalSiteVisitCount || 0,
       글: lawyer.lawyerBlogCaseCount || 0,
       영상: lawyer.lawyerVideoCaseCount || 0,
@@ -82,7 +82,9 @@ const LawyerListPage = () => {
       dataIndex: 'lawyerProfileImage',
       key: 'lawyerProfileImage',
       width: 140,
-      render: (image: string) => <Avatar src={image} size={120} shape='square' className={styles.lawyerImage} />,
+      render: (image: string) => (
+        <Avatar src={image} size={120} shape='square' icon={<UserOutlined />} className={styles.lawyerImage} />
+      ),
     },
     {
       title: '변호사명',
@@ -96,9 +98,9 @@ const LawyerListPage = () => {
     },
     {
       title: '가입일자',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      render: (date: string) => (date ? dayjs(date).format('YYYY-MM-DD') : '-'),
+      dataIndex: 'lawyerCreatedAt',
+      key: 'lawyerCreatedAt',
+      render: (date: string) => (date ? dayjs(date).format('YYYY.MM.DD') : '-'),
     },
     {
       title: '방문횟수/月',

@@ -16,6 +16,7 @@ export type Tag = {
 export type Lawyer = {
   lawyerId: number
   // lawfirmName: string
+  lawyerCreatedAt: string
   lawyerLawfirmName: string
   lawyerName: string
   lawyerProfileImage: string
