@@ -101,10 +101,13 @@ const LawyerListPage = () => {
       render: (date: string) => (date ? dayjs(date).format('YYYY-MM-DD') : '-'),
     },
     {
-      title: '방문횟수',
-      dataIndex: 'lawyerTotalSiteVisitCount',
-      key: 'lawyerTotalSiteVisitCount',
-      render: (count: number) => count?.toLocaleString() || '0',
+      title: '방문횟수/月',
+      key: 'lawyerSiteVisitCount',
+      width: 120,
+      render: (_, record) =>
+        `${record.lawyerTotalSiteVisitCount?.toLocaleString() || '0'} / ${
+          record.lawyerLast30DaysSiteVisitCount?.toLocaleString() || '0'
+        }`,
     },
     {
       title: '글',
