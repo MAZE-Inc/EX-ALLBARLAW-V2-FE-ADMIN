@@ -10,3 +10,7 @@ export interface AuthResponse {
 }
 
 export type withdraw = {}
+
+export interface FindAccountRequest {
+  adminEmail: string
+}

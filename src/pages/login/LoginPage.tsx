@@ -1,24 +1,48 @@
-import { Button, Checkbox, Form, Input, Modal } from 'antd'
+import { Button, Checkbox, Form, Input, Modal, message } from 'antd'
 import styles from './loginPage.module.scss'
 import Logo from '@/assets/imgs/allbarlaw-logo.png'
 import { useState } from 'react'
 import { useLoginMutation } from '@/hooks/mutations/useLoginMutation'
+import { useFindAccountMutation } from '@/hooks/mutations/useFindAccountMutation'
 import { LoginCredentials } from '@/types/authTypes'
 
 const LoginPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [email, setEmail] = useState('')
   const { mutate: login, isPending } = useLoginMutation()
+  const { mutate: findAccount, isPending: isFindingAccount } = useFindAccountMutation()
 
   const showModal = () => {
     setIsModalOpen(true)
-  }
-
-  const handleOk = () => {
-    setIsModalOpen(false)
+    setEmail('')
   }
 
   const handleCancel = () => {
     setIsModalOpen(false)
+    setEmail('')
+  }
+
+  const handleFindAccount = () => {
+    if (!email.trim()) {
+      message.warning('이메일 주소를 입력해주세요.')
+      return
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      message.warning('올바른 이메일 형식을 입력해주세요.')
+      return
+    }
+
+    findAccount(
+      { adminEmail: email },
+      {
+        onSuccess: () => {
+          setIsModalOpen(false)
+          setEmail('')
+        },
+      }
+    )
   }
 
   const onFinish = (values: LoginCredentials) => {
@@ -80,22 +104,26 @@ const LoginPage = () => {
           </Form.Item>
         </Form>
       </div>
-      <Modal
-        title='아이디 또는 비밀번호 찾기'
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        centered
-        footer={null}
-      >
+      <Modal title='아이디 또는 비밀번호 찾기' open={isModalOpen} onCancel={handleCancel} centered footer={null}>
         <div className={styles['modal-content']}>
           <p>{`가입시 등록하신 이메일 주소를 입력하시면\n메일로 아이디와 초기화된 비밀번호를 발송해드립니다.`}</p>
           <div className={styles['modal-input']}>
             <label htmlFor='email'>이메일 주소</label>
-            <Input placeholder='이메일 주소를 입력해주세요' />
+            <Input
+              placeholder='이메일 주소를 입력해주세요'
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              disabled={isFindingAccount}
+            />
           </div>
-          <Button type='primary' htmlType='submit' className={styles['login-form-button']} size='large'>
-            아이디 및 초기화된 비밀번호 메일로 받기
+          <Button
+            type='primary'
+            className={styles['login-form-button']}
+            size='large'
+            onClick={handleFindAccount}
+            loading={isFindingAccount}
+          >
+            {isFindingAccount ? '전송 중...' : '아이디 및 초기화된 비밀번호 메일로 받기'}
           </Button>
         </div>
       </Modal>
